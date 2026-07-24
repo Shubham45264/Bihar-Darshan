@@ -1,17 +1,18 @@
 import { Facebook, Instagram, Youtube } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/new-logo.png";
 import templeBg from "../../assets/bihar-temple.png";
 
 const quickLinks = [
-  { label: "Home", href: "#home" },
-  { label: "Districts", href: "#districts" },
-  { label: "Tourism", href: "#places" },
-  { label: "Community", href: "#community" },
-  { label: "Gallery", href: "#gallery" },
+  { label: "Home", href: "/" },
+  { label: "Districts", href: "/districts" },
+  { label: "Tourism", href: "/tourism" },
+  { label: "Community", href: "/community" },
+  { label: "Gallery", href: "/gallery" },
 ];
 
 const connectLinks = [
-  { label: "About Us", href: "#" },
+  { label: "About Us", href: "/about-us" },
   { label: "Contact Us", href: "#" },
   { label: "Privacy Policy", href: "#" },
 ];
@@ -67,12 +68,21 @@ const Footer = () => {
             <ul className="space-y-4">
               {quickLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link
+                      to={link.href}
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>
@@ -86,12 +96,21 @@ const Footer = () => {
             <ul className="space-y-4">
               {connectLinks.map((link) => (
                 <li key={link.label}>
-                  <a
-                    href={link.href}
-                    className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
-                  >
-                    {link.label}
-                  </a>
+                  {link.href.startsWith("/") ? (
+                    <Link
+                      to={link.href}
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                    >
+                      {link.label}
+                    </Link>
+                  ) : (
+                    <a
+                      href={link.href}
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                    >
+                      {link.label}
+                    </a>
+                  )}
                 </li>
               ))}
             </ul>

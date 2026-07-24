@@ -1,7 +1,8 @@
 # Node dependencies
 client/node_modules/
 server/node_modules/
-
+node_modules/
+dist/assets/
 # Build folders
 client/dist/
 server/dist/

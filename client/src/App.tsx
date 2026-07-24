@@ -23,6 +23,7 @@ import CultureDetails from './pages/CultureDetails';
 import ShareStory from './pages/ShareStory';
 import Personalities from './pages/Personalities';
 import PersonalityDetails from './pages/PersonalityDetails';
+import AboutUs from './pages/AboutUs';
 import { AdminDataProvider } from './data/AdminContext';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -102,6 +103,7 @@ function App() {
             <Route path="/profile" element={<Profile />} />
             <Route path="/marketplace/:id" element={<ProductDetails />} />
             <Route path="/share-story" element={<ShareStory />} />
+            <Route path="/about-us" element={<AboutUs />} />
           </Routes>
         </PageTransition>
 

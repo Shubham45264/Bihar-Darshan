@@ -24,9 +24,10 @@ const navItems: NavItem[] = [
 interface NavbarProps {
   forceDarkText?: boolean;
   forceWhiteText?: boolean;
+  fullTransparent?: boolean;
 }
 
-const Navbar = ({ forceDarkText = false, forceWhiteText = false }: NavbarProps = {}) => {
+const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent = true }: NavbarProps = {}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const getInitialLang = () => {
@@ -89,6 +90,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false }: NavbarProps =
 
   const isActive = (item: NavItem) => {
     if (item.label === "Home" && location.pathname === "/") return true;
+    if (item.label === "About Us" && location.pathname === "/about-us") return true;
     if (item.label === "Districts" && location.pathname === "/districts") return true;
     if (item.label === "Discover" && (location.pathname === "/discover" || location.pathname === "/culture" || location.pathname === "/personalities")) return true;
     if (item.label === "Community" && (location.pathname === "/community" || location.pathname === "/Community")) return true;
@@ -101,32 +103,35 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false }: NavbarProps =
 
   // Text/logo colour logic
   const useDarkText = scrolled || forceDarkText;
-  const useWhiteText = !scrolled && (forceWhiteText || (!forceDarkText));
 
   return (
     <header className={`fixed top-0 left-0 w-full z-[200] transition-all duration-500 ${scrolled
         ? "bg-white/80 backdrop-blur-2xl shadow-md border-b border-black/5 py-2"
-        : forceWhiteText
-          ? "bg-black/30 backdrop-blur-sm py-3"
-          : "bg-transparent py-3"
+        : fullTransparent
+          ? "bg-transparent py-3"
+          : forceWhiteText
+            ? "bg-black/30 backdrop-blur-sm py-3"
+            : "bg-transparent py-3"
       }`}>
-      <div className="max-w-[1920px] mx-auto px-6 sm:px-10 flex items-center justify-between">
+      <div className="max-w-[1920px] mx-auto px-4 sm:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3 shrink-0">
-          <img
-            src={logo}
-            alt="Bihar Darshan"
-            className={`h-10 lg:h-12 w-auto object-contain transition-all duration-500 drop-shadow-md ${!scrolled && (forceWhiteText || !forceDarkText) ? "brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" : ""
-              }`}
-          />
+          <Link to="/">
+            <img
+              src={logo}
+              alt="Bihar Darshan"
+              className={`h-9 lg:h-11 w-auto object-contain transition-all duration-500 drop-shadow-md ${!scrolled && (forceWhiteText || !forceDarkText) ? "brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" : ""
+                }`}
+            />
+          </Link>
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-8">
+        <nav className="hidden xl:flex items-center gap-4 2xl:gap-6">
           {navItems.map((item) => (
-            <div key={item.label} className="relative">
+            <div key={item.label} className="relative shrink-0">
               <Link
                 to={item.path}
-                className={`relative flex items-center gap-1.5 text-sm font-semibold transition-all duration-300 ${useDarkText
+                className={`relative flex items-center gap-1 text-[13px] 2xl:text-sm font-semibold whitespace-nowrap transition-all duration-300 ${useDarkText
                     ? "text-black/70 hover:text-gold"
                     : "text-white/90 hover:text-gold"
                   } ${isActive(item) ? "text-gold" : ""}`}
@@ -141,11 +146,11 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false }: NavbarProps =
         </nav>
 
         {/* Right Side */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2.5 shrink-0">
           {/* Share Your Story Button */}
           <Link
             to="/share-story"
-            className="hidden lg:block px-5 py-2.5 rounded-xl bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-bold text-[11px] uppercase tracking-wider shadow-md transition-all active:scale-95 duration-200"
+            className="hidden lg:block px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-bold text-[11px] uppercase tracking-wider shadow-md transition-all active:scale-95 duration-200 whitespace-nowrap"
           >
             Share your story
           </Link>
