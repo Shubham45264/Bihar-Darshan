@@ -13,8 +13,6 @@ import DistrictsDetails from './pages/DistrictsDetails';
 import LoginPage from './pages/Login';
 import ForgotPasswordPage from './pages/ForgotPassword';
 import Profile from './pages/Profile';
-import Community from './pages/Community';
-import CreateCommunity from './pages/CreateCommunity';
 import MarketPlace from './pages/MarketPlace';
 import AddProduct from './pages/AddProduct';
 import ScrollToTop from "./components/ScrollToTop";
@@ -24,6 +22,7 @@ import ShareStory from './pages/ShareStory';
 import Personalities from './pages/Personalities';
 import PersonalityDetails from './pages/PersonalityDetails';
 import AboutUs from './pages/AboutUs';
+import ContactUs from './pages/ContactUs';
 import { AdminDataProvider } from './data/AdminContext';
 import AdminLayout from './components/admin/AdminLayout';
 import AdminLogin from './pages/admin/AdminLogin';
@@ -32,7 +31,6 @@ import AdminCulture from './pages/admin/AdminCulture';
 import AdminDistricts from './pages/admin/AdminDistricts';
 import AdminTourism from './pages/admin/AdminTourism';
 import AdminGallery from './pages/admin/AdminGallery';
-import AdminCommunity from './pages/admin/AdminCommunity';
 import AdminMarketplace from './pages/admin/AdminMarketplace';
 import AdminTribes from './pages/admin/AdminTribes';
 import AdminPersonalities from './pages/admin/AdminPersonalities';
@@ -83,9 +81,6 @@ function App() {
             <Route path="/discover" element={<Discover />} />
             <Route path="/culture" element={<Discover />} />
             <Route path="/culture/:id" element={<CultureDetails />} />
-            <Route path="/community/create" element={<CreateCommunity />} />
-            <Route path="/community" element={<Community />} />
-            <Route path="/Community" element={<Community />} />
             <Route path="/marketplace" element={<MarketPlace />} />
             <Route path="/marketplace/add" element={<AddProduct />} />
             <Route path="/Marketplace" element={<MarketPlace />} />
@@ -104,6 +99,8 @@ function App() {
             <Route path="/marketplace/:id" element={<ProductDetails />} />
             <Route path="/share-story" element={<ShareStory />} />
             <Route path="/about-us" element={<AboutUs />} />
+            <Route path="/contact" element={<ContactUs />} />
+            <Route path="/contact-us" element={<ContactUs />} />
           </Routes>
         </PageTransition>
 
@@ -117,7 +114,6 @@ function App() {
               <Route path="culture" element={<AdminCulture />} />
               <Route path="tourism" element={<AdminTourism />} />
               <Route path="gallery" element={<AdminGallery />} />
-              <Route path="community" element={<AdminCommunity />} />
               <Route path="marketplace" element={<AdminMarketplace />} />
               <Route path="tribes" element={<AdminTribes />} />
               <Route path="personalities" element={<AdminPersonalities />} />

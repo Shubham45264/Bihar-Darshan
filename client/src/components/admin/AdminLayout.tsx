@@ -13,7 +13,6 @@ const sidebarItems = [
   { label: 'Tourism', path: '/admin/tourism', icon: Plane },
   { label: 'Popular Places', path: '/admin/places', icon: Sparkles },
   { label: 'Gallery', path: '/admin/gallery', icon: Image },
-  { label: 'Community', path: '/admin/community', icon: Users },
   { label: 'Marketplace', path: '/admin/marketplace', icon: Store },
   { label: 'Tribes', path: '/admin/tribes', icon: Mountain },
   { label: 'Personalities', path: '/admin/personalities', icon: UserCircle },

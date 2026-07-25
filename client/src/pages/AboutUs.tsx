@@ -68,12 +68,6 @@ const exploreItems = [
     icon: ImageIcon,
     link: "/gallery",
   },
-  {
-    title: "Community Stories",
-    description: "Connect with local voices and read authentic personal experiences from across the state.",
-    icon: MessageSquareHeart,
-    link: "/community",
-  },
 ];
 
 const whyCards = [

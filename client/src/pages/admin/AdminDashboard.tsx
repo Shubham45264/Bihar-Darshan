@@ -20,7 +20,6 @@ const AdminDashboard = () => {
   const communityStats = [
     { label: 'Tourism Packages', count: data.tourism.length, icon: Plane, path: '/admin/tourism', color: 'from-cyan-500/30 to-cyan-500/5', glow: 'bg-cyan-500', textColor: 'text-cyan-400', desc: 'Journeys & itineraries' },
     { label: 'Gallery Media', count: data.gallery.length, icon: ImageIcon, path: '/admin/gallery', color: 'from-pink-500/30 to-pink-500/5', glow: 'bg-pink-500', textColor: 'text-pink-400', desc: 'Photos and videos' },
-    { label: 'Communities', count: data.communities.length, icon: Users, path: '/admin/community', color: 'from-yellow-500/30 to-yellow-500/5', glow: 'bg-yellow-500', textColor: 'text-yellow-400', desc: 'Forums & discussions' },
     { label: 'Market Products', count: data.products.length, icon: Store, path: '/admin/marketplace', color: 'from-teal-500/30 to-teal-500/5', glow: 'bg-teal-500', textColor: 'text-teal-400', desc: 'Local artisan goods' },
   ];
 

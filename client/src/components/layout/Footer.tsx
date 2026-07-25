@@ -7,13 +7,12 @@ const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Districts", href: "/districts" },
   { label: "Tourism", href: "/tourism" },
-  { label: "Community", href: "/community" },
   { label: "Gallery", href: "/gallery" },
 ];
 
 const connectLinks = [
   { label: "About Us", href: "/about-us" },
-  { label: "Contact Us", href: "#" },
+  { label: "Contact Us", href: "/contact" },
   { label: "Privacy Policy", href: "#" },
 ];
 

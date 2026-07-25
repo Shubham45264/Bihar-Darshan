@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useAdminData } from '../data/AdminContext';
 
@@ -6,24 +6,18 @@ import Container from '../components/layout/Container';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import ShareStorySection from '../components/cta/ShareStorySection';
-import { MapPin, Utensils, PartyPopper, Search, Sparkles, User, MessageSquare, Plus } from 'lucide-react';
+import { MapPin, Utensils, PartyPopper, User, ArrowLeft, ArrowRight, Plus, Upload, X, Sparkles } from 'lucide-react';
 import { useContributions } from '../data/ContributionContext';
 import { Link, useLocation } from 'react-router-dom';
 
-// 1. ADDED: FULL LIST OF BIHAR DISTRICTS
-const BIHAR_DISTRICTS = [
-  "All Districts",
-  "Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur",
-  "Buxar", "Darbhanga", "East Champaran", "Gaya", "Gopalganj", "Jamui",
-  "Jehanabad", "Kaimur", "Katihar", "Khagaria", "Kishanganj", "Lakhisarai",
-  "Madhepura", "Madhubani", "Munger", "Muzaffarpur", "Nalanda", "Nawada",
-  "Patna", "Purnia", "Rohtas", "Saharsa", "Samastipur", "Saran", "Sheikhpura",
-  "Sheohar", "Sitamarhi", "Siwan", "Supaul", "Vaishali", "West Champaran"
-];
+import biharHeritage from '../assets/bihar-heritage.png';
+import biharFood from '../assets/bihar-food.png';
+import biharFolkDance from '../assets/bihar-folk-dance.png';
+import patnaSahib from '../assets/patna-sahib.png';
 
 interface DiscoverItem {
   id: string;
-  type: "Food" | "Festival" | "Personality";
+  type: string;
   district: string;
   image: string;
   title: string;
@@ -37,11 +31,21 @@ interface DiscoverItem {
   status?: string;
 }
 
+interface CustomCategory {
+  id: string;
+  title: string;
+  description?: string;
+  image: string;
+  badgeText: string;
+  district: string;
+}
+
 const Discover = () => {
   const { cultureSubmissions } = useContributions();
   const { culture: cultureData, personalities } = useAdminData();
   const location = useLocation();
-  const [activeCategory, setActiveCategory] = useState(() => {
+  
+  const [activeCategory, setActiveCategory] = useState<string | null>(() => {
     const searchParams = new URLSearchParams(location.search);
     const cat = searchParams.get('category');
     if (cat === 'food' || cat === 'Food') return 'Food';
@@ -50,16 +54,53 @@ const Discover = () => {
     if (location.state && (location.state as any).activeCategory) {
       return (location.state as any).activeCategory;
     }
-    return 'All';
+    return null; // null means viewing category cards grid
   });
-  const [activeDistrict, setActiveDistrict] = useState("All Districts");
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
+
+  const [selectedItem, setSelectedItem] = useState<DiscoverItem | null>(null);
+
+  // ── Custom Categories State ──
+  const [customCategories, setCustomCategories] = useState<CustomCategory[]>(() => {
+    try {
+      const stored = localStorage.getItem('discover_custom_categories');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        return parsed.filter((c: any) => c.id !== 'all' && c.id !== 'All' && c.title !== 'All Heritage' && c.title !== 'All Categories');
+      }
+    } catch (e) {
+      console.error('Failed to parse custom categories:', e);
+    }
+    return [];
+  });
+
+  // Modal State for Adding Category
+  const [isAddCategoryModalOpen, setIsAddCategoryModalOpen] = useState(false);
+  const [categoryName, setCategoryName] = useState('');
+  const [categoryDesc, setCategoryDesc] = useState('');
+  const [categoryCoverImage, setCategoryCoverImage] = useState<string | null>(null);
+  const [categoryCoverUrlInput, setCategoryCoverUrlInput] = useState('');
+
+  // Clean legacy "All Heritage" entries if any exist
+  useEffect(() => {
+    try {
+      const stored = localStorage.getItem('discover_custom_categories');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        const cleaned = parsed.filter((c: any) => c.id !== 'all' && c.id !== 'All' && c.title !== 'All Heritage' && c.title !== 'All Categories');
+        if (cleaned.length !== parsed.length) {
+          localStorage.setItem('discover_custom_categories', JSON.stringify(cleaned));
+          setCustomCategories(cleaned);
+        }
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  }, []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
     const cat = searchParams.get('category');
-    let targetCategory = 'All';
+    let targetCategory: string | null = null;
     if (cat === 'food' || cat === 'Food') targetCategory = 'Food';
     else if (cat === 'festival' || cat === 'Festival' || cat === 'festivals' || cat === 'Festivals') targetCategory = 'Festivals';
     else if (cat === 'personalities' || cat === 'Personalities' || cat === 'personality' || cat === 'Personality') targetCategory = 'Personalities';
@@ -67,19 +108,12 @@ const Discover = () => {
       targetCategory = (location.state as any).activeCategory;
     }
 
-    if (targetCategory !== 'All') {
+    if (targetCategory) {
       setActiveCategory(targetCategory);
-      setTimeout(() => {
-        const element = document.getElementById('discover-explore-section');
-        if (element) {
-          element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 100);
     }
   }, [location]);
 
   const combinedCultureData = [...cultureSubmissions, ...cultureData];
-  const [selectedItem, setSelectedItem] = useState<DiscoverItem | null>(null);
 
   const unifiedCulture: DiscoverItem[] = combinedCultureData.map(item => ({
     id: `culture-${item.id}`,
@@ -108,259 +142,457 @@ const Discover = () => {
   }));
 
   const allDiscoverItems = [...unifiedCulture, ...unifiedPersonalities];
+  const approvedItems = allDiscoverItems.filter(i => i.status === 'APPROVED');
 
-  // 2. REPLACED: DYNAMIC CALCULATION WITH STATIC DISTRICTS LIST
-  const districts = BIHAR_DISTRICTS;
-  const categories = ["All", "Food", "Festivals", "Personalities"];
+  // Specific 3 Default Category Cards: Food, Festivals, Personalities (NO "All Heritage")
+  const defaultCategoryCards = [
+    {
+      id: "Food",
+      title: "Food",
+      type: "Food",
+      badgeText: "Food",
+      icon: Utensils,
+      image: biharFood,
+      district: "BIHAR",
+      subtitle: `Explore ${approvedItems.filter(i => i.type === "Food").length} Dishes & Delicacies`
+    },
+    {
+      id: "Festivals",
+      title: "Festivals",
+      type: "Festival",
+      badgeText: "Festival",
+      icon: PartyPopper,
+      image: biharFolkDance,
+      district: "BIHAR",
+      subtitle: `Explore ${approvedItems.filter(i => i.type === "Festival").length} Sacred Rituals`
+    },
+    {
+      id: "Personalities",
+      title: "Personalities",
+      type: "Personality",
+      badgeText: "Personalities",
+      icon: User,
+      image: patnaSahib,
+      district: "BIHAR",
+      subtitle: `Explore ${approvedItems.filter(i => i.type === "Personality").length} Visionaries & Legends`
+    }
+  ];
 
-  const filteredData = allDiscoverItems.filter(item => {
-    const isApproved = item.status === 'APPROVED';
-    const matchCategory =
-      activeCategory === "All" ||
-      (activeCategory === "Food" && item.type === "Food") ||
-      (activeCategory === "Festivals" && item.type === "Festival") ||
-      (activeCategory === "Personalities" && item.type === "Personality");
+  // Merge default & custom user-created categories
+  const allCategoryCards = [
+    ...defaultCategoryCards,
+    ...customCategories.map(c => ({
+      id: c.id,
+      title: c.title,
+      type: c.title,
+      badgeText: c.badgeText,
+      icon: Sparkles,
+      image: c.image,
+      district: c.district,
+      subtitle: c.description || `Custom Category`
+    }))
+  ];
 
-    const matchDistrict = activeDistrict === "All Districts" || item.district.toLowerCase() === activeDistrict.toLowerCase();
-    return isApproved && matchCategory && matchDistrict;
+  const filteredData = approvedItems.filter(item => {
+    if (!activeCategory) return true;
+    if (activeCategory === "Food") return item.type === "Food";
+    if (activeCategory === "Festivals") return item.type === "Festival";
+    if (activeCategory === "Personalities") return item.type === "Personality";
+    return item.type.toLowerCase() === activeCategory.toLowerCase();
   });
+
+  // Handle Cover Photo File Upload
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setCategoryCoverImage(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  // Handle Add Category Form Submit
+  const handleCreateCategorySubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!categoryName.trim()) return;
+
+    const coverPhoto = categoryCoverImage || categoryCoverUrlInput.trim() || biharHeritage;
+
+    const newCategoryObj: CustomCategory = {
+      id: categoryName.trim().toLowerCase().replace(/\s+/g, '-'),
+      title: categoryName.trim(),
+      description: categoryDesc.trim() || undefined,
+      image: coverPhoto,
+      badgeText: categoryName.trim(),
+      district: "BIHAR"
+    };
+
+    const updatedCustoms = [...customCategories, newCategoryObj];
+    setCustomCategories(updatedCustoms);
+    try {
+      localStorage.setItem('discover_custom_categories', JSON.stringify(updatedCustoms));
+    } catch (err) {
+      console.error('Failed to save category to localStorage:', err);
+    }
+
+    // Reset Form & Close Modal
+    setCategoryName('');
+    setCategoryDesc('');
+    setCategoryCoverImage(null);
+    setCategoryCoverUrlInput('');
+    setIsAddCategoryModalOpen(false);
+  };
 
   return (
     <div className="min-h-screen bg-brand-gray">
       <Navbar />
 
+      {/* Hero Banner */}
       <div
         className="bg-brand-dark pt-32 pb-16 mb-12 relative overflow-hidden"
         style={{ backgroundImage: "url('/images/culture/hero-artwork.png')", backgroundSize: 'cover', backgroundPosition: 'center' }}
       >
-        <div className="absolute inset-0 bg-brand-dark/70"></div>
-        <div className="absolute inset-0 bg-brand-gold/15 opacity-50 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-brand-dark/75"></div>
+        <div className="absolute inset-0 bg-brand-gold/10 opacity-60 mix-blend-overlay"></div>
         <div className="absolute inset-x-0 bottom-0 h-px bg-brand-gold/20"></div>
         <Container>
           <div className="relative z-10 text-center max-w-2xl mx-auto">
-            <h1 className="font-display font-bold text-4xl md:text-5xl font-bold text-white mb-6 tracking-tight">
+            <h1 className="font-display font-bold text-4xl md:text-5xl text-white mb-4 tracking-tight">
               Discover Bihar's <span className="text-brand-gold">Heritage</span>
             </h1>
-            <p className="text-gray-300 text-lg leading-relaxed">
-              Explore the rich history, vibrant festivals, delicious foods, and legendary personalities that represent the soul of Bihar.
+            <p className="text-gray-300 text-base md:text-lg leading-relaxed">
+              Explore authentic local cuisines, sacred grand festivals, and legendary icons representing Bihar's glorious legacy.
             </p>
           </div>
         </Container>
       </div>
 
       <Container>
-        <div id="discover-explore-section" className="bg-white p-3 rounded-[1.5rem] shadow-sm border border-gray-100 flex flex-col md:flex-row gap-4 justify-between items-center mb-12">
-
-          <div className="flex items-center gap-2 overflow-x-auto no-scrollbar w-full md:w-auto">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                onClick={() => setActiveCategory(cat)}
-                className={`px-5 py-2.5 rounded-xl text-xs font-bold transition-all whitespace-nowrap cursor-pointer ${activeCategory === cat
-                  ? 'bg-brand-dark text-white shadow-md'
-                  : 'bg-gray-50 text-gray-500 hover:bg-gray-100 hover:text-gray-900'
-                  }`}
-              >
-                {cat}
-              </button>
-            ))}
+        {/* Header Action Bar */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
+          <div>
+            <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-dark">
+              {activeCategory ? activeCategory : "Explore Categories"}
+            </h2>
+            <p className="text-sm text-gray-500 font-medium mt-1">
+              {activeCategory ? `Showing ${filteredData.length} items in ${activeCategory}` : "Select a category card or create a new category"}
+            </p>
           </div>
 
-          <div className="flex items-center gap-3 w-full md:w-auto shrink-0 z-40">
-            {/* Add Story Button */}
-            <Link
-              to="/share-story"
-              className="flex items-center justify-center gap-1.5 px-5 py-2.5 bg-brand-gold hover:bg-brand-gold/90 text-brand-dark text-xs font-bold rounded-[1.25rem] transition-all shadow-sm shrink-0 uppercase tracking-wider active:scale-95 cursor-pointer"
+          <div className="flex items-center gap-3">
+            {/* Button to open Add Category Modal */}
+            <button
+              onClick={() => setIsAddCategoryModalOpen(true)}
+              className="flex items-center gap-2 px-5 py-2.5 bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-bold text-xs rounded-2xl shadow-sm transition-all cursor-pointer uppercase tracking-wider active:scale-95"
             >
-              <Plus size={14} className="stroke-[3px]" />
-              <span>Add</span>
-            </Link>
+              <Plus size={16} className="stroke-[3px]" />
+              <span>Add Category</span>
+            </button>
 
-            {/* Districts Dropdown */}
-            <div className="relative w-full md:w-56 shrink-0">
+            {activeCategory && (
               <button
-                onClick={() => setIsDropdownOpen(!isDropdownOpen)}
-                className="w-full bg-gray-50 border border-transparent hover:border-gray-200 text-brand-dark text-sm rounded-[1.25rem] pl-10 pr-10 py-2.5 font-semibold transition-all flex items-center justify-between cursor-pointer"
+                onClick={() => setActiveCategory(null)}
+                className="flex items-center gap-2 px-5 py-2.5 bg-white border border-gray-200 hover:border-brand-gold text-brand-dark font-bold text-xs rounded-2xl shadow-sm transition-all cursor-pointer uppercase tracking-wider"
               >
-                <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                  <MapPin size={16} className="text-gray-400" />
-                </div>
-                <span className="truncate">{activeDistrict}</span>
-                <svg
-                  className={`w-4 h-4 text-gray-400 transition-transform duration-300 ${isDropdownOpen ? 'rotate-180' : ''}`}
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
-                </svg>
+                <ArrowLeft size={14} />
+                <span>All Categories</span>
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── MAIN CONTENT AREA ── */}
+        <div className="mb-24">
+          <AnimatePresence mode="wait">
+            {!activeCategory ? (
+              /* CATEGORIES VIEW (TALL VERTICAL CARDS matching exact item card size & design) */
+              <motion.div
+                key="categories-grid"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              >
+                {/* Rendered Category Cards */}
+                {allCategoryCards.map((cat) => {
+                  const IconComp = cat.icon || Sparkles;
+                  return (
+                    <div
+                      key={cat.id}
+                      onClick={() => setActiveCategory(cat.id)}
+                      className="relative block h-[400px] rounded-3xl overflow-hidden group bg-gray-100 shadow-md transition-all hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer border border-gray-100"
+                    >
+                      {/* Image */}
+                      <img
+                        src={cat.image}
+                        alt={cat.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
+
+                      {/* Dark Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-300 pointer-events-none" />
+
+                      {/* Top Badge */}
+                      <div className="absolute top-4 left-4 bg-brand-gold px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 text-brand-dark shadow-lg z-25">
+                        <IconComp size={14} />
+                        <span>{cat.badgeText}</span>
+                      </div>
+
+                      {/* Bottom Content */}
+                      <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
+                        <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-1">
+                          {/* Location tag */}
+                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-gold mb-1.5 uppercase tracking-wider">
+                            <MapPin size={12} />
+                            <span>{cat.district}</span>
+                          </div>
+
+                          {/* Title */}
+                          <h3 className="text-3xl font-serif font-bold text-white leading-tight mb-2 drop-shadow-md">
+                            {cat.title}
+                          </h3>
+
+                          {/* Subtitle */}
+                          <div className="text-xs font-semibold text-white/80 flex items-center justify-between mt-1">
+                            <span className="line-clamp-1">{cat.subtitle}</span>
+                            <ArrowRight size={16} className="text-brand-gold shrink-0 transform transition-transform group-hover:translate-x-1" />
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </motion.div>
+            ) : (
+              /* INDIVIDUAL ITEMS GRID */
+              <motion.div
+                key={activeCategory}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.3 }}
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+              >
+                {filteredData.length > 0 ? (
+                  filteredData.map((item) => (
+                    <Link
+                      key={item.id}
+                      to={item.type === "Personality"
+                        ? `/personalities/${item.id.replace('personality-', '')}`
+                        : `/culture/${item.id.replace('culture-', '')}`
+                      }
+                      className="relative block h-[400px] rounded-3xl overflow-hidden group bg-gray-100 shadow-md transition-all hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer border border-gray-100"
+                    >
+                      {/* Image */}
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x600?text=Profile+Coming+Soon"; }}
+                      />
+
+                      {/* Gradient */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-300 pointer-events-none" />
+
+                      {/* Top Badge */}
+                      <div className="absolute top-4 left-4 bg-brand-gold px-3.5 py-1.5 rounded-full text-xs font-bold flex items-center gap-1.5 text-brand-dark shadow-lg z-25">
+                        {item.type === "Festival" ? <PartyPopper size={14} /> : item.type === "Food" ? <Utensils size={14} /> : <User size={14} />}
+                        <span>{item.type === "Personality" ? (item.personalityCategory || 'Personality') : item.type}</span>
+                      </div>
+
+                      {/* Content */}
+                      <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
+                        <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
+                          <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-gold mb-1.5 uppercase tracking-wider">
+                            <MapPin size={12} />
+                            <span>{item.district}</span>
+                          </div>
+
+                          <h3 className="text-2xl md:text-3xl font-serif font-bold text-white leading-tight mb-1 drop-shadow-md">
+                            {item.title}
+                          </h3>
+
+                          {item.submittedBy && (
+                            <div className="text-xs font-semibold text-white/70 flex items-center gap-1.5 mt-2">
+                              <User size={12} className="text-brand-gold" /> <span>By {item.submittedBy}</span>
+                            </div>
+                          )}
+                        </div>
+
+                        <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-out">
+                          <div className="overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out delay-100">
+                            <p className="text-xs text-white/90 line-clamp-3 leading-relaxed mt-3 mb-4 drop-shadow-sm">
+                              {item.caption || item.description}
+                            </p>
+
+                            <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-gold group/btn">
+                              Learn More
+                              <span className="transform transition-transform group-hover/btn:translate-x-1">→</span>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </Link>
+                  ))
+                ) : (
+                  <div className="col-span-full py-20 text-center flex flex-col items-center">
+                    <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
+                      <MapPin size={24} className="text-gray-400" />
+                    </div>
+                    <h3 className="text-xl font-bold text-brand-dark mb-2">No entries found</h3>
+                    <p className="text-gray-500">There are currently no items available in this category.</p>
+                    <button
+                      onClick={() => setActiveCategory(null)}
+                      className="mt-6 px-6 py-2.5 bg-brand-gold text-brand-dark font-bold rounded-full hover:bg-brand-gold/90 transition-colors cursor-pointer"
+                    >
+                      View All Categories
+                    </button>
+                  </div>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
+        </div>
+      </Container>
+
+      {/* ── MODAL: ADD NEW CATEGORY FORM ── */}
+      <AnimatePresence>
+        {isAddCategoryModalOpen && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[350] flex items-center justify-center p-4 bg-black/80 backdrop-blur-md"
+            onClick={() => setIsAddCategoryModalOpen(false)}
+          >
+            <motion.div
+              initial={{ scale: 0.95, y: 20 }}
+              animate={{ scale: 1, y: 0 }}
+              exit={{ scale: 0.95, y: 20 }}
+              className="bg-[#1A1814] border border-[#8C7A60]/30 rounded-3xl max-w-lg w-full p-6 md:p-8 shadow-2xl relative text-white"
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Close Button */}
+              <button
+                onClick={() => setIsAddCategoryModalOpen(false)}
+                className="absolute top-5 right-5 bg-white/10 hover:bg-white/20 text-white w-9 h-9 rounded-full flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X size={18} />
               </button>
 
-              {isDropdownOpen && (
-                <div
-                  className="fixed inset-0 z-45"
-                  onClick={() => {
-                    setIsDropdownOpen(false);
-                    setSearchQuery("");
-                  }}
-                ></div>
-              )}
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-2xl bg-brand-gold/20 flex items-center justify-center text-brand-gold font-bold">
+                  <Plus size={22} className="stroke-[3px]" />
+                </div>
+                <h3 className="text-2xl font-serif font-bold text-white">Add New Category</h3>
+              </div>
+              <p className="text-xs text-gray-400 mb-6 leading-relaxed">
+                Create a custom category with name, optional description, and cover photo.
+              </p>
 
-              <AnimatePresence>
-                {isDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: -10, scale: 0.95 }}
-                    animate={{ opacity: 1, y: 0, scale: 1 }}
-                    exit={{ opacity: 0, y: -10, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="absolute top-full left-0 right-0 mt-3 bg-white rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.15)] border border-gray-200 py-2 z-50 overflow-hidden"
-                  >
-                    <div className="px-3 pb-2 mb-1 border-b border-gray-100">
-                      <div className="relative">
-                        <Search size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+              <form onSubmit={handleCreateCategorySubmit} className="space-y-5">
+                {/* 1. Category Name Input (Required) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-brand-gold mb-2">
+                    Category Name <span className="text-red-400">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    placeholder="e.g. Handicrafts, Folk Music, Heritage Monuments"
+                    value={categoryName}
+                    onChange={(e) => setCategoryName(e.target.value)}
+                    className="w-full bg-[#26231E] border border-[#8C7A60]/40 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold transition-colors font-medium"
+                  />
+                </div>
+
+                {/* 2. Category Description (Optional) */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
+                    Description <span className="text-gray-500 font-normal">(Optional)</span>
+                  </label>
+                  <textarea
+                    rows={3}
+                    placeholder="Brief description of this category..."
+                    value={categoryDesc}
+                    onChange={(e) => setCategoryDesc(e.target.value)}
+                    className="w-full bg-[#26231E] border border-[#8C7A60]/40 rounded-xl px-4 py-3 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold transition-colors font-medium resize-none"
+                  />
+                </div>
+
+                {/* 3. Cover Photo Upload */}
+                <div>
+                  <label className="block text-xs font-bold uppercase tracking-wider text-brand-gold mb-2">
+                    Cover Photo
+                  </label>
+
+                  {categoryCoverImage ? (
+                    <div className="relative h-44 rounded-2xl overflow-hidden border border-brand-gold/50 group">
+                      <img src={categoryCoverImage} alt="Cover Preview" className="w-full h-full object-cover" />
+                      <button
+                        type="button"
+                        onClick={() => setCategoryCoverImage(null)}
+                        className="absolute top-3 right-3 bg-black/70 hover:bg-black text-white p-2 rounded-full transition-colors cursor-pointer"
+                      >
+                        <X size={16} />
+                      </button>
+                    </div>
+                  ) : (
+                    <div className="space-y-3">
+                      {/* File Upload Box */}
+                      <label className="flex flex-col items-center justify-center h-32 rounded-2xl border-2 border-dashed border-[#8C7A60]/40 hover:border-brand-gold bg-[#26231E] cursor-pointer transition-all p-4 text-center">
+                        <Upload size={24} className="text-brand-gold mb-2" />
+                        <span className="text-xs font-bold text-white">Click to upload cover photo</span>
+                        <span className="text-[10px] text-gray-400 mt-1">PNG, JPG, WEBP up to 5MB</span>
                         <input
-                          type="text"
-                          placeholder="Search district..."
-                          value={searchQuery}
-                          onChange={(e) => setSearchQuery(e.target.value)}
-                          className="w-full bg-gray-50 text-sm font-medium text-gray-900 rounded-xl pl-9 pr-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-brand-gold transition-all"
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageFileChange}
+                          className="hidden"
+                        />
+                      </label>
+
+                      {/* Image URL fallback */}
+                      <div className="relative">
+                        <span className="text-[11px] text-gray-400 block mb-1">Or enter image URL:</span>
+                        <input
+                          type="url"
+                          placeholder="https://example.com/cover.jpg"
+                          value={categoryCoverUrlInput}
+                          onChange={(e) => setCategoryCoverUrlInput(e.target.value)}
+                          className="w-full bg-[#26231E] border border-[#8C7A60]/40 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold transition-colors"
                         />
                       </div>
                     </div>
+                  )}
+                </div>
 
-                    <div className="max-h-[220px] overflow-y-auto scrollbar-thin scrollbar-thumb-gray-200 scrollbar-track-transparent">
-                      {districts.filter((d: string) => d.toLowerCase().includes(searchQuery.toLowerCase())).length > 0 ? (
-                        districts.filter((d: string) => d.toLowerCase().includes(searchQuery.toLowerCase())).map((district: string) => (
-                          <button
-                            key={district}
-                            onClick={() => {
-                              setActiveDistrict(district);
-                              setIsDropdownOpen(false);
-                              setSearchQuery("");
-                            }}
-                            className={`w-full text-left px-4 py-2.5 text-sm font-medium transition-colors hover:bg-gray-50 flex items-center gap-2 cursor-pointer ${activeDistrict === district ? 'text-brand-dark bg-gray-50' : 'text-gray-600'
-                              }`}
-                          >
-                            {activeDistrict === district && <div className="w-1.5 h-1.5 rounded-full bg-brand-gold"></div>}
-                            <span className={activeDistrict === district ? 'font-bold' : ''}>{district}</span>
-                          </button>
-                        ))
-                      ) : (
-                        <div className="px-4 py-6 text-center text-sm text-gray-400 font-medium">
-                          No districts found
-                        </div>
-                      )}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
-          </div>
-        </div>
-
-        {/* Results Grid - (Unchanged) */}
-        <div className="mb-24">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={activeCategory + activeDistrict}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.3, ease: "easeInOut" }}
-              className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-6"
-            >
-              {filteredData.length > 0 ? (
-                filteredData.map((item) => (
-                  <Link
-                    key={item.id}
-                    to={item.type === "Personality"
-                      ? `/personalities/${item.id.replace('personality-', '')}`
-                      : `/culture/${item.id.replace('culture-', '')}`
-                    }
-                    className="relative block h-[400px] rounded-[1.5rem] overflow-hidden group bg-gray-100 shadow-md transition-shadow hover:shadow-xl cursor-pointer"
-                  >
-                    {/* Image */}
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                      onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x600?text=Profile+Coming+Soon"; }}
-                    />
-
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-300 pointer-events-none" />
-
-                    {/* Category Tag */}
-                    <div className="absolute top-3 left-3 bg-brand-gold px-2.5 py-1 rounded-full text-[10px] font-bold flex items-center gap-1 text-brand-dark shadow-md z-25">
-                      {item.type === "Festival" ? <PartyPopper size={12} /> : item.type === "Food" ? <Utensils size={12} /> : <User size={12} />}
-                      {item.type === "Personality" ? item.personalityCategory : item.type}
-                    </div>
-
-
-                    {/* Content */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-5 z-20">
-                      {/* Always Visible Part */}
-                      <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-2">
-                        {/* District */}
-                        <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-gold mb-1.5 uppercase tracking-wider">
-                          <MapPin size={12} />
-                          <span>{item.district}</span>
-                        </div>
-
-                        {/* Title */}
-                        <h3 className="text-xl md:text-2xl font-serif font-bold text-white leading-tight mb-1 drop-shadow-md">
-                          {item.title}
-                        </h3>
-
-                        {item.submittedBy && (
-                          <div className="text-[10px] font-bold text-white/70 flex items-center gap-1.5 mt-2">
-                            <User size={10} className="text-brand-gold" /> <span>By {item.submittedBy}</span>
-                          </div>
-                        )}
-                      </div>
-
-                      {/* Hover Revealed Part */}
-                      <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-out">
-                        <div className="overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-500 ease-out delay-100">
-                          {/* Description */}
-                          <p className="text-sm text-white/90 line-clamp-3 leading-relaxed mt-3 mb-4 drop-shadow-sm">
-                            {item.caption || item.description}
-                          </p>
-
-                          {/* Action link indicator */}
-                          <div className="flex items-center gap-2 text-xs font-bold tracking-widest uppercase text-brand-gold group/btn">
-                            Learn More
-                            <span className="transform transition-transform group-hover/btn:translate-x-1">→</span>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </Link>
-                ))
-              ) : (
-                <div className="col-span-full py-20 text-center flex flex-col items-center">
-                  <div className="w-16 h-16 bg-gray-100 rounded-full flex items-center justify-center mb-4">
-                    <MapPin size={24} className="text-gray-400" />
-                  </div>
-                  <h3 className="text-xl font-bold text-brand-dark mb-2">No results found</h3>
-                  <p className="text-gray-500">We couldn't find any items matching your specific filters.</p>
+                {/* Form Action Buttons */}
+                <div className="pt-4 border-t border-white/10 flex gap-3">
                   <button
-                    onClick={() => { setActiveCategory("All"); setActiveDistrict("All Districts"); }}
-                    className="mt-6 px-6 py-2 bg-brand-gold text-brand-dark font-bold rounded-full hover:bg-brand-gold/90 transition-colors cursor-pointer"
+                    type="button"
+                    onClick={() => setIsAddCategoryModalOpen(false)}
+                    className="flex-1 py-3 bg-white/10 hover:bg-white/20 text-white font-bold text-xs rounded-xl uppercase tracking-wider transition-colors cursor-pointer"
                   >
-                    Clear Filters
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    className="flex-1 py-3 bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-extrabold text-xs rounded-xl uppercase tracking-wider transition-colors cursor-pointer shadow-lg active:scale-95"
+                  >
+                    Add Category
                   </button>
                 </div>
-              )}
+              </form>
             </motion.div>
-          </AnimatePresence>
-        </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
-        {/* ── RELATED COMMUNITY STORIES SECTION ── */}
-
-      </Container>
-
-      {/* Lightbox / Details Modal - (Unchanged) */}
+      {/* Lightbox / Details Modal */}
       <AnimatePresence>
         {selectedItem && (
           <motion.div

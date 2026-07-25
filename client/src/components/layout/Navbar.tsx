@@ -14,7 +14,6 @@ const navItems: NavItem[] = [
   { label: "Home", path: "/" },
   { label: "Districts", path: "/districts" },
   { label: "Discover", path: "/discover" },
-  { label: "Community", path: "/community" },
   { label: "Tourism", path: "/tourism" },
   { label: "Tribes", path: "/tribals" },
   { label: "MarketPlace", path: "/marketplace" },
@@ -93,7 +92,6 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     if (item.label === "About Us" && location.pathname === "/about-us") return true;
     if (item.label === "Districts" && location.pathname === "/districts") return true;
     if (item.label === "Discover" && (location.pathname === "/discover" || location.pathname === "/culture" || location.pathname === "/personalities")) return true;
-    if (item.label === "Community" && (location.pathname === "/community" || location.pathname === "/Community")) return true;
     if (item.label === "MarketPlace" && (location.pathname === "/marketplace" || location.pathname === "/Marketplace")) return true;
     if (item.label === "Tourism" && location.pathname === "/tourism") return true;
     if (item.label === "Tribes" && location.pathname === "/tribals") return true;
@@ -126,19 +124,19 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
         </div>
 
         {/* Desktop Navigation */}
-        <nav className="hidden xl:flex items-center gap-4 2xl:gap-6">
+        <nav className="hidden xl:flex items-center gap-6 xl:gap-8 2xl:gap-10">
           {navItems.map((item) => (
             <div key={item.label} className="relative shrink-0">
               <Link
                 to={item.path}
-                className={`relative flex items-center gap-1 text-[13px] 2xl:text-sm font-semibold whitespace-nowrap transition-all duration-300 ${useDarkText
-                    ? "text-black/70 hover:text-gold"
-                    : "text-white/90 hover:text-gold"
-                  } ${isActive(item) ? "text-gold" : ""}`}
+                className={`relative flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl text-sm 2xl:text-[15px] font-semibold tracking-wide whitespace-nowrap transition-all duration-300 ${useDarkText
+                    ? "text-black/80 hover:text-gold hover:bg-black/5"
+                    : "text-white/90 hover:text-gold hover:bg-white/10"
+                  } ${isActive(item) ? "text-gold font-bold" : ""}`}
               >
                 {item.label}
                 {isActive(item) && (
-                  <span className="absolute -bottom-2 left-0 h-0.5 w-full bg-gold rounded-full" />
+                  <span className="absolute -bottom-1.5 left-3 right-3 h-0.5 bg-gold rounded-full" />
                 )}
               </Link>
             </div>
@@ -146,7 +144,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
         </nav>
 
         {/* Right Side */}
-        <div className="flex items-center gap-2.5 shrink-0">
+        <div className="flex items-center gap-4 shrink-0">
           {/* Share Your Story Button */}
           <Link
             to="/share-story"
