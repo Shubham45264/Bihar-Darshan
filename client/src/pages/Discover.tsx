@@ -44,7 +44,7 @@ const Discover = () => {
   const { cultureSubmissions } = useContributions();
   const { culture: cultureData, personalities } = useAdminData();
   const location = useLocation();
-  
+
   const [activeCategory, setActiveCategory] = useState<string | null>(() => {
     const searchParams = new URLSearchParams(location.search);
     const cat = searchParams.get('category');
@@ -63,10 +63,7 @@ const Discover = () => {
   const [customCategories, setCustomCategories] = useState<CustomCategory[]>(() => {
     try {
       const stored = localStorage.getItem('discover_custom_categories');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        return parsed.filter((c: any) => c.id !== 'all' && c.id !== 'All' && c.title !== 'All Heritage' && c.title !== 'All Categories');
-      }
+      if (stored) return JSON.parse(stored);
     } catch (e) {
       console.error('Failed to parse custom categories:', e);
     }
@@ -79,23 +76,6 @@ const Discover = () => {
   const [categoryDesc, setCategoryDesc] = useState('');
   const [categoryCoverImage, setCategoryCoverImage] = useState<string | null>(null);
   const [categoryCoverUrlInput, setCategoryCoverUrlInput] = useState('');
-
-  // Clean legacy "All Heritage" entries if any exist
-  useEffect(() => {
-    try {
-      const stored = localStorage.getItem('discover_custom_categories');
-      if (stored) {
-        const parsed = JSON.parse(stored);
-        const cleaned = parsed.filter((c: any) => c.id !== 'all' && c.id !== 'All' && c.title !== 'All Heritage' && c.title !== 'All Categories');
-        if (cleaned.length !== parsed.length) {
-          localStorage.setItem('discover_custom_categories', JSON.stringify(cleaned));
-          setCustomCategories(cleaned);
-        }
-      }
-    } catch (e) {
-      console.error(e);
-    }
-  }, []);
 
   useEffect(() => {
     const searchParams = new URLSearchParams(location.search);
@@ -144,7 +124,7 @@ const Discover = () => {
   const allDiscoverItems = [...unifiedCulture, ...unifiedPersonalities];
   const approvedItems = allDiscoverItems.filter(i => i.status === 'APPROVED');
 
-  // Specific 3 Default Category Cards: Food, Festivals, Personalities (NO "All Heritage")
+  // Default initial categories
   const defaultCategoryCards = [
     {
       id: "Food",
@@ -178,7 +158,7 @@ const Discover = () => {
     }
   ];
 
-  // Merge default & custom user-created categories
+  // Merge default & custom categories
   const allCategoryCards = [
     ...defaultCategoryCards,
     ...customCategories.map(c => ({
@@ -194,7 +174,7 @@ const Discover = () => {
   ];
 
   const filteredData = approvedItems.filter(item => {
-    if (!activeCategory) return true;
+    if (!activeCategory || activeCategory === "All") return true;
     if (activeCategory === "Food") return item.type === "Food";
     if (activeCategory === "Festivals") return item.type === "Festival";
     if (activeCategory === "Personalities") return item.type === "Personality";
@@ -220,22 +200,22 @@ const Discover = () => {
 
     const coverPhoto = categoryCoverImage || categoryCoverUrlInput.trim() || biharHeritage;
 
-    const newCategoryObj: CustomCategory = {
-      id: categoryName.trim().toLowerCase().replace(/\s+/g, '-'),
-      title: categoryName.trim(),
-      description: categoryDesc.trim() || undefined,
-      image: coverPhoto,
-      badgeText: categoryName.trim(),
-      district: "BIHAR"
-    };
+    // const newCategoryObj: CustomCategory = {
+    //   id: categoryName.trim().toLowerCase().replace(/\s+/g, '-'),
+    //   title: categoryName.trim(),
+    //   description: categoryDesc.trim() || undefined,
+    //   image: coverPhoto,
+    //   badgeText: categoryName.trim(),
+    //   district: "BIHAR"
+    // };
 
-    const updatedCustoms = [...customCategories, newCategoryObj];
-    setCustomCategories(updatedCustoms);
-    try {
-      localStorage.setItem('discover_custom_categories', JSON.stringify(updatedCustoms));
-    } catch (err) {
-      console.error('Failed to save category to localStorage:', err);
-    }
+    // const updatedCustoms = [...customCategories, newCategoryObj];
+    // setCustomCategories(updatedCustoms);
+    // try {
+    //   localStorage.setItem('discover_custom_categories', JSON.stringify(updatedCustoms));
+    // } catch (err) {
+    //   console.error('Failed to save category to localStorage:', err);
+    // }
 
     // Reset Form & Close Modal
     setCategoryName('');
@@ -274,7 +254,7 @@ const Discover = () => {
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8">
           <div>
             <h2 className="text-2xl md:text-3xl font-serif font-bold text-brand-dark">
-              {activeCategory ? activeCategory : "Explore Categories"}
+              {activeCategory ? (activeCategory === "All" ? "All Heritage Entries" : activeCategory) : "Explore Categories"}
             </h2>
             <p className="text-sm text-gray-500 font-medium mt-1">
               {activeCategory ? `Showing ${filteredData.length} items in ${activeCategory}` : "Select a category card or create a new category"}
@@ -365,6 +345,44 @@ const Discover = () => {
                     </div>
                   );
                 })}
+
+                {/* "+ Add Category" Card in the Grid */}
+                <div
+                  onClick={() => setIsAddCategoryModalOpen(true)}
+                  className="relative block h-[400px] rounded-3xl overflow-hidden group bg-gray-100 shadow-md transition-all hover:shadow-2xl hover:-translate-y-1.5 cursor-pointer border border-brand-gold/40"
+                >
+                  <img
+                    src={biharHeritage}
+                    alt="Add Category"
+                    className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110 brightness-75"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-brand-dark/95 via-brand-dark/60 to-brand-dark/30 transition-opacity duration-300 pointer-events-none" />
+
+                  {/* Top Badge */}
+                  <div className="absolute top-4 left-4 bg-brand-gold px-3.5 py-1.5 rounded-full text-xs font-extrabold flex items-center gap-1.5 text-brand-dark shadow-lg z-25">
+                    <Plus size={14} className="stroke-[3px]" />
+                    <span>New Category</span>
+                  </div>
+
+                  {/* Bottom Content */}
+                  <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
+                    <div className="transform transition-transform duration-500 ease-out group-hover:-translate-y-1">
+                      <div className="flex items-center gap-1.5 text-[11px] font-bold text-brand-gold mb-1.5 uppercase tracking-wider">
+                        <MapPin size={12} />
+                        <span>BIHAR DARSHAN</span>
+                      </div>
+
+                      <h3 className="text-3xl font-serif font-bold text-white leading-tight mb-2 drop-shadow-md">
+                        Add Category
+                      </h3>
+
+                      <div className="text-xs font-semibold text-white/80 flex items-center justify-between mt-1">
+                        <span>Click to add custom category</span>
+                        <ArrowRight size={16} className="text-brand-gold transform transition-transform group-hover:translate-x-1" />
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </motion.div>
             ) : (
               /* INDIVIDUAL ITEMS GRID */
@@ -490,11 +508,11 @@ const Discover = () => {
                 <h3 className="text-2xl font-serif font-bold text-white">Add New Category</h3>
               </div>
               <p className="text-xs text-gray-400 mb-6 leading-relaxed">
-                Create a custom category with name, optional description, and cover photo.
+                Create a custom category to present unique aspects of Bihar's rich heritage.
               </p>
 
               <form onSubmit={handleCreateCategorySubmit} className="space-y-5">
-                {/* 1. Category Name Input (Required) */}
+                {/* Category Name Input (Required) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-brand-gold mb-2">
                     Category Name <span className="text-red-400">*</span>
@@ -509,7 +527,7 @@ const Discover = () => {
                   />
                 </div>
 
-                {/* 2. Category Description (Optional) */}
+                {/* Category Description (Optional) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-gray-300 mb-2">
                     Description <span className="text-gray-500 font-normal">(Optional)</span>
@@ -523,7 +541,7 @@ const Discover = () => {
                   />
                 </div>
 
-                {/* 3. Cover Photo Upload */}
+                {/* Cover Photo Upload (Required/Optional) */}
                 <div>
                   <label className="block text-xs font-bold uppercase tracking-wider text-brand-gold mb-2">
                     Cover Photo
@@ -555,7 +573,7 @@ const Discover = () => {
                         />
                       </label>
 
-                      {/* Image URL fallback */}
+                      {/* Alternatively Image URL */}
                       <div className="relative">
                         <span className="text-[11px] text-gray-400 block mb-1">Or enter image URL:</span>
                         <input
