@@ -61,21 +61,16 @@ const GalleryCard = ({ item, index, spanClass, onClick }: GalleryCardProps) => {
           </div>
         )}
 
-        {/* Community Contributor Name */}
+        {/* Community Submission Overlay */}
         {item.source !== "official" && (
-          <>
-            <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-            <div className="absolute bottom-0 left-0 right-0 p-4 z-10 transform translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-500">
-              <div className="flex items-center gap-2">
-                <div className="w-6 h-6 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center text-[10px] font-bold text-white">
-                  {item.photographer.charAt(0)}
-                </div>
-                <span className="text-white text-xs font-medium truncate drop-shadow-md">
-                  {item.photographer}
-                </span>
-              </div>
-            </div>
-          </>
+          <div className="gallery-community-overlay">
+            <p className="gallery-community-caption">
+              📸 {item.title}
+            </p>
+            <span className="gallery-community-author">
+              By: {item.photographer}
+            </span>
+          </div>
         )}
       </div>
     </motion.div>
