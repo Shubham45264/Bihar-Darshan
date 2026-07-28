@@ -215,22 +215,15 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const fetchCulture = useCallback(async () => {
     const user = auth.currentUser;
-    let discoverUrl = 'http://localhost:5000/api/v1/discover';
+    let discoverUrl = 'http://localhost:5000/api/v1/discover?status=all';
     const headers: any = {};
 
     if (user) {
       try {
         const token = await user.getIdToken();
-        const profileRes = await fetch('http://localhost:5000/api/v1/users/profile', {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const profileResult = await profileRes.json();
-        if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-          discoverUrl = 'http://localhost:5000/api/v1/discover?status=all';
-          headers['Authorization'] = `Bearer ${token}`;
-        }
+        headers['Authorization'] = `Bearer ${token}`;
       } catch (err) {
-        console.error('AdminContext: Failed to check user role:', err);
+        console.error('AdminContext: Failed to get token:', err);
       }
     }
 
@@ -238,21 +231,30 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const res = await fetch(discoverUrl, { headers });
       const result = await res.json();
       if (result.success && result.data && result.data.items) {
-        const dbCulture: CultureItem[] = result.data.items.map((item: any) => ({
-          id: item.id,
-          title: item.title,
-          type: item.category === 'FOOD' ? 'Food' : 'Festival',
-          image: item.image,
-          description: item.description,
-          longDescription: item.longDescription || '',
-          videoUrl: item.videoUrl || '',
-          galleryImages: item.galleryImages || [],
-          extendedDetails: item.extendedDetails || [],
-          district: item.district,
-          submittedBy: item.author || 'Admin',
-          featured: item.featured,
-          status: item.status
-        }));
+        const dbCulture: CultureItem[] = result.data.items.map((item: any) => {
+          let itemType = item.category === 'FOOD' ? 'Food' : 'Festival';
+          if (item.extendedDetails && Array.isArray(item.extendedDetails)) {
+            const customCatDetail = item.extendedDetails.find((d: string) => typeof d === 'string' && d.startsWith('Category: '));
+            if (customCatDetail) {
+              itemType = customCatDetail.replace('Category: ', '').trim();
+            }
+          }
+          return {
+            id: item.id,
+            title: item.title,
+            type: itemType,
+            image: item.image,
+            description: item.description,
+            longDescription: item.longDescription || '',
+            videoUrl: item.videoUrl || '',
+            galleryImages: item.galleryImages || [],
+            extendedDetails: item.extendedDetails || [],
+            district: item.district,
+            submittedBy: item.author || 'Admin',
+            featured: item.featured,
+            status: item.status
+          };
+        });
         setCulture(dbCulture);
       }
     } catch (e) {

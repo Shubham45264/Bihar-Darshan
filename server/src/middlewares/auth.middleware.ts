@@ -31,15 +31,21 @@ export const authenticate = catchAsync(async (req: Request, res: Response, next:
     });
 
     if (!currentUser) {
-      return next(new AppError('The user belonging to this token no longer exists.', 401));
-    }
-
-    // Auto-promote system admin email if database role is not ADMIN
-    if (currentUser.email?.toLowerCase() === 'bihardarshanofficial@gmail.com' && currentUser.role !== 'ADMIN') {
+      const email = decodedToken.email || `${firebaseUid}@user.com`;
+      const isAdmin = email.toLowerCase() === 'bihardarshanofficial@gmail.com';
+      currentUser = await db.user.create({
+        data: {
+          firebaseUid,
+          email,
+          name: decodedToken.name || email.split('@')[0] || 'User',
+          role: isAdmin ? 'ADMIN' : 'USER',
+        },
+      });
+    } else if (currentUser.email?.toLowerCase() === 'bihardarshanofficial@gmail.com' && currentUser.role !== 'ADMIN') {
       currentUser = await db.user.update({
         where: { id: currentUser.id },
         data: { role: 'ADMIN' },
-      });
+        });
     }
 
     req.user = currentUser;

@@ -1,12 +1,14 @@
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useAdminData } from '../../data/AdminContext';
 import { AdminTable } from '../../components/admin/AdminTable';
 import { AdminModal } from '../../components/admin/AdminModal';
 import { AdminInput, AdminTextarea, AdminSelect, AdminImagePreview, AdminImageUpload } from '../../components/admin/AdminFormField';
 import { AdminDeleteConfirm } from '../../components/admin/AdminDeleteConfirm';
 import type { CultureItem } from '../../data/cultureData';
-import { Plus, Trash2, CheckCircle, XCircle, LayoutList, ListChecks } from 'lucide-react';
+import { Plus, Trash2, CheckCircle, XCircle, LayoutList, ListChecks, Sparkles } from 'lucide-react';
 import { auth } from '../../lib/firebase';
+
+import { useContributions } from '../../data/ContributionContext';
 
 const emptyForm: Partial<CultureItem> = {
   title: '',
@@ -22,6 +24,7 @@ const emptyForm: Partial<CultureItem> = {
 
 const AdminCulture = () => {
   const { culture, refreshCulture, districts } = useAdminData();
+  const { cultureSubmissions } = useContributions();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -29,19 +32,146 @@ const AdminCulture = () => {
   const [formData, setFormData] = useState<Partial<CultureItem>>(emptyForm);
   const [itemToDelete, setItemToDelete] = useState<CultureItem | null>(null);
 
-  // Sub-view Tab Control
-  const [subView, setSubView] = useState<'approved' | 'pending'>('approved');
+  // Sub-view Tab Control: approved | pending | categories
+  const [subView, setSubView] = useState<'approved' | 'pending' | 'categories'>('approved');
+
+  // Database Custom Category Submissions State
+  const [dbCategories, setDbCategories] = useState<any[]>([]);
+  const [dbDiscoverItems, setDbDiscoverItems] = useState<any[]>([]);
+
+  const fetchDiscoverItems = useCallback(async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/v1/discover?status=all');
+      const data = await res.json();
+      if (data.success && data.data?.items) {
+        setDbDiscoverItems(data.data.items);
+      }
+    } catch (err) {
+      console.error('Failed to fetch discover items:', err);
+    }
+  }, []);
+
+  const fetchCategories = useCallback(async () => {
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : '';
+      const res = await fetch('http://localhost:5000/api/v1/categories?status=all', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success && data.data?.categories) {
+        setDbCategories(data.data.categories);
+      }
+    } catch (err) {
+      console.error('Failed to fetch categories:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchDiscoverItems();
+    fetchCategories();
+  }, [fetchDiscoverItems, fetchCategories]);
+
+  const handleDeleteCategory = async (catId: string) => {
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : '';
+      const res = await fetch(`http://localhost:5000/api/v1/categories/${catId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        fetchCategories();
+      }
+    } catch (err) {
+      console.error('Failed to delete category:', err);
+    }
+  };
+
+  const pendingCategoryList = dbCategories.filter(c => c.status === 'PENDING');
+
+  const handleApproveCategory = async (catId: string) => {
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : '';
+      const res = await fetch(`http://localhost:5000/api/v1/categories/${catId}/approve`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        fetchCategories();
+      }
+    } catch (err) {
+      console.error('Failed to approve category:', err);
+    }
+  };
+
+  const handleRejectCategory = async (catId: string) => {
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : '';
+      const res = await fetch(`http://localhost:5000/api/v1/categories/${catId}/reject`, {
+        method: 'PATCH',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        fetchCategories();
+      }
+    } catch (err) {
+      console.error('Failed to reject category:', err);
+    }
+  };
+
+  const mappedDbItems = dbDiscoverItems.map(item => {
+    let itemType = item.category || 'Culture';
+    if (item.extendedDetails && Array.isArray(item.extendedDetails)) {
+      const customCatDetail = item.extendedDetails.find((d: string) => typeof d === 'string' && d.startsWith('Category: '));
+      if (customCatDetail) {
+        itemType = customCatDetail.replace('Category: ', '').trim();
+      }
+    }
+    return {
+      id: item.id,
+      title: item.title,
+      type: itemType,
+      district: item.district || 'Bihar',
+      image: item.image,
+      description: item.description,
+      longDescription: item.longDescription,
+      videoUrl: item.videoUrl,
+      galleryImages: item.galleryImages,
+      extendedDetails: item.extendedDetails,
+      submittedBy: item.author || 'User',
+      status: item.status || 'APPROVED'
+    };
+  });
+
+  const allCultureItems = [...mappedDbItems, ...culture, ...cultureSubmissions];
+  
+  // Deduplicate items by ID
+  const uniqueItemsMap = new Map();
+  allCultureItems.forEach(item => {
+    if (!uniqueItemsMap.has(item.id)) {
+      uniqueItemsMap.set(item.id, item);
+    }
+  });
+  const mergedCultureList = Array.from(uniqueItemsMap.values()) as CultureItem[];
 
   // Filter items by status
-  const approvedItems = culture.filter(item => (item as any).status === 'APPROVED' || !(item as any).status);
-  const pendingItems = culture.filter(item => (item as any).status === 'PENDING');
+  const approvedItems = mergedCultureList.filter(item => (item as any).status === 'APPROVED' || !(item as any).status);
+  const pendingContentItems = mergedCultureList.filter(item => (item as any).status === 'PENDING');
 
-  const activeDataList = subView === 'approved' ? approvedItems : pendingItems;
+  const activeDataList = subView === 'approved' ? approvedItems : pendingContentItems;
 
   const filteredData = activeDataList.filter(item =>
     item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.district.toLowerCase().includes(searchTerm.toLowerCase()) ||
     item.type.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const filteredCategoryData = dbCategories.filter(cat =>
+    cat.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (cat.description && cat.description.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleApprove = async (id: string | number) => {
@@ -55,6 +185,7 @@ const AdminCulture = () => {
         }
       });
       if (res.ok) {
+        fetchDiscoverItems();
         refreshCulture();
       }
     } catch (e) {
@@ -73,6 +204,7 @@ const AdminCulture = () => {
         }
       });
       if (res.ok) {
+        fetchDiscoverItems();
         refreshCulture();
       }
     } catch (e) {
@@ -135,7 +267,7 @@ const AdminCulture = () => {
         extendedDetails: formData.extendedDetails || [],
         district: formData.district || 'Bihar',
         author: formData.submittedBy || 'Admin',
-        status: 'APPROVED', // items created/edited by Admin are immediately approved
+        status: 'APPROVED',
       };
 
       let response;
@@ -189,75 +321,164 @@ const AdminCulture = () => {
   return (
     <div className="space-y-6">
       {/* Sub-view switcher */}
-      <div className="flex gap-4 border-b border-white/10 pb-4">
+      <div className="flex flex-wrap gap-4 border-b border-white/10 pb-4">
         <button
           onClick={() => setSubView('approved')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${subView === 'approved' ? 'bg-[#EAB308] text-black' : 'text-white/60 hover:text-white'
-            }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition ${subView === 'approved' ? 'bg-[#EAB308] text-black' : 'text-white/60 hover:text-white'}`}
         >
           <LayoutList size={18} /> Discover Database ({approvedItems.length})
         </button>
+
         <button
           onClick={() => setSubView('pending')}
-          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition relative ${subView === 'pending' ? 'bg-[#EAB308] text-black' : 'text-white/60 hover:text-white'
-            }`}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition relative ${subView === 'pending' ? 'bg-[#EAB308] text-black' : 'text-white/60 hover:text-white'}`}
         >
           <ListChecks size={18} /> Pending Submissions
-          {pendingItems.length > 0 && (
+          {pendingContentItems.length > 0 && (
             <span className="bg-red-500 text-white text-xs px-2 py-0.5 rounded-full font-bold">
-              {pendingItems.length}
+              {pendingContentItems.length}
+            </span>
+          )}
+        </button>
+
+        <button
+          onClick={() => setSubView('categories')}
+          className={`flex items-center gap-2 px-4 py-2 rounded-lg font-bold transition relative ${subView === 'categories' ? 'bg-[#EAB308] text-black' : 'text-white/60 hover:text-white'}`}
+        >
+          <Sparkles size={18} /> Category Approvals
+          {pendingCategoryList.length > 0 && (
+            <span className="bg-amber-500 text-black text-xs px-2 py-0.5 rounded-full font-bold">
+              {pendingCategoryList.length}
             </span>
           )}
         </button>
       </div>
 
-      <AdminTable
-        title={subView === 'approved' ? "Culture & Discover Items" : "Pending Discover Submissions"}
-        description={subView === 'approved' ? "Manage approved festivals, foods, and arts of Bihar." : "Review user-submitted festivals and foods of Bihar."}
-        data={filteredData}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onAdd={subView === 'approved' ? handleAdd : undefined}
-        onEdit={subView === 'approved' ? handleEdit : undefined}
-        onDelete={subView === 'approved' ? handleDeleteClick : undefined}
-        columns={[
-          {
-            header: 'Image',
-            accessor: (item) => (
-              <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 shrink-0">
-                <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-              </div>
-            )
-          },
-          { header: 'Title', accessor: 'title', className: 'font-semibold text-white' },
-          { header: 'Type', accessor: 'type' },
-          { header: 'District', accessor: 'district' },
-          {
-            header: 'Actions',
-            accessor: (item) => {
-              if (subView === 'pending') {
-                return (
-                  <div className="flex items-center gap-2">
+      {subView === 'categories' ? (
+        <AdminTable
+          title="Category Approvals"
+          description="Review and approve user-suggested custom categories for the Discover page."
+          data={filteredCategoryData}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          columns={[
+            {
+              header: 'Cover Photo',
+              accessor: (item) => (
+                <div className="w-14 h-12 rounded-lg overflow-hidden bg-white/5 shrink-0 border border-white/10">
+                  <img src={item.image || '/images/placeholder.png'} alt={item.title} className="w-full h-full object-cover" />
+                </div>
+              )
+            },
+            { header: 'Category Name', accessor: 'title', className: 'font-bold text-white text-base' },
+            { header: 'Description', accessor: (item) => item.description || 'No description provided', className: 'text-gray-300 text-sm max-w-xs truncate' },
+            { header: 'District', accessor: (item) => item.district || 'BIHAR' },
+            {
+              header: 'Status',
+              accessor: (item) => (
+                <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
+                  item.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                  item.status === 'REJECTED' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                  'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                }`}>
+                  {item.status || 'PENDING'}
+                </span>
+              )
+            },
+            {
+              header: 'Actions',
+              accessor: (item) => (
+                <div className="flex items-center gap-2">
+                  {item.status !== 'APPROVED' && (
                     <button
-                      onClick={() => handleApprove(item.id)}
-                      className="flex items-center gap-1.5 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-green-500/20"
+                      onClick={() => handleApproveCategory(item.id)}
+                      className="flex items-center gap-1.5 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-green-500/20 cursor-pointer"
                     >
                       <CheckCircle size={14} /> Approve
                     </button>
+                  )}
+                  {item.status !== 'REJECTED' && (
                     <button
-                      onClick={() => handleReject(item.id)}
-                      className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-red-500/20"
+                      onClick={() => handleRejectCategory(item.id)}
+                      className="flex items-center gap-1.5 bg-yellow-600/20 hover:bg-yellow-600 text-yellow-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-yellow-500/20 cursor-pointer"
                     >
                       <XCircle size={14} /> Reject
                     </button>
-                  </div>
-                );
-              }
-              return null;
+                  )}
+                  <button
+                    onClick={() => handleDeleteCategory(item.id)}
+                    className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-2.5 py-1.5 rounded-lg text-xs font-bold transition-all border border-red-500/20 cursor-pointer"
+                    title="Delete Category"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              )
             }
-          }
-        ]}
-      />
+          ]}
+        />
+      ) : (
+        <AdminTable
+          title={subView === 'approved' ? "Culture & Discover Items" : "Pending Discover Submissions"}
+          description={subView === 'approved' ? "Manage approved festivals, foods, and arts of Bihar." : "Review user-submitted festivals and foods of Bihar."}
+          data={filteredData}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onAdd={subView === 'approved' ? handleAdd : undefined}
+          onEdit={subView === 'approved' ? handleEdit : undefined}
+          onDelete={subView === 'approved' ? handleDeleteClick : undefined}
+          columns={[
+            {
+              header: 'Image',
+              accessor: (item) => (
+                <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 shrink-0">
+                  <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                </div>
+              )
+            },
+            { header: 'Title', accessor: 'title', className: 'font-semibold text-white' },
+            { header: 'Type / Category', accessor: 'type', className: 'font-semibold text-amber-400' },
+            { header: 'District', accessor: 'district' },
+            { header: 'Submitted By', accessor: (item) => item.submittedBy || 'User', className: 'text-xs text-gray-300' },
+            {
+              header: 'Status',
+              accessor: (item) => (
+                <span className={`px-2.5 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
+                  item.status === 'APPROVED' ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                  item.status === 'REJECTED' ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' :
+                  'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                }`}>
+                  {item.status || 'PENDING'}
+                </span>
+              )
+            },
+            {
+              header: 'Actions',
+              accessor: (item) => {
+                if (subView === 'pending') {
+                  return (
+                    <div className="flex items-center gap-2">
+                      <button
+                        onClick={() => handleApprove(item.id)}
+                        className="flex items-center gap-1.5 bg-green-600/20 hover:bg-green-600 text-green-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-green-500/20 cursor-pointer"
+                      >
+                        <CheckCircle size={14} /> Approve
+                      </button>
+                      <button
+                        onClick={() => handleReject(item.id)}
+                        className="flex items-center gap-1.5 bg-red-600/20 hover:bg-red-600 text-red-400 hover:text-white px-3 py-1.5 rounded-lg text-xs font-bold transition-all border border-red-500/20 cursor-pointer"
+                      >
+                        <XCircle size={14} /> Reject
+                      </button>
+                    </div>
+                  );
+                }
+                return null;
+              }
+            }
+          ]}
+        />
+      )}
 
       <AdminModal
         isOpen={isModalOpen}

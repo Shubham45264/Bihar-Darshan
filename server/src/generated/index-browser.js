@@ -401,6 +401,34 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CustomCategoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  description: 'description',
+  image: 'image',
+  district: 'district',
+  badgeText: 'badgeText',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CardMediaScalarFieldEnum = {
+  id: 'id',
+  itemId: 'itemId',
+  url: 'url',
+  mediaType: 'mediaType',
+  title: 'title',
+  caption: 'caption',
+  likes: 'likes',
+  dislikes: 'dislikes',
+  likedBy: 'likedBy',
+  dislikedBy: 'dislikedBy',
+  uploadedBy: 'uploadedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -481,7 +509,9 @@ exports.Prisma.ModelName = {
   Journey: 'Journey',
   GalleryItem: 'GalleryItem',
   MarketplaceProduct: 'MarketplaceProduct',
-  SiteSettings: 'SiteSettings'
+  SiteSettings: 'SiteSettings',
+  CustomCategory: 'CustomCategory',
+  CardMedia: 'CardMedia'
 };
 
 /**

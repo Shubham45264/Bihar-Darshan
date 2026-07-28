@@ -20,6 +20,7 @@ import { marketplaceRoutes } from './modules/marketplace/marketplace.route';
 import { adminRoutes } from './modules/admin/admin.route';
 import { notificationRoutes } from './modules/notification/notification.route';
 import { tribeRoutes } from './modules/tribe/tribe.route';
+import { categoryRoutes } from './modules/category/category.route';
 
 const app: Application = express();
 
@@ -83,6 +84,7 @@ app.use('/api/v1/marketplace', marketplaceRoutes);
 app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/tribes', tribeRoutes);
+app.use('/api/v1/categories', categoryRoutes);
 
 app.get('/api/v1/health', (req: Request, res: Response) => {
   res.status(200).json({ success: true, message: 'Server is healthy' });

@@ -4,7 +4,7 @@ export const discoverCategoryEnum = z.enum(['FOOD', 'FESTIVAL', 'CRAFT', 'HERITA
 
 export const createDiscoverSchema = z.object({
   title: z.string().min(1),
-  category: discoverCategoryEnum,
+  category: z.string().min(1),
   image: z.string().min(1),
   description: z.string().min(1),
   featured: z.boolean().optional().default(false),

@@ -9,17 +9,8 @@ import { DiscoverCategory } from '../../db';
 export const getAllDiscoverItems = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const category = req.query.category as string;
   const status = req.query.status as string;
-  let parsedCategory: DiscoverCategory | undefined;
 
-  if (category) {
-    const parsed = discoverCategoryEnum.safeParse(category.toUpperCase());
-    if (!parsed.success) {
-      return next(new AppError('Invalid category', 400));
-    }
-    parsedCategory = parsed.data as DiscoverCategory;
-  }
-
-  const items = await discoverService.getAllDiscoverItems(parsedCategory, status);
+  const items = await discoverService.getAllDiscoverItems(category, status);
   sendSuccess(res, 200, 'Discover items fetched successfully', { items });
 });
 
@@ -54,3 +45,37 @@ export const deleteDiscoverItem = catchAsync(async (req: Request, res: Response,
   await discoverService.deleteDiscoverItem(req.params.id as string);
   sendSuccess(res, 200, 'Item deleted successfully');
 });
+
+export const getCardMedia = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const media = await discoverService.getCardMedia(req.params.id as string);
+  sendSuccess(res, 200, 'Card media fetched successfully', { media });
+});
+
+export const addCardMedia = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { url, mediaType, title, caption, uploadedBy } = req.body;
+  if (!url) {
+    return next(new AppError('Media URL is required', 400));
+  }
+  const media = await discoverService.addCardMedia({
+    itemId: req.params.id as string,
+    url,
+    mediaType,
+    title,
+    caption,
+    uploadedBy,
+  });
+  sendSuccess(res, 201, 'Media added to card successfully', { media });
+});
+
+export const toggleLikeMedia = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = (req as any).user?.uid || (req as any).user?.id || req.body.userId || 'AnonymousUser';
+  const media = await discoverService.toggleLikeMedia(req.params.mediaId as string, userId);
+  sendSuccess(res, 200, 'Media like toggled successfully', { media });
+});
+
+export const toggleDislikeMedia = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const userId = (req as any).user?.uid || (req as any).user?.id || req.body.userId || 'AnonymousUser';
+  const media = await discoverService.toggleDislikeMedia(req.params.mediaId as string, userId);
+  sendSuccess(res, 200, 'Media dislike toggled successfully', { media });
+});
+

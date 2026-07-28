@@ -6,7 +6,13 @@ const router = Router();
 
 // Public routes
 router.get('/', discoverController.getAllDiscoverItems);
+router.get('/:id/media', discoverController.getCardMedia);
 router.get('/:id', discoverController.getDiscoverItemById);
+
+// Media interaction routes
+router.post('/:id/media', discoverController.addCardMedia);
+router.post('/media/:mediaId/like', discoverController.toggleLikeMedia);
+router.post('/media/:mediaId/dislike', discoverController.toggleDislikeMedia);
 
 // Authenticated user routes (for submission)
 router.post('/', authenticate, discoverController.createDiscoverItem);

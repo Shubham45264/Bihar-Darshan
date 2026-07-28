@@ -210,7 +210,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
       if (!user) throw new Error("Must be logged in to submit content");
 
       const token = await user.getIdToken();
-      const mappedCategory = submission.type === "Food" ? "FOOD" : "FESTIVAL";
+      const mappedCategory = submission.type || "Food";
 
       const payload = {
         title: submission.title,
@@ -243,7 +243,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
       const createdItem: CultureItem = {
         id: result.data.item.id,
         title: result.data.item.title,
-        type: result.data.item.category === "FOOD" ? "Food" : "Festival",
+        type: submission.type,
         image: result.data.item.image,
         description: result.data.item.description,
         longDescription: result.data.item.longDescription,

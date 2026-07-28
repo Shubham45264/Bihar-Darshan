@@ -8,6 +8,7 @@ import { useContributions } from '../data/ContributionContext';
 import { MapPin, Utensils, PartyPopper } from 'lucide-react';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
+import CardMediaGallery from '../components/media/CardMediaGallery';
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
@@ -17,7 +18,10 @@ const CultureDetails = () => {
   const { cultureSubmissions } = useContributions();
   const { culture: cultureData } = useAdminData();
 
-  const combinedCulture = [...cultureSubmissions, ...cultureData];
+  const cultureMap = new Map();
+  cultureSubmissions.forEach(item => cultureMap.set(item.id, item));
+  cultureData.forEach(item => cultureMap.set(item.id, item));
+  const combinedCulture = Array.from(cultureMap.values());
   const cultureItem = combinedCulture.find((item) => item.id.toString() === id);
 
   useEffect(() => {
@@ -85,53 +89,13 @@ const CultureDetails = () => {
           </motion.div>
         </div>
 
-        {/* Gallery Section */}
-        {((cultureItem.galleryImages && cultureItem.galleryImages.length > 0) || cultureItem.image) && (
-          <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.2 }}
-            className="mt-16"
-          >
-            <div className="mb-10 text-center">
-              <h2 className="text-3xl font-extrabold text-gray-900 inline-block relative">
-                Gallery
-                <div className="absolute -bottom-2 left-1/4 right-1/4 h-1 bg-brand-gold rounded-full" />
-              </h2>
-            </div>
-
-            <div className="relative rounded-3xl overflow-hidden shadow-sm">
-              <Swiper
-                modules={[Navigation, Pagination, Autoplay]}
-                spaceBetween={24}
-                slidesPerView={1}
-                navigation
-                pagination={{ clickable: true }}
-                autoplay={{ delay: 3500, disableOnInteraction: false }}
-                breakpoints={{
-                  640: { slidesPerView: 2 },
-                  1024: { slidesPerView: 3 },
-                }}
-                className="w-full !pb-16"
-              >
-                {(cultureItem.galleryImages && cultureItem.galleryImages.length > 0
-                  ? cultureItem.galleryImages
-                  : [cultureItem.image]
-                ).map((src, index) => (
-                  <SwiperSlide key={index}>
-                    <div className="bg-white rounded-2xl overflow-hidden shadow-md group aspect-[4/3] cursor-pointer">
-                      <img
-                        src={src}
-                        alt={`${cultureItem.title} Gallery ${index + 1}`}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                      />
-                    </div>
-                  </SwiperSlide>
-                ))}
-              </Swiper>
-            </div>
-          </motion.div>
-        )}
+        {/* Gallery & Interactive Media Section */}
+        <CardMediaGallery
+          itemId={cultureItem.id.toString()}
+          itemTitle={cultureItem.title}
+          initialImages={cultureItem.galleryImages || [cultureItem.image]}
+          initialVideoUrl={cultureItem.videoUrl}
+        />
       </div>
 
       <Footer />

@@ -98,6 +98,16 @@ export type MarketplaceProduct = $Result.DefaultSelection<Prisma.$MarketplacePro
  * 
  */
 export type SiteSettings = $Result.DefaultSelection<Prisma.$SiteSettingsPayload>
+/**
+ * Model CustomCategory
+ * 
+ */
+export type CustomCategory = $Result.DefaultSelection<Prisma.$CustomCategoryPayload>
+/**
+ * Model CardMedia
+ * 
+ */
+export type CardMedia = $Result.DefaultSelection<Prisma.$CardMediaPayload>
 
 /**
  * Enums
@@ -474,6 +484,26 @@ export class PrismaClient<
     * ```
     */
   get siteSettings(): Prisma.SiteSettingsDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.customCategory`: Exposes CRUD operations for the **CustomCategory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CustomCategories
+    * const customCategories = await prisma.customCategory.findMany()
+    * ```
+    */
+  get customCategory(): Prisma.CustomCategoryDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.cardMedia`: Exposes CRUD operations for the **CardMedia** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more CardMedias
+    * const cardMedias = await prisma.cardMedia.findMany()
+    * ```
+    */
+  get cardMedia(): Prisma.CardMediaDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -924,7 +954,9 @@ export namespace Prisma {
     Journey: 'Journey',
     GalleryItem: 'GalleryItem',
     MarketplaceProduct: 'MarketplaceProduct',
-    SiteSettings: 'SiteSettings'
+    SiteSettings: 'SiteSettings',
+    CustomCategory: 'CustomCategory',
+    CardMedia: 'CardMedia'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -940,7 +972,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "notification" | "district" | "seasonRow" | "topAttraction" | "discoverItem" | "tribe" | "personality" | "tribalArticle" | "community" | "communityMember" | "communityPost" | "postComment" | "journey" | "galleryItem" | "marketplaceProduct" | "siteSettings"
+      modelProps: "user" | "notification" | "district" | "seasonRow" | "topAttraction" | "discoverItem" | "tribe" | "personality" | "tribalArticle" | "community" | "communityMember" | "communityPost" | "postComment" | "journey" | "galleryItem" | "marketplaceProduct" | "siteSettings" | "customCategory" | "cardMedia"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -2202,6 +2234,154 @@ export namespace Prisma {
           }
         }
       }
+      CustomCategory: {
+        payload: Prisma.$CustomCategoryPayload<ExtArgs>
+        fields: Prisma.CustomCategoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CustomCategoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CustomCategoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>
+          }
+          findFirst: {
+            args: Prisma.CustomCategoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CustomCategoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>
+          }
+          findMany: {
+            args: Prisma.CustomCategoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>[]
+          }
+          create: {
+            args: Prisma.CustomCategoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>
+          }
+          createMany: {
+            args: Prisma.CustomCategoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CustomCategoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>[]
+          }
+          delete: {
+            args: Prisma.CustomCategoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>
+          }
+          update: {
+            args: Prisma.CustomCategoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.CustomCategoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CustomCategoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CustomCategoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.CustomCategoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CustomCategoryPayload>
+          }
+          aggregate: {
+            args: Prisma.CustomCategoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCustomCategory>
+          }
+          groupBy: {
+            args: Prisma.CustomCategoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CustomCategoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CustomCategoryCountArgs<ExtArgs>
+            result: $Utils.Optional<CustomCategoryCountAggregateOutputType> | number
+          }
+        }
+      }
+      CardMedia: {
+        payload: Prisma.$CardMediaPayload<ExtArgs>
+        fields: Prisma.CardMediaFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.CardMediaFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.CardMediaFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>
+          }
+          findFirst: {
+            args: Prisma.CardMediaFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.CardMediaFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>
+          }
+          findMany: {
+            args: Prisma.CardMediaFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>[]
+          }
+          create: {
+            args: Prisma.CardMediaCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>
+          }
+          createMany: {
+            args: Prisma.CardMediaCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.CardMediaCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>[]
+          }
+          delete: {
+            args: Prisma.CardMediaDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>
+          }
+          update: {
+            args: Prisma.CardMediaUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>
+          }
+          deleteMany: {
+            args: Prisma.CardMediaDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.CardMediaUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.CardMediaUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>[]
+          }
+          upsert: {
+            args: Prisma.CardMediaUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$CardMediaPayload>
+          }
+          aggregate: {
+            args: Prisma.CardMediaAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateCardMedia>
+          }
+          groupBy: {
+            args: Prisma.CardMediaGroupByArgs<ExtArgs>
+            result: $Utils.Optional<CardMediaGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.CardMediaCountArgs<ExtArgs>
+            result: $Utils.Optional<CardMediaCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -2327,6 +2507,8 @@ export namespace Prisma {
     galleryItem?: GalleryItemOmit
     marketplaceProduct?: MarketplaceProductOmit
     siteSettings?: SiteSettingsOmit
+    customCategory?: CustomCategoryOmit
+    cardMedia?: CardMediaOmit
   }
 
   /* Types for Logging */
@@ -22852,6 +23034,2192 @@ export namespace Prisma {
 
 
   /**
+   * Model CustomCategory
+   */
+
+  export type AggregateCustomCategory = {
+    _count: CustomCategoryCountAggregateOutputType | null
+    _min: CustomCategoryMinAggregateOutputType | null
+    _max: CustomCategoryMaxAggregateOutputType | null
+  }
+
+  export type CustomCategoryMinAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    image: string | null
+    district: string | null
+    badgeText: string | null
+    status: $Enums.ApprovalStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomCategoryMaxAggregateOutputType = {
+    id: string | null
+    title: string | null
+    description: string | null
+    image: string | null
+    district: string | null
+    badgeText: string | null
+    status: $Enums.ApprovalStatus | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CustomCategoryCountAggregateOutputType = {
+    id: number
+    title: number
+    description: number
+    image: number
+    district: number
+    badgeText: number
+    status: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CustomCategoryMinAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    image?: true
+    district?: true
+    badgeText?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomCategoryMaxAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    image?: true
+    district?: true
+    badgeText?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CustomCategoryCountAggregateInputType = {
+    id?: true
+    title?: true
+    description?: true
+    image?: true
+    district?: true
+    badgeText?: true
+    status?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CustomCategoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomCategory to aggregate.
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomCategories to fetch.
+     */
+    orderBy?: CustomCategoryOrderByWithRelationInput | CustomCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CustomCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CustomCategories
+    **/
+    _count?: true | CustomCategoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CustomCategoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CustomCategoryMaxAggregateInputType
+  }
+
+  export type GetCustomCategoryAggregateType<T extends CustomCategoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateCustomCategory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCustomCategory[P]>
+      : GetScalarType<T[P], AggregateCustomCategory[P]>
+  }
+
+
+
+
+  export type CustomCategoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CustomCategoryWhereInput
+    orderBy?: CustomCategoryOrderByWithAggregationInput | CustomCategoryOrderByWithAggregationInput[]
+    by: CustomCategoryScalarFieldEnum[] | CustomCategoryScalarFieldEnum
+    having?: CustomCategoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CustomCategoryCountAggregateInputType | true
+    _min?: CustomCategoryMinAggregateInputType
+    _max?: CustomCategoryMaxAggregateInputType
+  }
+
+  export type CustomCategoryGroupByOutputType = {
+    id: string
+    title: string
+    description: string | null
+    image: string
+    district: string
+    badgeText: string | null
+    status: $Enums.ApprovalStatus
+    createdAt: Date
+    updatedAt: Date
+    _count: CustomCategoryCountAggregateOutputType | null
+    _min: CustomCategoryMinAggregateOutputType | null
+    _max: CustomCategoryMaxAggregateOutputType | null
+  }
+
+  type GetCustomCategoryGroupByPayload<T extends CustomCategoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CustomCategoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CustomCategoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CustomCategoryGroupByOutputType[P]>
+            : GetScalarType<T[P], CustomCategoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CustomCategorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    image?: boolean
+    district?: boolean
+    badgeText?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["customCategory"]>
+
+  export type CustomCategorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    image?: boolean
+    district?: boolean
+    badgeText?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["customCategory"]>
+
+  export type CustomCategorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    image?: boolean
+    district?: boolean
+    badgeText?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["customCategory"]>
+
+  export type CustomCategorySelectScalar = {
+    id?: boolean
+    title?: boolean
+    description?: boolean
+    image?: boolean
+    district?: boolean
+    badgeText?: boolean
+    status?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CustomCategoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "image" | "district" | "badgeText" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["customCategory"]>
+
+  export type $CustomCategoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CustomCategory"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      title: string
+      description: string | null
+      image: string
+      district: string
+      badgeText: string | null
+      status: $Enums.ApprovalStatus
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["customCategory"]>
+    composites: {}
+  }
+
+  type CustomCategoryGetPayload<S extends boolean | null | undefined | CustomCategoryDefaultArgs> = $Result.GetResult<Prisma.$CustomCategoryPayload, S>
+
+  type CustomCategoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CustomCategoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CustomCategoryCountAggregateInputType | true
+    }
+
+  export interface CustomCategoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CustomCategory'], meta: { name: 'CustomCategory' } }
+    /**
+     * Find zero or one CustomCategory that matches the filter.
+     * @param {CustomCategoryFindUniqueArgs} args - Arguments to find a CustomCategory
+     * @example
+     * // Get one CustomCategory
+     * const customCategory = await prisma.customCategory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CustomCategoryFindUniqueArgs>(args: SelectSubset<T, CustomCategoryFindUniqueArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CustomCategory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CustomCategoryFindUniqueOrThrowArgs} args - Arguments to find a CustomCategory
+     * @example
+     * // Get one CustomCategory
+     * const customCategory = await prisma.customCategory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CustomCategoryFindUniqueOrThrowArgs>(args: SelectSubset<T, CustomCategoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomCategory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryFindFirstArgs} args - Arguments to find a CustomCategory
+     * @example
+     * // Get one CustomCategory
+     * const customCategory = await prisma.customCategory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CustomCategoryFindFirstArgs>(args?: SelectSubset<T, CustomCategoryFindFirstArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CustomCategory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryFindFirstOrThrowArgs} args - Arguments to find a CustomCategory
+     * @example
+     * // Get one CustomCategory
+     * const customCategory = await prisma.customCategory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CustomCategoryFindFirstOrThrowArgs>(args?: SelectSubset<T, CustomCategoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CustomCategories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CustomCategories
+     * const customCategories = await prisma.customCategory.findMany()
+     * 
+     * // Get first 10 CustomCategories
+     * const customCategories = await prisma.customCategory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const customCategoryWithIdOnly = await prisma.customCategory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CustomCategoryFindManyArgs>(args?: SelectSubset<T, CustomCategoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CustomCategory.
+     * @param {CustomCategoryCreateArgs} args - Arguments to create a CustomCategory.
+     * @example
+     * // Create one CustomCategory
+     * const CustomCategory = await prisma.customCategory.create({
+     *   data: {
+     *     // ... data to create a CustomCategory
+     *   }
+     * })
+     * 
+     */
+    create<T extends CustomCategoryCreateArgs>(args: SelectSubset<T, CustomCategoryCreateArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CustomCategories.
+     * @param {CustomCategoryCreateManyArgs} args - Arguments to create many CustomCategories.
+     * @example
+     * // Create many CustomCategories
+     * const customCategory = await prisma.customCategory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CustomCategoryCreateManyArgs>(args?: SelectSubset<T, CustomCategoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CustomCategories and returns the data saved in the database.
+     * @param {CustomCategoryCreateManyAndReturnArgs} args - Arguments to create many CustomCategories.
+     * @example
+     * // Create many CustomCategories
+     * const customCategory = await prisma.customCategory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CustomCategories and only return the `id`
+     * const customCategoryWithIdOnly = await prisma.customCategory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CustomCategoryCreateManyAndReturnArgs>(args?: SelectSubset<T, CustomCategoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CustomCategory.
+     * @param {CustomCategoryDeleteArgs} args - Arguments to delete one CustomCategory.
+     * @example
+     * // Delete one CustomCategory
+     * const CustomCategory = await prisma.customCategory.delete({
+     *   where: {
+     *     // ... filter to delete one CustomCategory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CustomCategoryDeleteArgs>(args: SelectSubset<T, CustomCategoryDeleteArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CustomCategory.
+     * @param {CustomCategoryUpdateArgs} args - Arguments to update one CustomCategory.
+     * @example
+     * // Update one CustomCategory
+     * const customCategory = await prisma.customCategory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CustomCategoryUpdateArgs>(args: SelectSubset<T, CustomCategoryUpdateArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CustomCategories.
+     * @param {CustomCategoryDeleteManyArgs} args - Arguments to filter CustomCategories to delete.
+     * @example
+     * // Delete a few CustomCategories
+     * const { count } = await prisma.customCategory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CustomCategoryDeleteManyArgs>(args?: SelectSubset<T, CustomCategoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CustomCategories
+     * const customCategory = await prisma.customCategory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CustomCategoryUpdateManyArgs>(args: SelectSubset<T, CustomCategoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CustomCategories and returns the data updated in the database.
+     * @param {CustomCategoryUpdateManyAndReturnArgs} args - Arguments to update many CustomCategories.
+     * @example
+     * // Update many CustomCategories
+     * const customCategory = await prisma.customCategory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CustomCategories and only return the `id`
+     * const customCategoryWithIdOnly = await prisma.customCategory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CustomCategoryUpdateManyAndReturnArgs>(args: SelectSubset<T, CustomCategoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CustomCategory.
+     * @param {CustomCategoryUpsertArgs} args - Arguments to update or create a CustomCategory.
+     * @example
+     * // Update or create a CustomCategory
+     * const customCategory = await prisma.customCategory.upsert({
+     *   create: {
+     *     // ... data to create a CustomCategory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CustomCategory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CustomCategoryUpsertArgs>(args: SelectSubset<T, CustomCategoryUpsertArgs<ExtArgs>>): Prisma__CustomCategoryClient<$Result.GetResult<Prisma.$CustomCategoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CustomCategories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryCountArgs} args - Arguments to filter CustomCategories to count.
+     * @example
+     * // Count the number of CustomCategories
+     * const count = await prisma.customCategory.count({
+     *   where: {
+     *     // ... the filter for the CustomCategories we want to count
+     *   }
+     * })
+    **/
+    count<T extends CustomCategoryCountArgs>(
+      args?: Subset<T, CustomCategoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CustomCategoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CustomCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CustomCategoryAggregateArgs>(args: Subset<T, CustomCategoryAggregateArgs>): Prisma.PrismaPromise<GetCustomCategoryAggregateType<T>>
+
+    /**
+     * Group by CustomCategory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CustomCategoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CustomCategoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CustomCategoryGroupByArgs['orderBy'] }
+        : { orderBy?: CustomCategoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CustomCategoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCustomCategoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CustomCategory model
+   */
+  readonly fields: CustomCategoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CustomCategory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CustomCategoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CustomCategory model
+   */
+  interface CustomCategoryFieldRefs {
+    readonly id: FieldRef<"CustomCategory", 'String'>
+    readonly title: FieldRef<"CustomCategory", 'String'>
+    readonly description: FieldRef<"CustomCategory", 'String'>
+    readonly image: FieldRef<"CustomCategory", 'String'>
+    readonly district: FieldRef<"CustomCategory", 'String'>
+    readonly badgeText: FieldRef<"CustomCategory", 'String'>
+    readonly status: FieldRef<"CustomCategory", 'ApprovalStatus'>
+    readonly createdAt: FieldRef<"CustomCategory", 'DateTime'>
+    readonly updatedAt: FieldRef<"CustomCategory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CustomCategory findUnique
+   */
+  export type CustomCategoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * Filter, which CustomCategory to fetch.
+     */
+    where: CustomCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomCategory findUniqueOrThrow
+   */
+  export type CustomCategoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * Filter, which CustomCategory to fetch.
+     */
+    where: CustomCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomCategory findFirst
+   */
+  export type CustomCategoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * Filter, which CustomCategory to fetch.
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomCategories to fetch.
+     */
+    orderBy?: CustomCategoryOrderByWithRelationInput | CustomCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomCategories.
+     */
+    cursor?: CustomCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomCategories.
+     */
+    distinct?: CustomCategoryScalarFieldEnum | CustomCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomCategory findFirstOrThrow
+   */
+  export type CustomCategoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * Filter, which CustomCategory to fetch.
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomCategories to fetch.
+     */
+    orderBy?: CustomCategoryOrderByWithRelationInput | CustomCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CustomCategories.
+     */
+    cursor?: CustomCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomCategories.
+     */
+    distinct?: CustomCategoryScalarFieldEnum | CustomCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomCategory findMany
+   */
+  export type CustomCategoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * Filter, which CustomCategories to fetch.
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CustomCategories to fetch.
+     */
+    orderBy?: CustomCategoryOrderByWithRelationInput | CustomCategoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CustomCategories.
+     */
+    cursor?: CustomCategoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CustomCategories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CustomCategories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CustomCategories.
+     */
+    distinct?: CustomCategoryScalarFieldEnum | CustomCategoryScalarFieldEnum[]
+  }
+
+  /**
+   * CustomCategory create
+   */
+  export type CustomCategoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * The data needed to create a CustomCategory.
+     */
+    data: XOR<CustomCategoryCreateInput, CustomCategoryUncheckedCreateInput>
+  }
+
+  /**
+   * CustomCategory createMany
+   */
+  export type CustomCategoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CustomCategories.
+     */
+    data: CustomCategoryCreateManyInput | CustomCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomCategory createManyAndReturn
+   */
+  export type CustomCategoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many CustomCategories.
+     */
+    data: CustomCategoryCreateManyInput | CustomCategoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CustomCategory update
+   */
+  export type CustomCategoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * The data needed to update a CustomCategory.
+     */
+    data: XOR<CustomCategoryUpdateInput, CustomCategoryUncheckedUpdateInput>
+    /**
+     * Choose, which CustomCategory to update.
+     */
+    where: CustomCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomCategory updateMany
+   */
+  export type CustomCategoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CustomCategories.
+     */
+    data: XOR<CustomCategoryUpdateManyMutationInput, CustomCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomCategories to update
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * Limit how many CustomCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomCategory updateManyAndReturn
+   */
+  export type CustomCategoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * The data used to update CustomCategories.
+     */
+    data: XOR<CustomCategoryUpdateManyMutationInput, CustomCategoryUncheckedUpdateManyInput>
+    /**
+     * Filter which CustomCategories to update
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * Limit how many CustomCategories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomCategory upsert
+   */
+  export type CustomCategoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * The filter to search for the CustomCategory to update in case it exists.
+     */
+    where: CustomCategoryWhereUniqueInput
+    /**
+     * In case the CustomCategory found by the `where` argument doesn't exist, create a new CustomCategory with this data.
+     */
+    create: XOR<CustomCategoryCreateInput, CustomCategoryUncheckedCreateInput>
+    /**
+     * In case the CustomCategory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CustomCategoryUpdateInput, CustomCategoryUncheckedUpdateInput>
+  }
+
+  /**
+   * CustomCategory delete
+   */
+  export type CustomCategoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+    /**
+     * Filter which CustomCategory to delete.
+     */
+    where: CustomCategoryWhereUniqueInput
+  }
+
+  /**
+   * CustomCategory deleteMany
+   */
+  export type CustomCategoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CustomCategories to delete
+     */
+    where?: CustomCategoryWhereInput
+    /**
+     * Limit how many CustomCategories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CustomCategory without action
+   */
+  export type CustomCategoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CustomCategory
+     */
+    select?: CustomCategorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CustomCategory
+     */
+    omit?: CustomCategoryOmit<ExtArgs> | null
+  }
+
+
+  /**
+   * Model CardMedia
+   */
+
+  export type AggregateCardMedia = {
+    _count: CardMediaCountAggregateOutputType | null
+    _avg: CardMediaAvgAggregateOutputType | null
+    _sum: CardMediaSumAggregateOutputType | null
+    _min: CardMediaMinAggregateOutputType | null
+    _max: CardMediaMaxAggregateOutputType | null
+  }
+
+  export type CardMediaAvgAggregateOutputType = {
+    likes: number | null
+    dislikes: number | null
+  }
+
+  export type CardMediaSumAggregateOutputType = {
+    likes: number | null
+    dislikes: number | null
+  }
+
+  export type CardMediaMinAggregateOutputType = {
+    id: string | null
+    itemId: string | null
+    url: string | null
+    mediaType: $Enums.MediaType | null
+    title: string | null
+    caption: string | null
+    likes: number | null
+    dislikes: number | null
+    uploadedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CardMediaMaxAggregateOutputType = {
+    id: string | null
+    itemId: string | null
+    url: string | null
+    mediaType: $Enums.MediaType | null
+    title: string | null
+    caption: string | null
+    likes: number | null
+    dislikes: number | null
+    uploadedBy: string | null
+    createdAt: Date | null
+    updatedAt: Date | null
+  }
+
+  export type CardMediaCountAggregateOutputType = {
+    id: number
+    itemId: number
+    url: number
+    mediaType: number
+    title: number
+    caption: number
+    likes: number
+    dislikes: number
+    likedBy: number
+    dislikedBy: number
+    uploadedBy: number
+    createdAt: number
+    updatedAt: number
+    _all: number
+  }
+
+
+  export type CardMediaAvgAggregateInputType = {
+    likes?: true
+    dislikes?: true
+  }
+
+  export type CardMediaSumAggregateInputType = {
+    likes?: true
+    dislikes?: true
+  }
+
+  export type CardMediaMinAggregateInputType = {
+    id?: true
+    itemId?: true
+    url?: true
+    mediaType?: true
+    title?: true
+    caption?: true
+    likes?: true
+    dislikes?: true
+    uploadedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CardMediaMaxAggregateInputType = {
+    id?: true
+    itemId?: true
+    url?: true
+    mediaType?: true
+    title?: true
+    caption?: true
+    likes?: true
+    dislikes?: true
+    uploadedBy?: true
+    createdAt?: true
+    updatedAt?: true
+  }
+
+  export type CardMediaCountAggregateInputType = {
+    id?: true
+    itemId?: true
+    url?: true
+    mediaType?: true
+    title?: true
+    caption?: true
+    likes?: true
+    dislikes?: true
+    likedBy?: true
+    dislikedBy?: true
+    uploadedBy?: true
+    createdAt?: true
+    updatedAt?: true
+    _all?: true
+  }
+
+  export type CardMediaAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CardMedia to aggregate.
+     */
+    where?: CardMediaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardMedias to fetch.
+     */
+    orderBy?: CardMediaOrderByWithRelationInput | CardMediaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: CardMediaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardMedias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardMedias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned CardMedias
+    **/
+    _count?: true | CardMediaCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: CardMediaAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: CardMediaSumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: CardMediaMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: CardMediaMaxAggregateInputType
+  }
+
+  export type GetCardMediaAggregateType<T extends CardMediaAggregateArgs> = {
+        [P in keyof T & keyof AggregateCardMedia]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateCardMedia[P]>
+      : GetScalarType<T[P], AggregateCardMedia[P]>
+  }
+
+
+
+
+  export type CardMediaGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: CardMediaWhereInput
+    orderBy?: CardMediaOrderByWithAggregationInput | CardMediaOrderByWithAggregationInput[]
+    by: CardMediaScalarFieldEnum[] | CardMediaScalarFieldEnum
+    having?: CardMediaScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: CardMediaCountAggregateInputType | true
+    _avg?: CardMediaAvgAggregateInputType
+    _sum?: CardMediaSumAggregateInputType
+    _min?: CardMediaMinAggregateInputType
+    _max?: CardMediaMaxAggregateInputType
+  }
+
+  export type CardMediaGroupByOutputType = {
+    id: string
+    itemId: string
+    url: string
+    mediaType: $Enums.MediaType
+    title: string | null
+    caption: string | null
+    likes: number
+    dislikes: number
+    likedBy: string[]
+    dislikedBy: string[]
+    uploadedBy: string | null
+    createdAt: Date
+    updatedAt: Date
+    _count: CardMediaCountAggregateOutputType | null
+    _avg: CardMediaAvgAggregateOutputType | null
+    _sum: CardMediaSumAggregateOutputType | null
+    _min: CardMediaMinAggregateOutputType | null
+    _max: CardMediaMaxAggregateOutputType | null
+  }
+
+  type GetCardMediaGroupByPayload<T extends CardMediaGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<CardMediaGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof CardMediaGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], CardMediaGroupByOutputType[P]>
+            : GetScalarType<T[P], CardMediaGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type CardMediaSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    url?: boolean
+    mediaType?: boolean
+    title?: boolean
+    caption?: boolean
+    likes?: boolean
+    dislikes?: boolean
+    likedBy?: boolean
+    dislikedBy?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["cardMedia"]>
+
+  export type CardMediaSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    url?: boolean
+    mediaType?: boolean
+    title?: boolean
+    caption?: boolean
+    likes?: boolean
+    dislikes?: boolean
+    likedBy?: boolean
+    dislikedBy?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["cardMedia"]>
+
+  export type CardMediaSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    itemId?: boolean
+    url?: boolean
+    mediaType?: boolean
+    title?: boolean
+    caption?: boolean
+    likes?: boolean
+    dislikes?: boolean
+    likedBy?: boolean
+    dislikedBy?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }, ExtArgs["result"]["cardMedia"]>
+
+  export type CardMediaSelectScalar = {
+    id?: boolean
+    itemId?: boolean
+    url?: boolean
+    mediaType?: boolean
+    title?: boolean
+    caption?: boolean
+    likes?: boolean
+    dislikes?: boolean
+    likedBy?: boolean
+    dislikedBy?: boolean
+    uploadedBy?: boolean
+    createdAt?: boolean
+    updatedAt?: boolean
+  }
+
+  export type CardMediaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "url" | "mediaType" | "title" | "caption" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "uploadedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["cardMedia"]>
+
+  export type $CardMediaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "CardMedia"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      itemId: string
+      url: string
+      mediaType: $Enums.MediaType
+      title: string | null
+      caption: string | null
+      likes: number
+      dislikes: number
+      likedBy: string[]
+      dislikedBy: string[]
+      uploadedBy: string | null
+      createdAt: Date
+      updatedAt: Date
+    }, ExtArgs["result"]["cardMedia"]>
+    composites: {}
+  }
+
+  type CardMediaGetPayload<S extends boolean | null | undefined | CardMediaDefaultArgs> = $Result.GetResult<Prisma.$CardMediaPayload, S>
+
+  type CardMediaCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<CardMediaFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: CardMediaCountAggregateInputType | true
+    }
+
+  export interface CardMediaDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['CardMedia'], meta: { name: 'CardMedia' } }
+    /**
+     * Find zero or one CardMedia that matches the filter.
+     * @param {CardMediaFindUniqueArgs} args - Arguments to find a CardMedia
+     * @example
+     * // Get one CardMedia
+     * const cardMedia = await prisma.cardMedia.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends CardMediaFindUniqueArgs>(args: SelectSubset<T, CardMediaFindUniqueArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one CardMedia that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {CardMediaFindUniqueOrThrowArgs} args - Arguments to find a CardMedia
+     * @example
+     * // Get one CardMedia
+     * const cardMedia = await prisma.cardMedia.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends CardMediaFindUniqueOrThrowArgs>(args: SelectSubset<T, CardMediaFindUniqueOrThrowArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CardMedia that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaFindFirstArgs} args - Arguments to find a CardMedia
+     * @example
+     * // Get one CardMedia
+     * const cardMedia = await prisma.cardMedia.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends CardMediaFindFirstArgs>(args?: SelectSubset<T, CardMediaFindFirstArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first CardMedia that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaFindFirstOrThrowArgs} args - Arguments to find a CardMedia
+     * @example
+     * // Get one CardMedia
+     * const cardMedia = await prisma.cardMedia.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends CardMediaFindFirstOrThrowArgs>(args?: SelectSubset<T, CardMediaFindFirstOrThrowArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more CardMedias that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all CardMedias
+     * const cardMedias = await prisma.cardMedia.findMany()
+     * 
+     * // Get first 10 CardMedias
+     * const cardMedias = await prisma.cardMedia.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const cardMediaWithIdOnly = await prisma.cardMedia.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends CardMediaFindManyArgs>(args?: SelectSubset<T, CardMediaFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a CardMedia.
+     * @param {CardMediaCreateArgs} args - Arguments to create a CardMedia.
+     * @example
+     * // Create one CardMedia
+     * const CardMedia = await prisma.cardMedia.create({
+     *   data: {
+     *     // ... data to create a CardMedia
+     *   }
+     * })
+     * 
+     */
+    create<T extends CardMediaCreateArgs>(args: SelectSubset<T, CardMediaCreateArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many CardMedias.
+     * @param {CardMediaCreateManyArgs} args - Arguments to create many CardMedias.
+     * @example
+     * // Create many CardMedias
+     * const cardMedia = await prisma.cardMedia.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends CardMediaCreateManyArgs>(args?: SelectSubset<T, CardMediaCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many CardMedias and returns the data saved in the database.
+     * @param {CardMediaCreateManyAndReturnArgs} args - Arguments to create many CardMedias.
+     * @example
+     * // Create many CardMedias
+     * const cardMedia = await prisma.cardMedia.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many CardMedias and only return the `id`
+     * const cardMediaWithIdOnly = await prisma.cardMedia.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends CardMediaCreateManyAndReturnArgs>(args?: SelectSubset<T, CardMediaCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a CardMedia.
+     * @param {CardMediaDeleteArgs} args - Arguments to delete one CardMedia.
+     * @example
+     * // Delete one CardMedia
+     * const CardMedia = await prisma.cardMedia.delete({
+     *   where: {
+     *     // ... filter to delete one CardMedia
+     *   }
+     * })
+     * 
+     */
+    delete<T extends CardMediaDeleteArgs>(args: SelectSubset<T, CardMediaDeleteArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one CardMedia.
+     * @param {CardMediaUpdateArgs} args - Arguments to update one CardMedia.
+     * @example
+     * // Update one CardMedia
+     * const cardMedia = await prisma.cardMedia.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends CardMediaUpdateArgs>(args: SelectSubset<T, CardMediaUpdateArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more CardMedias.
+     * @param {CardMediaDeleteManyArgs} args - Arguments to filter CardMedias to delete.
+     * @example
+     * // Delete a few CardMedias
+     * const { count } = await prisma.cardMedia.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends CardMediaDeleteManyArgs>(args?: SelectSubset<T, CardMediaDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CardMedias.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many CardMedias
+     * const cardMedia = await prisma.cardMedia.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends CardMediaUpdateManyArgs>(args: SelectSubset<T, CardMediaUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more CardMedias and returns the data updated in the database.
+     * @param {CardMediaUpdateManyAndReturnArgs} args - Arguments to update many CardMedias.
+     * @example
+     * // Update many CardMedias
+     * const cardMedia = await prisma.cardMedia.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more CardMedias and only return the `id`
+     * const cardMediaWithIdOnly = await prisma.cardMedia.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends CardMediaUpdateManyAndReturnArgs>(args: SelectSubset<T, CardMediaUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one CardMedia.
+     * @param {CardMediaUpsertArgs} args - Arguments to update or create a CardMedia.
+     * @example
+     * // Update or create a CardMedia
+     * const cardMedia = await prisma.cardMedia.upsert({
+     *   create: {
+     *     // ... data to create a CardMedia
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the CardMedia we want to update
+     *   }
+     * })
+     */
+    upsert<T extends CardMediaUpsertArgs>(args: SelectSubset<T, CardMediaUpsertArgs<ExtArgs>>): Prisma__CardMediaClient<$Result.GetResult<Prisma.$CardMediaPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of CardMedias.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaCountArgs} args - Arguments to filter CardMedias to count.
+     * @example
+     * // Count the number of CardMedias
+     * const count = await prisma.cardMedia.count({
+     *   where: {
+     *     // ... the filter for the CardMedias we want to count
+     *   }
+     * })
+    **/
+    count<T extends CardMediaCountArgs>(
+      args?: Subset<T, CardMediaCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], CardMediaCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a CardMedia.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends CardMediaAggregateArgs>(args: Subset<T, CardMediaAggregateArgs>): Prisma.PrismaPromise<GetCardMediaAggregateType<T>>
+
+    /**
+     * Group by CardMedia.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {CardMediaGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends CardMediaGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: CardMediaGroupByArgs['orderBy'] }
+        : { orderBy?: CardMediaGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, CardMediaGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetCardMediaGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the CardMedia model
+   */
+  readonly fields: CardMediaFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for CardMedia.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__CardMediaClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the CardMedia model
+   */
+  interface CardMediaFieldRefs {
+    readonly id: FieldRef<"CardMedia", 'String'>
+    readonly itemId: FieldRef<"CardMedia", 'String'>
+    readonly url: FieldRef<"CardMedia", 'String'>
+    readonly mediaType: FieldRef<"CardMedia", 'MediaType'>
+    readonly title: FieldRef<"CardMedia", 'String'>
+    readonly caption: FieldRef<"CardMedia", 'String'>
+    readonly likes: FieldRef<"CardMedia", 'Int'>
+    readonly dislikes: FieldRef<"CardMedia", 'Int'>
+    readonly likedBy: FieldRef<"CardMedia", 'String[]'>
+    readonly dislikedBy: FieldRef<"CardMedia", 'String[]'>
+    readonly uploadedBy: FieldRef<"CardMedia", 'String'>
+    readonly createdAt: FieldRef<"CardMedia", 'DateTime'>
+    readonly updatedAt: FieldRef<"CardMedia", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * CardMedia findUnique
+   */
+  export type CardMediaFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * Filter, which CardMedia to fetch.
+     */
+    where: CardMediaWhereUniqueInput
+  }
+
+  /**
+   * CardMedia findUniqueOrThrow
+   */
+  export type CardMediaFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * Filter, which CardMedia to fetch.
+     */
+    where: CardMediaWhereUniqueInput
+  }
+
+  /**
+   * CardMedia findFirst
+   */
+  export type CardMediaFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * Filter, which CardMedia to fetch.
+     */
+    where?: CardMediaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardMedias to fetch.
+     */
+    orderBy?: CardMediaOrderByWithRelationInput | CardMediaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CardMedias.
+     */
+    cursor?: CardMediaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardMedias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardMedias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CardMedias.
+     */
+    distinct?: CardMediaScalarFieldEnum | CardMediaScalarFieldEnum[]
+  }
+
+  /**
+   * CardMedia findFirstOrThrow
+   */
+  export type CardMediaFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * Filter, which CardMedia to fetch.
+     */
+    where?: CardMediaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardMedias to fetch.
+     */
+    orderBy?: CardMediaOrderByWithRelationInput | CardMediaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for CardMedias.
+     */
+    cursor?: CardMediaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardMedias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardMedias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CardMedias.
+     */
+    distinct?: CardMediaScalarFieldEnum | CardMediaScalarFieldEnum[]
+  }
+
+  /**
+   * CardMedia findMany
+   */
+  export type CardMediaFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * Filter, which CardMedias to fetch.
+     */
+    where?: CardMediaWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of CardMedias to fetch.
+     */
+    orderBy?: CardMediaOrderByWithRelationInput | CardMediaOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing CardMedias.
+     */
+    cursor?: CardMediaWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` CardMedias from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` CardMedias.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of CardMedias.
+     */
+    distinct?: CardMediaScalarFieldEnum | CardMediaScalarFieldEnum[]
+  }
+
+  /**
+   * CardMedia create
+   */
+  export type CardMediaCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * The data needed to create a CardMedia.
+     */
+    data: XOR<CardMediaCreateInput, CardMediaUncheckedCreateInput>
+  }
+
+  /**
+   * CardMedia createMany
+   */
+  export type CardMediaCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many CardMedias.
+     */
+    data: CardMediaCreateManyInput | CardMediaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CardMedia createManyAndReturn
+   */
+  export type CardMediaCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * The data used to create many CardMedias.
+     */
+    data: CardMediaCreateManyInput | CardMediaCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * CardMedia update
+   */
+  export type CardMediaUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * The data needed to update a CardMedia.
+     */
+    data: XOR<CardMediaUpdateInput, CardMediaUncheckedUpdateInput>
+    /**
+     * Choose, which CardMedia to update.
+     */
+    where: CardMediaWhereUniqueInput
+  }
+
+  /**
+   * CardMedia updateMany
+   */
+  export type CardMediaUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update CardMedias.
+     */
+    data: XOR<CardMediaUpdateManyMutationInput, CardMediaUncheckedUpdateManyInput>
+    /**
+     * Filter which CardMedias to update
+     */
+    where?: CardMediaWhereInput
+    /**
+     * Limit how many CardMedias to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CardMedia updateManyAndReturn
+   */
+  export type CardMediaUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * The data used to update CardMedias.
+     */
+    data: XOR<CardMediaUpdateManyMutationInput, CardMediaUncheckedUpdateManyInput>
+    /**
+     * Filter which CardMedias to update
+     */
+    where?: CardMediaWhereInput
+    /**
+     * Limit how many CardMedias to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * CardMedia upsert
+   */
+  export type CardMediaUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * The filter to search for the CardMedia to update in case it exists.
+     */
+    where: CardMediaWhereUniqueInput
+    /**
+     * In case the CardMedia found by the `where` argument doesn't exist, create a new CardMedia with this data.
+     */
+    create: XOR<CardMediaCreateInput, CardMediaUncheckedCreateInput>
+    /**
+     * In case the CardMedia was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<CardMediaUpdateInput, CardMediaUncheckedUpdateInput>
+  }
+
+  /**
+   * CardMedia delete
+   */
+  export type CardMediaDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+    /**
+     * Filter which CardMedia to delete.
+     */
+    where: CardMediaWhereUniqueInput
+  }
+
+  /**
+   * CardMedia deleteMany
+   */
+  export type CardMediaDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which CardMedias to delete
+     */
+    where?: CardMediaWhereInput
+    /**
+     * Limit how many CardMedias to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * CardMedia without action
+   */
+  export type CardMediaDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the CardMedia
+     */
+    select?: CardMediaSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the CardMedia
+     */
+    omit?: CardMediaOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -23195,6 +25563,40 @@ export namespace Prisma {
   };
 
   export type SiteSettingsScalarFieldEnum = (typeof SiteSettingsScalarFieldEnum)[keyof typeof SiteSettingsScalarFieldEnum]
+
+
+  export const CustomCategoryScalarFieldEnum: {
+    id: 'id',
+    title: 'title',
+    description: 'description',
+    image: 'image',
+    district: 'district',
+    badgeText: 'badgeText',
+    status: 'status',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CustomCategoryScalarFieldEnum = (typeof CustomCategoryScalarFieldEnum)[keyof typeof CustomCategoryScalarFieldEnum]
+
+
+  export const CardMediaScalarFieldEnum: {
+    id: 'id',
+    itemId: 'itemId',
+    url: 'url',
+    mediaType: 'mediaType',
+    title: 'title',
+    caption: 'caption',
+    likes: 'likes',
+    dislikes: 'dislikes',
+    likedBy: 'likedBy',
+    dislikedBy: 'dislikedBy',
+    uploadedBy: 'uploadedBy',
+    createdAt: 'createdAt',
+    updatedAt: 'updatedAt'
+  };
+
+  export type CardMediaScalarFieldEnum = (typeof CardMediaScalarFieldEnum)[keyof typeof CardMediaScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -25109,6 +27511,172 @@ export namespace Prisma {
     statTourists?: StringWithAggregatesFilter<"SiteSettings"> | string
     footerAbout?: StringWithAggregatesFilter<"SiteSettings"> | string
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
+  }
+
+  export type CustomCategoryWhereInput = {
+    AND?: CustomCategoryWhereInput | CustomCategoryWhereInput[]
+    OR?: CustomCategoryWhereInput[]
+    NOT?: CustomCategoryWhereInput | CustomCategoryWhereInput[]
+    id?: StringFilter<"CustomCategory"> | string
+    title?: StringFilter<"CustomCategory"> | string
+    description?: StringNullableFilter<"CustomCategory"> | string | null
+    image?: StringFilter<"CustomCategory"> | string
+    district?: StringFilter<"CustomCategory"> | string
+    badgeText?: StringNullableFilter<"CustomCategory"> | string | null
+    status?: EnumApprovalStatusFilter<"CustomCategory"> | $Enums.ApprovalStatus
+    createdAt?: DateTimeFilter<"CustomCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomCategory"> | Date | string
+  }
+
+  export type CustomCategoryOrderByWithRelationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    image?: SortOrder
+    district?: SortOrder
+    badgeText?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomCategoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CustomCategoryWhereInput | CustomCategoryWhereInput[]
+    OR?: CustomCategoryWhereInput[]
+    NOT?: CustomCategoryWhereInput | CustomCategoryWhereInput[]
+    title?: StringFilter<"CustomCategory"> | string
+    description?: StringNullableFilter<"CustomCategory"> | string | null
+    image?: StringFilter<"CustomCategory"> | string
+    district?: StringFilter<"CustomCategory"> | string
+    badgeText?: StringNullableFilter<"CustomCategory"> | string | null
+    status?: EnumApprovalStatusFilter<"CustomCategory"> | $Enums.ApprovalStatus
+    createdAt?: DateTimeFilter<"CustomCategory"> | Date | string
+    updatedAt?: DateTimeFilter<"CustomCategory"> | Date | string
+  }, "id">
+
+  export type CustomCategoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrderInput | SortOrder
+    image?: SortOrder
+    district?: SortOrder
+    badgeText?: SortOrderInput | SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CustomCategoryCountOrderByAggregateInput
+    _max?: CustomCategoryMaxOrderByAggregateInput
+    _min?: CustomCategoryMinOrderByAggregateInput
+  }
+
+  export type CustomCategoryScalarWhereWithAggregatesInput = {
+    AND?: CustomCategoryScalarWhereWithAggregatesInput | CustomCategoryScalarWhereWithAggregatesInput[]
+    OR?: CustomCategoryScalarWhereWithAggregatesInput[]
+    NOT?: CustomCategoryScalarWhereWithAggregatesInput | CustomCategoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CustomCategory"> | string
+    title?: StringWithAggregatesFilter<"CustomCategory"> | string
+    description?: StringNullableWithAggregatesFilter<"CustomCategory"> | string | null
+    image?: StringWithAggregatesFilter<"CustomCategory"> | string
+    district?: StringWithAggregatesFilter<"CustomCategory"> | string
+    badgeText?: StringNullableWithAggregatesFilter<"CustomCategory"> | string | null
+    status?: EnumApprovalStatusWithAggregatesFilter<"CustomCategory"> | $Enums.ApprovalStatus
+    createdAt?: DateTimeWithAggregatesFilter<"CustomCategory"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CustomCategory"> | Date | string
+  }
+
+  export type CardMediaWhereInput = {
+    AND?: CardMediaWhereInput | CardMediaWhereInput[]
+    OR?: CardMediaWhereInput[]
+    NOT?: CardMediaWhereInput | CardMediaWhereInput[]
+    id?: StringFilter<"CardMedia"> | string
+    itemId?: StringFilter<"CardMedia"> | string
+    url?: StringFilter<"CardMedia"> | string
+    mediaType?: EnumMediaTypeFilter<"CardMedia"> | $Enums.MediaType
+    title?: StringNullableFilter<"CardMedia"> | string | null
+    caption?: StringNullableFilter<"CardMedia"> | string | null
+    likes?: IntFilter<"CardMedia"> | number
+    dislikes?: IntFilter<"CardMedia"> | number
+    likedBy?: StringNullableListFilter<"CardMedia">
+    dislikedBy?: StringNullableListFilter<"CardMedia">
+    uploadedBy?: StringNullableFilter<"CardMedia"> | string | null
+    createdAt?: DateTimeFilter<"CardMedia"> | Date | string
+    updatedAt?: DateTimeFilter<"CardMedia"> | Date | string
+  }
+
+  export type CardMediaOrderByWithRelationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    url?: SortOrder
+    mediaType?: SortOrder
+    title?: SortOrderInput | SortOrder
+    caption?: SortOrderInput | SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
+    likedBy?: SortOrder
+    dislikedBy?: SortOrder
+    uploadedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CardMediaWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: CardMediaWhereInput | CardMediaWhereInput[]
+    OR?: CardMediaWhereInput[]
+    NOT?: CardMediaWhereInput | CardMediaWhereInput[]
+    itemId?: StringFilter<"CardMedia"> | string
+    url?: StringFilter<"CardMedia"> | string
+    mediaType?: EnumMediaTypeFilter<"CardMedia"> | $Enums.MediaType
+    title?: StringNullableFilter<"CardMedia"> | string | null
+    caption?: StringNullableFilter<"CardMedia"> | string | null
+    likes?: IntFilter<"CardMedia"> | number
+    dislikes?: IntFilter<"CardMedia"> | number
+    likedBy?: StringNullableListFilter<"CardMedia">
+    dislikedBy?: StringNullableListFilter<"CardMedia">
+    uploadedBy?: StringNullableFilter<"CardMedia"> | string | null
+    createdAt?: DateTimeFilter<"CardMedia"> | Date | string
+    updatedAt?: DateTimeFilter<"CardMedia"> | Date | string
+  }, "id">
+
+  export type CardMediaOrderByWithAggregationInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    url?: SortOrder
+    mediaType?: SortOrder
+    title?: SortOrderInput | SortOrder
+    caption?: SortOrderInput | SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
+    likedBy?: SortOrder
+    dislikedBy?: SortOrder
+    uploadedBy?: SortOrderInput | SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+    _count?: CardMediaCountOrderByAggregateInput
+    _avg?: CardMediaAvgOrderByAggregateInput
+    _max?: CardMediaMaxOrderByAggregateInput
+    _min?: CardMediaMinOrderByAggregateInput
+    _sum?: CardMediaSumOrderByAggregateInput
+  }
+
+  export type CardMediaScalarWhereWithAggregatesInput = {
+    AND?: CardMediaScalarWhereWithAggregatesInput | CardMediaScalarWhereWithAggregatesInput[]
+    OR?: CardMediaScalarWhereWithAggregatesInput[]
+    NOT?: CardMediaScalarWhereWithAggregatesInput | CardMediaScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"CardMedia"> | string
+    itemId?: StringWithAggregatesFilter<"CardMedia"> | string
+    url?: StringWithAggregatesFilter<"CardMedia"> | string
+    mediaType?: EnumMediaTypeWithAggregatesFilter<"CardMedia"> | $Enums.MediaType
+    title?: StringNullableWithAggregatesFilter<"CardMedia"> | string | null
+    caption?: StringNullableWithAggregatesFilter<"CardMedia"> | string | null
+    likes?: IntWithAggregatesFilter<"CardMedia"> | number
+    dislikes?: IntWithAggregatesFilter<"CardMedia"> | number
+    likedBy?: StringNullableListFilter<"CardMedia">
+    dislikedBy?: StringNullableListFilter<"CardMedia">
+    uploadedBy?: StringNullableWithAggregatesFilter<"CardMedia"> | string | null
+    createdAt?: DateTimeWithAggregatesFilter<"CardMedia"> | Date | string
+    updatedAt?: DateTimeWithAggregatesFilter<"CardMedia"> | Date | string
   }
 
   export type UserCreateInput = {
@@ -27117,6 +29685,202 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type CustomCategoryCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    image: string
+    district?: string
+    badgeText?: string | null
+    status?: $Enums.ApprovalStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomCategoryUncheckedCreateInput = {
+    id?: string
+    title: string
+    description?: string | null
+    image: string
+    district?: string
+    badgeText?: string | null
+    status?: $Enums.ApprovalStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomCategoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    district?: StringFieldUpdateOperationsInput | string
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomCategoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    district?: StringFieldUpdateOperationsInput | string
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomCategoryCreateManyInput = {
+    id?: string
+    title: string
+    description?: string | null
+    image: string
+    district?: string
+    badgeText?: string | null
+    status?: $Enums.ApprovalStatus
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CustomCategoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    district?: StringFieldUpdateOperationsInput | string
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CustomCategoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    title?: StringFieldUpdateOperationsInput | string
+    description?: NullableStringFieldUpdateOperationsInput | string | null
+    image?: StringFieldUpdateOperationsInput | string
+    district?: StringFieldUpdateOperationsInput | string
+    badgeText?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardMediaCreateInput = {
+    id?: string
+    itemId: string
+    url: string
+    mediaType?: $Enums.MediaType
+    title?: string | null
+    caption?: string | null
+    likes?: number
+    dislikes?: number
+    likedBy?: CardMediaCreatelikedByInput | string[]
+    dislikedBy?: CardMediaCreatedislikedByInput | string[]
+    uploadedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CardMediaUncheckedCreateInput = {
+    id?: string
+    itemId: string
+    url: string
+    mediaType?: $Enums.MediaType
+    title?: string | null
+    caption?: string | null
+    likes?: number
+    dislikes?: number
+    likedBy?: CardMediaCreatelikedByInput | string[]
+    dislikedBy?: CardMediaCreatedislikedByInput | string[]
+    uploadedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CardMediaUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: IntFieldUpdateOperationsInput | number
+    dislikes?: IntFieldUpdateOperationsInput | number
+    likedBy?: CardMediaUpdatelikedByInput | string[]
+    dislikedBy?: CardMediaUpdatedislikedByInput | string[]
+    uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardMediaUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: IntFieldUpdateOperationsInput | number
+    dislikes?: IntFieldUpdateOperationsInput | number
+    likedBy?: CardMediaUpdatelikedByInput | string[]
+    dislikedBy?: CardMediaUpdatedislikedByInput | string[]
+    uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardMediaCreateManyInput = {
+    id?: string
+    itemId: string
+    url: string
+    mediaType?: $Enums.MediaType
+    title?: string | null
+    caption?: string | null
+    likes?: number
+    dislikes?: number
+    likedBy?: CardMediaCreatelikedByInput | string[]
+    dislikedBy?: CardMediaCreatedislikedByInput | string[]
+    uploadedBy?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type CardMediaUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: IntFieldUpdateOperationsInput | number
+    dislikes?: IntFieldUpdateOperationsInput | number
+    likedBy?: CardMediaUpdatelikedByInput | string[]
+    dislikedBy?: CardMediaUpdatedislikedByInput | string[]
+    uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type CardMediaUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    itemId?: StringFieldUpdateOperationsInput | string
+    url?: StringFieldUpdateOperationsInput | string
+    mediaType?: EnumMediaTypeFieldUpdateOperationsInput | $Enums.MediaType
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    caption?: NullableStringFieldUpdateOperationsInput | string | null
+    likes?: IntFieldUpdateOperationsInput | number
+    dislikes?: IntFieldUpdateOperationsInput | number
+    likedBy?: CardMediaUpdatelikedByInput | string[]
+    dislikedBy?: CardMediaUpdatedislikedByInput | string[]
+    uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -28478,6 +31242,113 @@ export namespace Prisma {
     id?: SortOrder
   }
 
+  export type CustomCategoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    image?: SortOrder
+    district?: SortOrder
+    badgeText?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomCategoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    image?: SortOrder
+    district?: SortOrder
+    badgeText?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CustomCategoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    title?: SortOrder
+    description?: SortOrder
+    image?: SortOrder
+    district?: SortOrder
+    badgeText?: SortOrder
+    status?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type EnumMediaTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaType | EnumMediaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMediaTypeFilter<$PrismaModel> | $Enums.MediaType
+  }
+
+  export type CardMediaCountOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    url?: SortOrder
+    mediaType?: SortOrder
+    title?: SortOrder
+    caption?: SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
+    likedBy?: SortOrder
+    dislikedBy?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CardMediaAvgOrderByAggregateInput = {
+    likes?: SortOrder
+    dislikes?: SortOrder
+  }
+
+  export type CardMediaMaxOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    url?: SortOrder
+    mediaType?: SortOrder
+    title?: SortOrder
+    caption?: SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CardMediaMinOrderByAggregateInput = {
+    id?: SortOrder
+    itemId?: SortOrder
+    url?: SortOrder
+    mediaType?: SortOrder
+    title?: SortOrder
+    caption?: SortOrder
+    likes?: SortOrder
+    dislikes?: SortOrder
+    uploadedBy?: SortOrder
+    createdAt?: SortOrder
+    updatedAt?: SortOrder
+  }
+
+  export type CardMediaSumOrderByAggregateInput = {
+    likes?: SortOrder
+    dislikes?: SortOrder
+  }
+
+  export type EnumMediaTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaType | EnumMediaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMediaTypeWithAggregatesFilter<$PrismaModel> | $Enums.MediaType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMediaTypeFilter<$PrismaModel>
+    _max?: NestedEnumMediaTypeFilter<$PrismaModel>
+  }
+
   export type CommunityPostCreateNestedManyWithoutAuthorInput = {
     create?: XOR<CommunityPostCreateWithoutAuthorInput, CommunityPostUncheckedCreateWithoutAuthorInput> | CommunityPostCreateWithoutAuthorInput[] | CommunityPostUncheckedCreateWithoutAuthorInput[]
     connectOrCreate?: CommunityPostCreateOrConnectWithoutAuthorInput | CommunityPostCreateOrConnectWithoutAuthorInput[]
@@ -29391,6 +32262,28 @@ export namespace Prisma {
     push?: string | string[]
   }
 
+  export type CardMediaCreatelikedByInput = {
+    set: string[]
+  }
+
+  export type CardMediaCreatedislikedByInput = {
+    set: string[]
+  }
+
+  export type EnumMediaTypeFieldUpdateOperationsInput = {
+    set?: $Enums.MediaType
+  }
+
+  export type CardMediaUpdatelikedByInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CardMediaUpdatedislikedByInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
   export type NestedStringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -29706,6 +32599,23 @@ export namespace Prisma {
     _count?: NestedIntNullableFilter<$PrismaModel>
     _min?: NestedEnumMediaTypeNullableFilter<$PrismaModel>
     _max?: NestedEnumMediaTypeNullableFilter<$PrismaModel>
+  }
+
+  export type NestedEnumMediaTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaType | EnumMediaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMediaTypeFilter<$PrismaModel> | $Enums.MediaType
+  }
+
+  export type NestedEnumMediaTypeWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: $Enums.MediaType | EnumMediaTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.MediaType[] | ListEnumMediaTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumMediaTypeWithAggregatesFilter<$PrismaModel> | $Enums.MediaType
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedEnumMediaTypeFilter<$PrismaModel>
+    _max?: NestedEnumMediaTypeFilter<$PrismaModel>
   }
 
   export type CommunityPostCreateWithoutAuthorInput = {
