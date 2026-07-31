@@ -5,6 +5,7 @@ import { motion } from 'framer-motion';
 import React, { useState, useEffect } from 'react';
 import LatestArticlesSection from '../components/tribals/LatestArticlesSection';
 import TribeCulturalSections from '../components/tribals/CulturalHighlightsGrid';
+import TribeVideoSlider from '../components/tribals/TribeVideoSlider';
 import { getTribeCulturalSections } from '../data/tribeCulturalData';
 import { useAdminData } from '../data/AdminContext';
 
@@ -44,8 +45,8 @@ const TribeDetail = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#FDFBF7] flex items-center justify-center">
-        <div className="w-8 h-8 border-4 border-[#8B3E2F] border-t-transparent rounded-full animate-spin"></div>
+      <div className="min-h-screen bg-[#FFFBEB] flex items-center justify-center">
+        <div className="w-8 h-8 border-4 border-[#D4A017] border-t-transparent rounded-full animate-spin"></div>
       </div>
     );
   }
@@ -55,7 +56,7 @@ const TribeDetail = () => {
   }
 
   return (
-    <div className="min-h-screen bg-[#FCEBD3] text-[#8B3E2F] overflow-x-hidden relative">
+    <div className="min-h-screen bg-[#FFFBEB] text-[#451A03] overflow-x-hidden relative">
       <Navbar forceDarkText={true} />
 
       {/* Global Parchment Background Texture */}
@@ -74,7 +75,7 @@ const TribeDetail = () => {
 
         {/* Back Button */}
         <div className="mb-12">
-          <Link to="/tribals" className="inline-flex items-center text-[#8B3E2F] hover:text-[#8B3E2F] font-bold tracking-widest uppercase transition-colors">
+          <Link to="/tribals" className="inline-flex items-center text-[#B45309] hover:text-[#D4A017] font-bold tracking-widest uppercase transition-colors">
             <span className="mr-2">←</span> Back to Directory
           </Link>
         </div>
@@ -98,11 +99,11 @@ const TribeDetail = () => {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-8"
           >
-            <h2 className="text-3xl md:text-4xl text-[#8B3E2F] mb-2 tracking-widest font-bold">{tribe.hindiName}</h2>
-            <h1 className="font-display font-bold text-5xl md:text-7xl uppercase tracking-[0.2em] text-[#8B3E2F] border-b border-[#8B3E2F]/30 pb-4 inline-block">
+            <h2 className="text-3xl md:text-4xl text-[#B45309] mb-2 tracking-widest font-bold">{tribe.hindiName}</h2>
+            <h1 className="font-display font-bold text-5xl md:text-7xl uppercase tracking-[0.2em] text-[#451A03] border-b border-[#D4A017]/40 pb-4 inline-block">
               {tribe.englishName}
             </h1>
-            <p className="mt-6 text-lg md:text-xl max-w-3xl mx-auto italic text-[#8B3E2F]">
+            <p className="mt-6 text-lg md:text-xl max-w-3xl mx-auto italic text-[#582C12] font-medium">
               {tribe.description || tribe.shortDesc}
             </p>
           </motion.div>
@@ -118,11 +119,11 @@ const TribeDetail = () => {
                 transition={{ duration: 0.6 }}
                 className="lg:col-span-4 flex flex-col order-2 lg:order-1 text-center lg:text-right px-4 lg:px-0"
               >
-                <div className="bg-[#FCEBD3]/50 lg:bg-transparent p-6 lg:p-0 rounded-2xl lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none border border-[#8B3E2F]/10 lg:border-none shadow-sm lg:shadow-none lg:translate-y-8">
-                  <h3 className="text-xl font-bold uppercase tracking-wider mb-3 text-[#8B3E2F] border-b lg:border-b-0 lg:border-r-4 border-gold lg:pr-4 pb-2 lg:pb-0 inline-block lg:block">
+                <div className="bg-[#FFFBEB]/70 lg:bg-transparent p-6 lg:p-0 rounded-2xl lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none border border-[#D4A017]/20 lg:border-none shadow-sm lg:shadow-none lg:translate-y-8">
+                  <h3 className="text-xl font-bold uppercase tracking-wider mb-3 text-[#451A03] border-b lg:border-b-0 lg:border-r-4 border-[#D4A017] lg:pr-4 pb-2 lg:pb-0 inline-block lg:block">
                     {tribe.leftTitle || "Cultural Heritage"}
                   </h3>
-                  <p className="text-[1.05rem] leading-relaxed text-[#8B3E2F] mt-2 font-medium">
+                  <p className="text-[1.05rem] leading-relaxed text-[#582C12] mt-2 font-medium">
                     {tribe.leftDesc}
                   </p>
                 </div>
@@ -149,11 +150,11 @@ const TribeDetail = () => {
                 transition={{ duration: 0.6 }}
                 className="lg:col-span-4 flex flex-col order-3 text-center lg:text-left px-4 lg:px-0"
               >
-                <div className="bg-[#FCEBD3]/50 lg:bg-transparent p-6 lg:p-0 rounded-2xl lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none border border-[#8B3E2F]/10 lg:border-none shadow-sm lg:shadow-none mt-4 lg:mt-0 lg:-translate-y-8">
-                  <h3 className="text-xl font-bold uppercase tracking-wider mb-3 text-[#8B3E2F] border-b lg:border-b-0 lg:border-l-4 border-gold lg:pl-4 pb-2 lg:pb-0 inline-block lg:block">
+                <div className="bg-[#FFFBEB]/70 lg:bg-transparent p-6 lg:p-0 rounded-2xl lg:rounded-none backdrop-blur-sm lg:backdrop-blur-none border border-[#D4A017]/20 lg:border-none shadow-sm lg:shadow-none mt-4 lg:mt-0 lg:-translate-y-8">
+                  <h3 className="text-xl font-bold uppercase tracking-wider mb-3 text-[#451A03] border-b lg:border-b-0 lg:border-l-4 border-[#D4A017] lg:pl-4 pb-2 lg:pb-0 inline-block lg:block">
                     {tribe.rightTitle || "Traditional Practices"}
                   </h3>
-                  <p className="text-[1.05rem] leading-relaxed text-[#8B3E2F] mt-2 font-medium">
+                  <p className="text-[1.05rem] leading-relaxed text-[#582C12] mt-2 font-medium">
                     {tribe.rightDesc}
                   </p>
                 </div>
@@ -168,16 +169,19 @@ const TribeDetail = () => {
               transition={{ duration: 0.6, delay: 0.2 }}
               className="max-w-xl mx-auto text-center px-4 mt-12 relative z-20"
             >
-              <div className="bg-[#FCEBD3]/60 p-6 rounded-2xl border border-[#8B3E2F]/10 shadow-sm">
-                <p className="text-[1.1rem] leading-relaxed text-[#8B3E2F] italic font-medium">
+              <div className="bg-[#FEF3C7]/80 p-6 rounded-2xl border border-[#D4A017]/30 shadow-sm">
+                <p className="text-[1.1rem] leading-relaxed text-[#451A03] italic font-medium">
                   {tribe.bottomDesc}
                 </p>
               </div>
             </motion.div>
           </div>
 
+          {/* Tribe Video Slider (User submissions & Admin verified) */}
+          <TribeVideoSlider tribeId={id || ''} tribeName={tribe.englishName} />
+
           {/* Cultural Highlights */}
-          <div className="w-full max-w-6xl mx-auto mt-20 mb-20 px-4 lg:px-0 relative z-20">
+          <div className="w-full max-w-6xl mx-auto mt-12 mb-20 px-4 lg:px-0 relative z-20">
             <TribeCulturalSections sections={(tribe.cultureSections && tribe.cultureSections.length > 0) ? tribe.cultureSections : getTribeCulturalSections(id || '', tribe.englishName)} />
           </div>
 

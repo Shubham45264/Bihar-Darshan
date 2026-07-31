@@ -79,7 +79,7 @@ const CultureDetails = () => {
 
             {cultureItem.extendedDetails && cultureItem.extendedDetails.length > 0 && (
               <div className="space-y-4 mb-8">
-                {cultureItem.extendedDetails.map((detail, index) => (
+                {cultureItem.extendedDetails.map((detail: string, index: number) => (
                   <p key={index} className="text-lg text-gray-600 leading-relaxed">
                     {detail}
                   </p>

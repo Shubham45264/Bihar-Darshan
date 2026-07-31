@@ -332,6 +332,8 @@ const CreateJourney = () => {
         await addJourneySubmission(submissionData);
       }
       setShowSuccessCard(true);
+      window.dispatchEvent(new Event('submissionCreated'));
+      window.dispatchEvent(new Event('storage'));
     } catch (e: any) {
       alert("Failed to submit journey. Please ensure you are logged in and try again.");
     }

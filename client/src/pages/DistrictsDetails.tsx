@@ -6,6 +6,7 @@ import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { useAdminData } from '../data/AdminContext';
 import { getDistrictDetail } from '../data/districtDetailsData';
+import { allDistricts, resolveDistrictImage } from '../data/districtsData';
 
 const DistrictsDetails = () => {
   const { name } = useParams();
@@ -13,8 +14,14 @@ const DistrictsDetails = () => {
   const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
   const { districts } = useAdminData();
   
-  // Find from context, fallback to static if somehow missing
-  const d = districts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase()) || getDistrictDetail(formattedName);
+  // Find from context, fallback to allDistricts/static if missing
+  const matchedDistrict = districts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase())
+    || allDistricts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase());
+
+  const d = matchedDistrict || getDistrictDetail(formattedName);
+
+  const rawImage = matchedDistrict?.image || (d as any).image || allDistricts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase())?.image || '';
+  const heroBgImage = resolveDistrictImage(rawImage);
 
   useEffect(() => {
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
@@ -25,23 +32,38 @@ const DistrictsDetails = () => {
       <Navbar forceDarkText={false} />
 
       {/* ── Hero ─────────────────────────────────────────────── */}
-      <section className="relative pt-40 pb-24 bg-[#251E18]">
-        <Container className="max-w-4xl">
+      <section className="relative pt-40 pb-24 overflow-hidden bg-[#251E18]">
+        {/* Background District Image with Gradient Overlays */}
+        {heroBgImage && (
+          <div className="absolute inset-0 pointer-events-none z-0">
+            <img
+              src={heroBgImage}
+              alt={d.name}
+              className="w-full h-full object-cover object-center"
+            />
+            {/* Dark overlays for high text contrast and rich aesthetic */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#251E18] via-[#251E18]/75 to-[#251E18]/50" />
+            <div className="absolute inset-0 bg-black/40" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30" />
+          </div>
+        )}
+
+        <Container className="relative z-10 max-w-4xl">
           <Link
             to="/districts"
-            className="inline-flex items-center gap-2 text-white/50 hover:text-[#D4A017] text-xs font-bold uppercase tracking-[0.2em] transition-colors mb-6"
+            className="inline-flex items-center gap-2 text-white/70 hover:text-[#D4A017] text-xs font-bold uppercase tracking-[0.2em] transition-colors mb-6 drop-shadow-sm"
           >
             <ArrowLeft size={14} />
             Back to Districts
           </Link>
           <div className="space-y-3">
-            <span className="text-xs font-bold text-[#D4A017] uppercase tracking-[0.3em]">
+            <span className="text-xs font-bold text-[#D4A017] uppercase tracking-[0.3em] drop-shadow-sm">
               District Profile
             </span>
-            <h1 className="text-5xl sm:text-7xl font-serif font-bold text-white leading-tight">
+            <h1 className="text-5xl sm:text-7xl font-serif font-bold text-white leading-tight drop-shadow-md">
               {d.name}
             </h1>
-            <p className="text-lg sm:text-xl font-serif italic text-white/80 mt-2">
+            <p className="text-lg sm:text-xl font-serif italic text-white/90 mt-2 drop-shadow-sm">
               {d.tagline}
             </p>
           </div>

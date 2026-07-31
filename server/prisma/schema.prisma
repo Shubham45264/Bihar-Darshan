@@ -74,6 +74,7 @@ model User {
   notifications  Notification[]
   communitiesCreated   Community[]       @relation("CommunityCreator")
   communityMemberships CommunityMember[]
+  categoryStories      CategoryStory[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -185,6 +186,25 @@ model Tribe {
   updatedAt DateTime @updatedAt
 }
 
+model TribeVideo {
+  id              String         @id @default(uuid())
+  title           String?
+  caption         String?        @db.Text
+  videoUrl        String         @db.Text
+  uploaderName    String         @default("Explorer")
+  description     String?        @db.Text
+  tribeId         String
+  tribeName       String
+  thumbnail       String?
+  duration        String?
+  status          ApprovalStatus @default(PENDING)
+  rejectionReason String?        @db.Text
+  userId          String?
+
+  createdAt       DateTime       @default(now())
+  updatedAt       DateTime       @updatedAt
+}
+
 model Personality {
   id          String  @id @default(uuid())
   name        String
@@ -266,9 +286,10 @@ model CommunityPost {
   id      String @id @default(uuid())
   title   String
   content String
-  likes   Int    @default(0)
-  replies Int    @default(0)
-  views   Int    @default(0)
+  likes   Int      @default(0)
+  replies Int      @default(0)
+  views   Int      @default(0)
+  viewedBy String[] @default([])
 
   mediaUrl   String?
   mediaType  MediaType?
@@ -453,4 +474,75 @@ model CardMedia {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 }
+
+// ----------------------------------------
+// CATEGORIES & SUB-CATEGORIES & STORIES
+// ----------------------------------------
+
+model Category {
+  id          String         @id @default(uuid())
+  title       String
+  slug        String         @unique
+  description String?        @db.Text
+  image       String
+  icon        String?
+  status      ApprovalStatus @default(APPROVED)
+
+  subcategories SubCategory[]
+  stories       CategoryStory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SubCategory {
+  id          String   @id @default(uuid())
+  title       String
+  slug        String
+  description String?  @db.Text
+  image       String
+  icon        String?
+
+  categoryId  String
+  category    Category @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  stories     CategoryStory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([categoryId, slug])
+}
+
+model CategoryStory {
+  id           String         @id @default(uuid())
+  title        String
+  content      String         @db.Text
+  mediaUrl     String?
+  mediaType    MediaType      @default(IMAGE)
+  mediaFiles   Json?
+  authorName   String         @default("Anonymous")
+  authorAvatar String?
+  district     String         @default("Bihar")
+  views        Int            @default(0)
+  viewedBy     String[]       @default([])
+  likes        Int            @default(0)
+  dislikes     Int            @default(0)
+  likedBy      String[]       @default([])
+  dislikedBy   String[]       @default([])
+  status       ApprovalStatus @default(PENDING)
+
+  authorId     String?
+  author       User?          @relation(fields: [authorId], references: [id], onDelete: SetNull)
+
+  categoryId   String
+  category     Category       @relation(fields: [categoryId], references: [id], onDelete: Cascade)
+
+  subcategoryId String
+  subcategory  SubCategory    @relation(fields: [subcategoryId], references: [id], onDelete: Cascade)
+
+  createdAt    DateTime       @default(now())
+  updatedAt    DateTime       @updatedAt
+}
+
 

@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import * as tribeService from './tribe.service';
-import { createTribeSchema, updateTribeSchema, createTribalArticleSchema } from './tribe.validation';
+import { createTribeSchema, updateTribeSchema, createTribalArticleSchema, createTribeVideoSchema } from './tribe.validation';
 
 // --- Tribes ---
 export const getActiveTribes = async (req: Request, res: Response, next: NextFunction) => {
@@ -121,6 +121,76 @@ export const deleteArticle = async (req: Request, res: Response, next: NextFunct
   try {
     await tribeService.deleteArticle(req.params.id as string);
     res.status(200).json({ success: true, message: 'Article deleted successfully' });
+  } catch (error) {
+    next(error);
+  }
+};
+
+// --- Tribe Videos ---
+export const getApprovedVideos = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const tribeId = req.query.tribeId as string | undefined;
+    const tribeName = req.query.tribeName as string | undefined;
+    const videos = await tribeService.getApprovedTribeVideos(tribeId, tribeName);
+    res.status(200).json({ success: true, data: { videos } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getPendingVideos = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const videos = await tribeService.getPendingTribeVideos();
+    res.status(200).json({ success: true, data: { videos } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const submitVideo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const validatedData = createTribeVideoSchema.parse({ body: req.body }).body;
+    const userRole = req.user?.role || 'USER';
+    const video = await tribeService.createTribeVideo(validatedData, userRole);
+    res.status(201).json({ success: true, data: { video } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const getAllVideos = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const status = req.query.status as string | undefined;
+    const videos = await tribeService.getAllTribeVideos(status);
+    res.status(200).json({ success: true, data: { videos } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const approveVideo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const video = await tribeService.approveTribeVideo(req.params.id as string);
+    res.status(200).json({ success: true, data: { video } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const rejectVideo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const rejectionReason = req.body?.rejectionReason as string | undefined;
+    const video = await tribeService.rejectTribeVideo(req.params.id as string, rejectionReason);
+    res.status(200).json({ success: true, data: { video } });
+  } catch (error) {
+    next(error);
+  }
+};
+
+export const deleteVideo = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    await tribeService.deleteTribeVideo(req.params.id as string);
+    res.status(200).json({ success: true, message: 'Video deleted successfully' });
   } catch (error) {
     next(error);
   }

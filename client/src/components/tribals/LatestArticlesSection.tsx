@@ -64,20 +64,20 @@ const ArticleCard = ({
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.1, margin: "50px" }}
       transition={{ delay: (index % 4) * 0.08, duration: 0.5 }}
-      className="group bg-[#FCEBD3]/80 rounded-2xl overflow-hidden border border-[#8B3E2F]/10 hover:border-[#F4A261]/50 transition-all duration-500 flex flex-col hover:-translate-y-1.5 hover:shadow-[0_8px_30px_-8px_rgba(62,39,35,0.18)] cursor-pointer"
+      className="group bg-[#FFFBEB]/90 rounded-2xl overflow-hidden border border-[#D4A017]/25 hover:border-[#D4A017] transition-all duration-500 flex flex-col hover:-translate-y-1.5 hover:shadow-[0_8px_30px_-8px_rgba(212,160,23,0.3)] cursor-pointer"
     >
       {/* Top Source Bar */}
-      <div className="flex justify-between items-center px-4 py-2 border-b border-[#8B3E2F]/10 bg-[#FCEBD3]/40">
-        <span className="text-[10px] font-bold tracking-[0.15em] uppercase text-[#b71c1c]">
+      <div className="flex justify-between items-center px-4 py-2 border-b border-[#D4A017]/20 bg-[#FEF3C7]/80">
+        <span className="text-[10px] font-extrabold tracking-[0.15em] uppercase text-[#B45309]">
           {article.author}
         </span>
-        <span className="text-[10px] font-semibold tracking-wider text-[#8B3E2F]/70 uppercase">
+        <span className="text-[10px] font-semibold tracking-wider text-[#B45309]/80 uppercase">
           {formatDate(article.publishedDate)}
         </span>
       </div>
 
       {/* Image */}
-      <div className="relative h-44 overflow-hidden bg-[#FCEBD3]">
+      <div className="relative h-44 overflow-hidden bg-[#FEF3C7]">
         {!imgLoaded && (
           <div className="absolute inset-0 tribal-articles-shimmer" />
         )}
@@ -97,30 +97,30 @@ const ArticleCard = ({
 
       {/* Content */}
       <div className="p-4 flex-grow flex flex-col">
-        <h3 className="text-[15px] leading-snug font-serif font-bold text-[#8B3E2F] group-hover:text-[#8B3E2F] transition-colors mb-2 line-clamp-3">
+        <h3 className="text-[15px] leading-snug font-serif font-bold text-[#451A03] group-hover:text-[#D4A017] transition-colors mb-2 line-clamp-3">
           {article.headline}
         </h3>
 
-        <p className="text-[13px] text-[#8B3E2F]/80 leading-relaxed line-clamp-3 mb-4 flex-grow">
+        <p className="text-[13px] text-[#582C12] leading-relaxed line-clamp-3 mb-4 flex-grow font-medium">
           {article.description}
         </p>
 
         {/* Meta Row */}
-        <div className="flex items-center gap-3 text-[11px] text-[#8B3E2F]/70 mb-3 font-medium border-t border-[#8B3E2F]/8 pt-3">
+        <div className="flex items-center gap-3 text-[11px] text-[#B45309]/80 mb-3 font-medium border-t border-[#D4A017]/15 pt-3">
           <span className="flex items-center gap-1">
-            <Calendar className="w-3 h-3" />
+            <Calendar className="w-3 h-3 text-[#D4A017]" />
             {formatDateShort(article.publishedDate)}
           </span>
-          <span className="text-[#8B3E2F]/20">|</span>
+          <span className="text-[#D4A017]/30">|</span>
           <span className="flex items-center gap-1">
-            <Clock className="w-3 h-3" />
+            <Clock className="w-3 h-3 text-[#D4A017]" />
             {article.readTime} min read
           </span>
         </div>
 
         {/* Read More */}
         <span
-          className="inline-flex items-center text-[#b71c1c] group-hover:text-[#F4A261] text-sm font-bold tracking-wide transition-all group/link"
+          className="inline-flex items-center text-[#B45309] group-hover:text-[#D4A017] text-sm font-bold tracking-wide transition-all group/link"
         >
           Read More
           <ArrowRight className="w-4 h-4 ml-1 group-hover/link:translate-x-1 transition-transform" />
@@ -136,20 +136,20 @@ const EmptyState = ({ tribeName, onContribute }: { tribeName?: string, onContrib
   <motion.div
     initial={{ opacity: 0, y: 20 }}
     animate={{ opacity: 1, y: 0 }}
-    className="text-center py-16 px-6 bg-[#FCEBD3]/50 rounded-3xl border border-[#8B3E2F]/10"
+    className="text-center py-16 px-6 bg-[#FFFBEB]/90 rounded-3xl border border-[#D4A017]/30"
   >
-    <div className="w-16 h-16 rounded-full bg-[#F4A261]/10 flex items-center justify-center mx-auto mb-4">
-      <Newspaper className="w-7 h-7 text-[#F4A261]" />
+    <div className="w-16 h-16 rounded-full bg-[#D4A017]/15 border border-[#D4A017]/30 flex items-center justify-center mx-auto mb-4">
+      <Newspaper className="w-7 h-7 text-[#D4A017]" />
     </div>
-    <h3 className="text-xl font-serif font-bold text-[#8B3E2F] mb-2">No Articles Yet</h3>
-    <p className="text-[#8B3E2F] text-sm max-w-md mx-auto mb-6">
+    <h3 className="text-xl font-serif font-bold text-[#451A03] mb-2">No Articles Yet</h3>
+    <p className="text-[#582C12] text-sm max-w-md mx-auto mb-6 font-medium">
       {tribeName
         ? `Stories and articles about the ${tribeName} will appear here. Be the first to share!`
         : "Stories and articles about Bihar's tribal communities will appear here soon."}
     </p>
     <button
       onClick={onContribute}
-      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-[#F4A261] hover:bg-[#F4A261]/90 text-white font-bold text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg"
+      className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-gradient-to-r from-[#E6B52F] to-[#D4A017] hover:from-[#F0C343] hover:to-[#E6B52F] text-[#3B2412] font-extrabold text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg"
     >
       <PenLine className="w-4 h-4" />
       Contribute an Article
@@ -205,27 +205,27 @@ const LatestArticlesSection = ({ tribeName }: LatestArticlesSectionProps) => {
         >
           {/* Decorative Icon */}
           <div className="flex justify-center mb-4">
-            <div className="w-12 h-12 rounded-xl bg-[#b71c1c]/10 border border-[#b71c1c]/20 flex items-center justify-center">
-              <Newspaper className="w-5 h-5 text-[#b71c1c]" />
+            <div className="w-12 h-12 rounded-xl bg-[#D4A017]/15 border border-[#D4A017]/30 flex items-center justify-center shadow-sm">
+              <Newspaper className="w-5 h-5 text-[#D4A017]" />
             </div>
           </div>
 
           {/* Title with decorative lines */}
           <div className="flex items-center justify-center gap-4 mb-4">
             <div className="flex items-center gap-1.5">
-              <div className="w-2 h-2 rounded-full bg-[#F4A261]" />
-              <div className="w-12 sm:w-20 h-px bg-[#8B3E2F]/30" />
+              <div className="w-2 h-2 rounded-full bg-[#D4A017]" />
+              <div className="w-12 sm:w-20 h-px bg-[#D4A017]/40" />
             </div>
-            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#8B3E2F] tracking-[0.12em] uppercase font-bold">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif text-[#451A03] tracking-[0.12em] uppercase font-bold">
               Latest Articles
             </h2>
             <div className="flex items-center gap-1.5">
-              <div className="w-12 sm:w-20 h-px bg-[#8B3E2F]/30" />
-              <div className="w-2 h-2 rounded-full bg-[#F4A261]" />
+              <div className="w-12 sm:w-20 h-px bg-[#D4A017]/40" />
+              <div className="w-2 h-2 rounded-full bg-[#D4A017]" />
             </div>
           </div>
 
-          <p className="text-sm sm:text-base text-[#8B3E2F] max-w-2xl mx-auto italic">
+          <p className="text-sm sm:text-base text-[#582C12] max-w-2xl mx-auto italic font-medium">
             {subtitle}
           </p>
         </motion.div>
@@ -260,7 +260,7 @@ const LatestArticlesSection = ({ tribeName }: LatestArticlesSectionProps) => {
               className="flex flex-col sm:flex-row items-center justify-center gap-4 mt-12"
             >
               {/* View All Articles */}
-              <button className="group inline-flex items-center gap-2 px-7 py-3 rounded-full border-2 border-[#8B3E2F] text-[#8B3E2F] font-bold text-sm tracking-wider uppercase hover:bg-[#8B3E2F] hover:text-[#FCEBD3] transition-all duration-300 shadow-sm hover:shadow-md">
+              <button className="group inline-flex items-center gap-2 px-7 py-3 rounded-full border-2 border-[#D4A017] text-[#B45309] font-bold text-sm tracking-wider uppercase hover:bg-[#D4A017] hover:text-[#3B2412] transition-all duration-300 shadow-sm hover:shadow-md cursor-pointer">
                 View All Articles
                 <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </button>
@@ -268,7 +268,7 @@ const LatestArticlesSection = ({ tribeName }: LatestArticlesSectionProps) => {
               {/* Contribute an Article */}
               <button
                 onClick={() => setIsModalOpen(true)}
-                className="group inline-flex items-center gap-2 px-7 py-3 rounded-full bg-[#F4A261] hover:bg-[#F4A261] text-white font-bold text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:shadow-[#F4A261]/20"
+                className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#E6B52F] to-[#D4A017] hover:from-[#F0C343] hover:to-[#E6B52F] text-[#3B2412] font-extrabold text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.02] cursor-pointer"
               >
                 <PenLine className="w-4 h-4" />
                 Contribute an Article

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAdminData } from '../../data/AdminContext';
 import { auth } from '../../lib/firebase';
 import type { TribeItem } from '../../data/AdminContext';
@@ -10,12 +10,13 @@ import type { CultureSection } from '../../components/tribals/CulturalHighlights
 import { getTribeCulturalSections } from '../../data/tribeCulturalData';
 import { useArticles } from '../../data/ArticlesContext';
 import type { TribalArticle } from '../../data/tribalArticlesData';
-import { User, Palette, BookOpen, Utensils, Mic2, AlignLeft, RefreshCw, Plus, Trash2, ChevronUp, ChevronDown, Newspaper, Calendar, Clock, MapPin, Shield, PenLine, Eye } from 'lucide-react';
+import { User, Palette, BookOpen, Utensils, Mic2, AlignLeft, RefreshCw, Plus, Trash2, ChevronUp, ChevronDown, Newspaper, Calendar, Clock, MapPin, Shield, PenLine, Eye, Film, Check, X } from 'lucide-react';
 
 // ── Tab definitions ──────────────────────────────────────────────
 
 const TABS = [
   { key: 'hero', label: 'Hero Section', icon: AlignLeft },
+  { key: 'videos', label: 'Videos & Moderation', icon: Film },
   { key: 'traditions', label: 'Traditions & Culture', icon: BookOpen },
   { key: 'personalities', label: 'Famous Personalities', icon: User },
   { key: 'arts', label: 'Arts & Handicrafts', icon: Palette },
@@ -34,7 +35,7 @@ const TAB_HEADING_MAP: Record<string, string> = {
   folklore: 'Oral Stories & Folklore',
 };
 
-const CONTENT_TABS = TABS.filter(t => t.key !== 'hero' && t.key !== 'articles');
+const CONTENT_TABS = TABS.filter(t => t.key !== 'hero' && t.key !== 'articles' && t.key !== 'videos');
 
 
 
@@ -234,6 +235,75 @@ const AdminTribes = () => {
     author: 'Bihar Darshan Editorial', location: '', tags: '',
   });
   const [previewArticle, setPreviewArticle] = useState<TribalArticle | null>(null);
+
+  // Video Moderation State
+  const [adminPendingVideos, setAdminPendingVideos] = useState<any[]>([]);
+  const [isFetchingPendingVideos, setIsFetchingPendingVideos] = useState(false);
+  const [rejectingVideo, setRejectingVideo] = useState<any | null>(null);
+  const [rejectionReasonText, setRejectionReasonText] = useState('');
+
+  const loadPendingVideos = async () => {
+    try {
+      setIsFetchingPendingVideos(true);
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch('http://localhost:5000/api/v1/tribes/admin/videos/pending', {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const data = await res.json();
+      if (data.success && data.data?.videos) {
+        setAdminPendingVideos(data.data.videos);
+      }
+    } catch (err) {
+      console.error('Failed to load pending videos:', err);
+    } finally {
+      setIsFetchingPendingVideos(false);
+    }
+  };
+
+  useEffect(() => {
+    if (activeTab === 'videos') {
+      loadPendingVideos();
+    }
+  }, [activeTab]);
+
+  const handleApproveAdminVideo = async (videoId: string) => {
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch(`http://localhost:5000/api/v1/tribes/admin/videos/${videoId}/approve`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setAdminPendingVideos(prev => prev.filter(v => v.id !== videoId));
+        alert('Video approved successfully! It is now live on the public video slider.');
+      }
+    } catch (err) {
+      console.error('Failed to approve video:', err);
+    }
+  };
+
+  const handleConfirmRejectAdminVideo = async () => {
+    if (!rejectingVideo) return;
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch(`http://localhost:5000/api/v1/tribes/admin/videos/${rejectingVideo.id}/reject`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ rejectionReason: rejectionReasonText.trim() || 'Content does not meet site community guidelines.' })
+      });
+      if (res.ok) {
+        setAdminPendingVideos(prev => prev.filter(v => v.id !== rejectingVideo.id));
+        setRejectingVideo(null);
+        setRejectionReasonText('');
+        alert('Video rejected. The rejection status and reason have been sent to the user profile.');
+      }
+    } catch (err) {
+      console.error('Failed to reject video:', err);
+    }
+  };
 
   const filteredData = tribes.filter(item =>
     item.englishName.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -494,6 +564,150 @@ const AdminTribes = () => {
                     placeholder='"A memorable quote or key fact shown at the bottom of the hero section..."' />
                 </div>
               </div>
+            </div>
+          )}
+
+          {/* ── VIDEOS MODERATION TAB ── */}
+          {activeTab === 'videos' && (
+            <div className="space-y-5 animate-in fade-in duration-200">
+              <div className="flex items-center justify-between p-3 bg-[#EAB308]/10 border border-[#EAB308]/20 rounded-xl">
+                <div className="flex items-center gap-2">
+                  <Film size={16} className="text-[#EAB308]" />
+                  <span className="text-sm font-semibold text-white">Video Moderation for {editingItem?.englishName || 'this tribe'}</span>
+                  <span className="text-xs text-white/50 hidden md:inline">— verify video content & publish/reject</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={loadPendingVideos}
+                  className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all"
+                >
+                  <RefreshCw size={12} /> Refresh Submissions
+                </button>
+              </div>
+
+              <div className="p-4 bg-white/[0.02] border border-white/10 rounded-2xl space-y-4">
+                <div className="flex items-center justify-between">
+                  <h4 className="text-xs font-bold text-white/80 uppercase tracking-wider flex items-center gap-2">
+                    <Film size={14} className="text-[#EAB308]" />
+                    Pending Video Submissions ({adminPendingVideos.length})
+                  </h4>
+                  <span className="text-xs text-[#EAB308] bg-[#EAB308]/10 px-2.5 py-0.5 rounded-full font-bold">
+                    Inline Video Verification Enabled
+                  </span>
+                </div>
+
+                <div className="text-xs text-white/60 bg-white/5 p-3 rounded-xl border border-white/5">
+                  🎥 Watch and verify each user video below. Click <strong>Approve Video</strong> to publish it live to the public Tribe Video Slider. Click <strong>Reject</strong> to attach a rejection reason for the user's profile.
+                </div>
+
+                {isFetchingPendingVideos ? (
+                  <div className="py-12 text-center text-white/50 text-sm">
+                    Loading video submissions...
+                  </div>
+                ) : adminPendingVideos.length === 0 ? (
+                  <div className="py-12 text-center bg-white/[0.01] border border-dashed border-white/10 rounded-xl">
+                    <Film size={28} className="mx-auto mb-2 text-white/20" />
+                    <p className="text-white/40 text-sm">No pending videos awaiting moderation for this tribe.</p>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
+                    {adminPendingVideos.map((vid) => (
+                      <div key={vid.id} className="border border-white/10 rounded-2xl bg-white/[0.03] p-4 flex flex-col justify-between space-y-3">
+                        {/* Inline Video Player for Admin Verification */}
+                        <div className="w-full aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
+                          <video
+                            src={vid.videoUrl}
+                            controls
+                            preload="metadata"
+                            className="w-full h-full object-contain"
+                          />
+                        </div>
+
+                        <div className="space-y-1.5">
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                              Pending Approval
+                            </span>
+                            <span className="text-[11px] text-white/40">Tribe: {vid.tribeName}</span>
+                          </div>
+                          <h5 className="font-serif font-bold text-white text-sm leading-snug">
+                            {vid.caption || vid.title || 'Untitled Video'}
+                          </h5>
+                          <p className="text-xs text-white/60">Uploaded by {vid.uploaderName || 'Community Member'}</p>
+                        </div>
+
+                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+                          <button
+                            type="button"
+                            onClick={() => handleApproveAdminVideo(vid.id)}
+                            className="px-4 py-2 rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-green-500/30"
+                          >
+                            <Check size={14} /> Approve Video
+                          </button>
+                          <button
+                            type="button"
+                            onClick={() => {
+                              setRejectingVideo(vid);
+                              setRejectionReasonText('');
+                            }}
+                            className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-red-500/30"
+                          >
+                            <X size={14} /> Reject
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Rejection Reason Modal */}
+              {rejectingVideo && (
+                <div className="fixed inset-0 z-[500] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
+                  <div className="bg-[#120E0B] border border-[#D4A017]/40 rounded-2xl p-6 w-full max-w-md space-y-4 text-white shadow-2xl">
+                    <div className="flex items-center justify-between border-b border-white/10 pb-3">
+                      <h4 className="text-base font-bold text-red-400 flex items-center gap-2">
+                        <X size={16} /> Reject Video Submission
+                      </h4>
+                      <button type="button" onClick={() => setRejectingVideo(null)} className="text-white/40 hover:text-white text-xs">✕</button>
+                    </div>
+
+                    <p className="text-xs text-white/70">
+                      Specify the reason for rejecting <strong className="text-white">&quot;{rejectingVideo.caption || rejectingVideo.title}&quot;</strong>. This reason will be displayed to the user under their profile&apos;s <strong>Rejected Posts</strong>.
+                    </p>
+
+                    <div>
+                      <label className="block text-xs font-bold text-white/90 mb-1.5 uppercase tracking-wider">
+                        Rejection Reason <span className="text-red-400">*</span>
+                      </label>
+                      <textarea
+                        rows={3}
+                        value={rejectionReasonText}
+                        onChange={(e) => setRejectionReasonText(e.target.value)}
+                        placeholder="e.g. Inappropriate content, video quality is too low, or not related to tribal heritage."
+                        className="w-full bg-white/[0.04] border border-white/10 text-white rounded-xl py-2.5 px-4 focus:outline-none focus:border-red-400 text-sm placeholder:text-white/30 resize-none"
+                      />
+                    </div>
+
+                    <div className="flex items-center justify-end gap-3 pt-2">
+                      <button
+                        type="button"
+                        onClick={() => setRejectingVideo(null)}
+                        className="px-4 py-2 text-white/60 hover:text-white font-semibold text-xs rounded-xl border border-white/10 hover:bg-white/5"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        type="button"
+                        onClick={handleConfirmRejectAdminVideo}
+                        className="px-5 py-2 bg-red-500 hover:bg-red-600 text-white font-bold text-xs rounded-xl transition-all shadow-md"
+                      >
+                        Confirm Rejection
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

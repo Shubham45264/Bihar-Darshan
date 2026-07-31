@@ -3,7 +3,7 @@ import tourismMain from "../../assets/tourism main.png";
 
 const Hero = () => {
   return (
-    <section className="relative min-h-[90vh] md:min-h-screen w-full flex flex-col pt-32 pb-24 md:pb-0 justify-center">
+    <section className="relative min-h-[90vh] md:min-h-[85vh] w-full flex flex-col pt-32 pb-24 md:pb-0 justify-center">
       {/* Cinematic Background */}
       <div className="absolute inset-0 z-0">
         <img
@@ -26,8 +26,8 @@ const Hero = () => {
               EXPLORE THE SOUL OF BIHAR
             </span>
 
-            <h1 className="font-display font-bold text-5xl md:text-7xl text-white leading-[1.1] mb-6">
-              Journeys That <br /> Stay <span className="text-brand-gold italic font-light">With You</span>
+            <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight mb-6">
+              Discover Bihar's <span className="text-[#EAB308]">Tourism</span>
             </h1>
 
             <p className="text-white/80 text-lg md:text-xl max-w-md mb-10 font-medium leading-relaxed">

@@ -1,6 +1,6 @@
 import { prisma as db } from '../../db';
 import { AppError } from '../../errors/AppError';
-import { CreateTribeInput, UpdateTribeInput, CreateTribalArticleInput } from './tribe.validation';
+import { CreateTribeInput, UpdateTribeInput, CreateTribalArticleInput, CreateTribeVideoInput } from './tribe.validation';
 
 // --- Tribes ---
 export const getAllTribes = async (includeInactive = false) => {
@@ -121,4 +121,81 @@ export const deleteArticle = async (id: string) => {
   if (!article) throw new AppError('Article not found', 404);
   
   return db.tribalArticle.delete({ where: { id } });
+};
+
+// --- Tribe Videos ---
+export const getApprovedTribeVideos = async (tribeId?: string, tribeName?: string) => {
+  const whereClause: any = { status: 'APPROVED' };
+  if (tribeId) whereClause.tribeId = tribeId;
+  else if (tribeName) whereClause.tribeName = { equals: tribeName, mode: 'insensitive' };
+  
+  return (db as any).tribeVideo.findMany({
+    where: whereClause,
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+export const getPendingTribeVideos = async () => {
+  return (db as any).tribeVideo.findMany({
+    where: { status: 'PENDING' },
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+export const createTribeVideo = async (data: CreateTribeVideoInput, userRole: string = 'USER') => {
+  const status = userRole === 'ADMIN' ? 'APPROVED' : 'PENDING';
+  const caption = data.caption || data.title || '';
+  const title = data.title || caption;
+  const uploaderName = data.uploaderName || 'Community Member';
+
+  return (db as any).tribeVideo.create({
+    data: {
+      title,
+      caption,
+      videoUrl: data.videoUrl,
+      uploaderName,
+      description: data.description || null,
+      tribeId: data.tribeId,
+      tribeName: data.tribeName,
+      status,
+    },
+  });
+};
+
+export const getAllTribeVideos = async (status?: string) => {
+  const whereClause: any = {};
+  if (status && status !== 'all') {
+    whereClause.status = status.toUpperCase();
+  }
+  return (db as any).tribeVideo.findMany({
+    where: whereClause,
+    orderBy: { createdAt: 'desc' },
+  });
+};
+
+export const approveTribeVideo = async (id: string) => {
+  const video = await (db as any).tribeVideo.findUnique({ where: { id } });
+  if (!video) throw new AppError('Video not found', 404);
+  return (db as any).tribeVideo.update({
+    where: { id },
+    data: { status: 'APPROVED', rejectionReason: null },
+  });
+};
+
+export const rejectTribeVideo = async (id: string, rejectionReason?: string) => {
+  const video = await (db as any).tribeVideo.findUnique({ where: { id } });
+  if (!video) throw new AppError('Video not found', 404);
+  return (db as any).tribeVideo.update({
+    where: { id },
+    data: {
+      status: 'REJECTED',
+      rejectionReason: rejectionReason || 'Content does not meet site community guidelines.',
+    },
+  });
+};
+
+export const deleteTribeVideo = async (id: string) => {
+  const video = await (db as any).tribeVideo.findUnique({ where: { id } });
+  if (!video) throw new AppError('Video not found', 404);
+  return (db as any).tribeVideo.delete({ where: { id } });
 };

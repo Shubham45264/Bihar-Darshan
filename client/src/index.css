@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Barlow:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=DM+Sans:ital,opsz,wght@0,9..40,100..1000;1,9..40,100..1000&family=Lora:ital,wght@0,400..700;1,400..700&family=Titillium+Web:ital,wght@0,200;0,300;0,400;0,600;0,700;0,900;1,200;1,300;1,400;1,600;1,700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "DM Sans", system-ui, -apple-system, sans-serif;
-  --font-serif: "Lora", serif;
-  --font-display: "Barlow", sans-serif;
+  --font-sans: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  --font-serif: "Marcellus", serif;
+  --font-display: "Marcellus", serif;
 
   --color-gold: #D4A017;
   --color-gold-dark: #B8860B;
@@ -21,13 +21,33 @@
   --color-card-border: #E5E7EB;
 }
 
+/* ── Unified Site Typography (Marcellus Headings + Source Sans 3 Body) ── */
+h1, h2, h3, h4, h5, h6,
+.font-serif,
+.font-display {
+  font-family: "Marcellus", serif !important;
+}
+
+body,
+p,
+span,
+a,
+button,
+input,
+textarea,
+select,
+label,
+.font-sans {
+  font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+}
+
 /* Smooth scrolling */
 html {
   scroll-behavior: auto;
 }
 
 body {
-  font-family: var(--font-sans);
+  font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
   color: var(--color-primary);
   background: var(--color-bg);
   overflow-x: hidden;

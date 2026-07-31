@@ -209,10 +209,27 @@ export const votePoll = async (postId: string, optionId: string, previousOptionI
   });
 };
 
-export const incrementPostViews = async (postId: string) => {
+export const incrementPostViews = async (postId: string, userId?: string) => {
+  const post = await db.communityPost.findUnique({ where: { id: postId } });
+  if (!post) throw new Error('Post not found');
+
+  if (!userId || userId === 'guest' || userId === 'anonymous') {
+    return post;
+  }
+
+  const hasViewed = post.viewedBy?.includes(userId);
+  if (hasViewed) {
+    return post;
+  }
+
+  const newViewedBy = [...(post.viewedBy || []), userId];
+
   return db.communityPost.update({
     where: { id: postId },
-    data: { views: { increment: 1 } },
+    data: {
+      viewedBy: newViewedBy,
+      views: newViewedBy.length,
+    },
   });
 };
 

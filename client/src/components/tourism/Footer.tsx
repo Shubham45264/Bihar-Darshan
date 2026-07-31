@@ -1,5 +1,6 @@
 import { motion } from "framer-motion";
 import { Facebook, Twitter, Instagram, Youtube, Send, ArrowUpRight } from "lucide-react";
+import { Link } from "react-router-dom";
 import logo from "../../assets/logo.png";
 
 const Footer = () => {
@@ -88,7 +89,7 @@ const Footer = () => {
             © 2026 Bihar Darshan. All Rights Reserved. Crafted with <span className="text-brand-gold italic">Heritage</span> & Excellence.
           </p>
           <div className="flex gap-8">
-            <a href="#" className="text-brand-dark/30 text-[10px] uppercase font-bold tracking-[0.2em] hover:text-brand-gold transition-colors">Privacy Policy</a>
+            <Link to="/privacy-policy" className="text-brand-dark/30 text-[10px] uppercase font-bold tracking-[0.2em] hover:text-brand-gold transition-colors">Privacy Policy</Link>
             <a href="#" className="text-brand-dark/30 text-[10px] uppercase font-bold tracking-[0.2em] hover:text-brand-gold transition-colors">Terms of Service</a>
           </div>
         </div>

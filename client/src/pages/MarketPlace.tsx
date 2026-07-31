@@ -71,9 +71,8 @@ const MarketPlace = () => {
                 SUPPORT LOCAL ARTISANS
               </span>
 
-              <h1 className="font-display font-bold text-5xl md:text-7xl text-white leading-[1.1] mb-6">
-                Bihar
-                <span className="text-brand-gold italic font-light block mt-2">Marketplace</span>
+              <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight mb-6">
+                Discover Bihar's <span className="text-[#EAB308]">Marketplace</span>
               </h1>
 
               <p className="text-white/80 text-lg md:text-xl max-w-md mb-10 font-medium leading-relaxed">

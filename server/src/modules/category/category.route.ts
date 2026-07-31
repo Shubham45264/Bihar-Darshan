@@ -1,13 +1,19 @@
 import { Router } from 'express';
 import * as categoryController from './category.controller';
-import { authenticate, restrictTo } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
+// Public / Admin Category Routes
 router.get('/', categoryController.getAllCategories);
-router.post('/', authenticate, categoryController.createCategory);
-router.patch('/:id/approve', authenticate, restrictTo('ADMIN'), categoryController.approveCategory);
-router.patch('/:id/reject', authenticate, restrictTo('ADMIN'), categoryController.rejectCategory);
-router.delete('/:id', authenticate, restrictTo('ADMIN'), categoryController.deleteCategory);
+router.get('/:slug', categoryController.getCategoryBySlug);
+
+router.post('/', categoryController.createCategory);
+router.put('/:id', categoryController.updateCategory);
+router.delete('/:id', categoryController.deleteCategory);
+
+// Admin Subcategory Routes
+router.post('/:categoryId/subcategories', categoryController.createSubCategory);
+router.put('/subcategories/:subId', categoryController.updateSubCategory);
+router.delete('/subcategories/:subId', categoryController.deleteSubCategory);
 
 export const categoryRoutes = router;

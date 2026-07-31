@@ -66,11 +66,11 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
           transition={{ duration: 0.25 }}
-          className="fixed inset-0 z-[300] flex items-start justify-center pt-24 pb-8"
+          className="fixed inset-0 z-[300] flex items-start justify-center p-4 pt-20 pb-8"
           onClick={(e) => { if (e.target === e.currentTarget) onClose(); }}
         >
           {/* Backdrop */}
-          <div className="fixed inset-0 bg-[#8B3E2F]/70 backdrop-blur-sm" />
+          <div className="fixed inset-0 bg-black/80 backdrop-blur-md" />
 
           {/* Article Container */}
           <motion.div
@@ -78,12 +78,16 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: 40 }}
             transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
-            className="relative w-full max-w-[820px] max-h-[calc(100vh-8rem)] overflow-y-auto mx-4 bg-[#FCEBD3] rounded-3xl shadow-2xl border border-[#8B3E2F]/10 z-10 flex-shrink-0"
+            className="relative w-full max-w-[820px] max-h-[calc(100vh-6rem)] overflow-y-auto mx-4 bg-[#120E0B]/95 backdrop-blur-xl rounded-[2rem] shadow-[0_25px_70px_rgba(0,0,0,0.8)] border border-[#D4A017]/30 z-10 flex-shrink-0 text-white"
+            style={{
+              scrollbarWidth: 'thin',
+              scrollbarColor: '#D4A017 transparent',
+            }}
           >
             {/* Close Button - Fixed top right */}
             <button
               onClick={onClose}
-              className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-[#8B3E2F]/80 hover:bg-[#b71c1c] flex items-center justify-center transition-colors shadow-lg"
+              className="absolute top-4 right-4 z-30 w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 border border-white/10 flex items-center justify-center transition-colors shadow-lg cursor-pointer text-white"
               aria-label="Close article"
             >
               <X className="w-5 h-5 text-white" />
@@ -108,18 +112,18 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
               </div>
 
               {/* Gradient Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-[#8B3E2F]/90 via-[#8B3E2F]/30 to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[#120E0B] via-[#120E0B]/40 to-transparent pointer-events-none" />
 
               {/* Source Badge */}
               <div className="absolute top-4 left-4 z-20 pointer-events-none">
-                <span className="px-3 py-1.5 bg-[#b71c1c] text-white text-[10px] font-bold tracking-[0.2em] uppercase rounded-md shadow-md">
+                <span className="px-3 py-1.5 bg-[#D4A017] text-[#120E0B] text-[10px] font-extrabold tracking-[0.2em] uppercase rounded-md shadow-md">
                   {article.author}
                 </span>
               </div>
               
               {/* Image Indicators */}
               {(article.images && article.images.length > 1) && (
-                <div className="absolute top-4 right-16 z-20 flex gap-1.5 bg-black/30 px-3 py-1.5 rounded-full backdrop-blur-sm pointer-events-none">
+                <div className="absolute top-4 right-16 z-20 flex gap-1.5 bg-black/50 border border-white/10 px-3 py-1.5 rounded-full backdrop-blur-md pointer-events-none">
                    <span className="text-white text-xs font-bold tracking-wider">{article.images.length} Images • Scroll ➔</span>
                 </div>
               )}
@@ -133,26 +137,26 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
             </div>
 
             {/* Meta Bar */}
-            <div className="px-6 sm:px-10 py-4 border-b border-[#8B3E2F]/10 bg-[#FCEBD3]/50 flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-[#8B3E2F]">
-              <span className="flex items-center gap-1.5 font-semibold">
-                <User className="w-3.5 h-3.5 text-[#F4A261]" />
+            <div className="px-6 sm:px-10 py-4 border-b border-white/10 bg-white/[0.03] flex flex-wrap items-center gap-x-5 gap-y-2 text-xs sm:text-sm text-white/80">
+              <span className="flex items-center gap-1.5 font-semibold text-white">
+                <User className="w-3.5 h-3.5 text-[#D4A017]" />
                 {article.author}
               </span>
-              <span className="text-[#8B3E2F]/15">|</span>
+              <span className="text-white/20">|</span>
               <span className="flex items-center gap-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#F4A261]" />
+                <Calendar className="w-3.5 h-3.5 text-[#D4A017]" />
                 {formatDateFull(article.publishedDate)}
               </span>
-              <span className="text-[#8B3E2F]/15">|</span>
+              <span className="text-white/20">|</span>
               <span className="flex items-center gap-1.5">
-                <Clock className="w-3.5 h-3.5 text-[#F4A261]" />
+                <Clock className="w-3.5 h-3.5 text-[#D4A017]" />
                 {article.readTime} min read
               </span>
               {article.location && (
                 <>
-                  <span className="text-[#8B3E2F]/15">|</span>
+                  <span className="text-white/20">|</span>
                   <span className="flex items-center gap-1.5">
-                    <MapPin className="w-3.5 h-3.5 text-[#F4A261]" />
+                    <MapPin className="w-3.5 h-3.5 text-[#D4A017]" />
                     {article.location}
                   </span>
                 </>
@@ -163,7 +167,7 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
             <div className="px-6 sm:px-10 py-8 sm:py-10">
               {/* Tribe Badge */}
               <div className="mb-6">
-                <span className="inline-flex items-center gap-1.5 px-3 py-1 bg-[#F4A261]/10 border border-[#F4A261]/30 rounded-full text-xs font-bold text-[#8B3E2F] uppercase tracking-wider">
+                <span className="inline-flex items-center gap-1.5 px-3.5 py-1 bg-[#D4A017]/15 border border-[#D4A017]/30 rounded-full text-xs font-bold text-[#D4A017] uppercase tracking-wider">
                   {article.tribe}
                 </span>
               </div>
@@ -178,7 +182,7 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
                     return (
                       <blockquote
                         key={idx}
-                        className="my-6 pl-5 border-l-4 border-[#F4A261] italic text-[#8B3E2F] text-lg sm:text-xl font-serif leading-relaxed"
+                        className="my-6 pl-5 border-l-4 border-[#D4A017] italic text-[#D4A017] text-lg sm:text-xl font-serif leading-relaxed"
                       >
                         {paragraph}
                       </blockquote>
@@ -190,7 +194,7 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
                     return (
                       <p
                         key={idx}
-                        className="text-lg sm:text-xl text-[#8B3E2F] font-serif leading-relaxed font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-[#b71c1c] first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-[0.8]"
+                        className="text-lg sm:text-xl text-white/90 font-serif leading-relaxed font-medium first-letter:text-5xl first-letter:font-bold first-letter:text-[#D4A017] first-letter:float-left first-letter:mr-2 first-letter:mt-1 first-letter:leading-[0.8]"
                       >
                         {paragraph}
                       </p>
@@ -200,7 +204,7 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
                   return (
                     <p
                       key={idx}
-                      className="text-base sm:text-[17px] text-[#8B3E2F] leading-[1.85] font-sans"
+                      className="text-base sm:text-[17px] text-white/80 leading-[1.85] font-sans"
                     >
                       {paragraph}
                     </p>
@@ -208,12 +212,11 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
                 })}
               </div>
 
-
               {/* Back Button */}
-              <div className="mt-8 pt-6 border-t border-[#8B3E2F]/10">
+              <div className="mt-8 pt-6 border-t border-white/10">
                 <button
                   onClick={onClose}
-                  className="inline-flex items-center gap-2 text-[#8B3E2F] hover:text-[#8B3E2F] font-bold text-sm tracking-wider uppercase transition-colors group"
+                  className="inline-flex items-center gap-2 text-[#D4A017] hover:text-[#E6B52F] font-bold text-sm tracking-wider uppercase transition-colors group cursor-pointer"
                 >
                   <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
                   Back to Articles

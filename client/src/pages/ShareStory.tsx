@@ -1,17 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Camera, Utensils, PartyPopper, MapPin, Sparkles, User, Tag, FileText, Upload, Video, CheckCircle2, Heart, Send, Edit2, Plus } from "lucide-react";
+import { Camera, MapPin, Sparkles, User, Tag, FileText, Upload, CheckCircle2, Heart, Send, X, Plus } from "lucide-react";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
-import { useContributions } from "../data/ContributionContext";
-import galleryBg from "../assets/gallery-hero.png";
-import foodBg from "../assets/bihar-food.png";
-import festivalBg from "../assets/bihar-folk-dance.png";
 import heroBg from "../assets/hero.png";
-import heritageBg from "../assets/bihar-heritage.png";
-import { useArticles } from "../data/ArticlesContext";
-import { useAdminData } from "../data/AdminContext";
-import { auth } from "../lib/firebase";
 import "./ShareStory.css";
 
 const BIHAR_DISTRICTS = [
@@ -23,138 +17,118 @@ const BIHAR_DISTRICTS = [
   "Siwan", "Supaul", "Vaishali", "West Champaran"
 ].sort();
 
-const GALLERY_CATEGORIES = [
-  "Food", "Culture", "Politicians", "Places", "Heritage", "Festivals",
-  "Agriculture", "Art & Craft", "Wildlife", "Community", "Tourism",
-  "Architecture", "Religion"
-];
+interface SubCategory {
+  id: string;
+  title: string;
+  slug: string;
+  image?: string;
+}
+
+interface Category {
+  id: string;
+  title: string;
+  slug: string;
+  image?: string;
+  subcategories: SubCategory[];
+}
+
+interface MediaItem {
+  id: string;
+  url: string;
+  type: 'photo' | 'video';
+  name: string;
+}
 
 const ShareStory = () => {
   const navigate = useNavigate();
-  const { cultureSubmissions, gallerySubmissions, personalitySubmissions, addCultureSubmission, addGallerySubmission, addPersonalitySubmission } = useContributions();
-  const { articles, addArticle } = useArticles();
-  const { culture, personalities } = useAdminData();
   const location = useLocation();
 
-  // Dynamically collect only entries/items that are present on the website for the selected category
-  const getWebsiteItemsForCategory = (selectedCategory: string) => {
-    const normalized = selectedCategory.toLowerCase().trim();
-    const titles = new Set<string>();
-
-    if (normalized === 'food') {
-      [...culture, ...cultureSubmissions]
-        .filter(item => item.type?.toLowerCase() === 'food')
-        .forEach(item => { if (item.title?.trim()) titles.add(item.title.trim()); });
-    } else if (normalized === 'festival' || normalized === 'festivals') {
-      [...culture, ...cultureSubmissions]
-        .filter(item => item.type?.toLowerCase() === 'festival')
-        .forEach(item => { if (item.title?.trim()) titles.add(item.title.trim()); });
-    } else if (normalized === 'personality' || normalized === 'personalities') {
-      [...personalities, ...personalitySubmissions]
-        .forEach(item => { if (item.name?.trim()) titles.add(item.name.trim()); });
-    } else if (normalized === 'tribes') {
-      articles.forEach(item => { if (item.headline?.trim()) titles.add(item.headline.trim()); });
-    } else {
-      [...culture, ...cultureSubmissions]
-        .filter(item => item.type?.toLowerCase() === normalized)
-        .forEach(item => { if (item.title?.trim()) titles.add(item.title.trim()); });
-    }
-
-    return Array.from(titles);
-  };
-  const [category, setCategory] = useState<string>(() => {
-    const searchParams = new URLSearchParams(window.location.search);
-    const catParam = searchParams.get('category');
-    if (catParam) return catParam;
-    return "gallery";
-  });
-
-  useEffect(() => {
-    const searchParams = new URLSearchParams(location.search);
-    const catParam = searchParams.get('category');
-    const stateCat = location.state && (location.state as any).category;
-    const targetCat = catParam || stateCat;
-    if (targetCat) {
-      setCategory(targetCat);
-    }
-  }, [location]);
-
-  const [isCustomCategoryInput, setIsCustomCategoryInput] = useState(false);
-  const [customCategoryName, setCustomCategoryName] = useState("");
-  const [isCustomSubCategoryInput, setIsCustomSubCategoryInput] = useState(false);
-  const [customSubCategoryName, setCustomSubCategoryName] = useState("");
-  const [customCategories, setCustomCategories] = useState<{ id: string; title: string; image?: string }[]>(() => {
-    try {
-      const stored = localStorage.getItem('discover_custom_categories');
-      if (stored) return JSON.parse(stored);
-    } catch (e) {
-      console.error('Failed to parse custom categories:', e);
-    }
-    return [];
-  });
+  // Dynamic Categories from Backend
+  const [categoriesList, setCategoriesList] = useState<Category[]>([]);
+  const [selectedCatId, setSelectedCatId] = useState<string>('');
+  const [selectedSubId, setSelectedSubId] = useState<string>('');
 
   // Form Fields
-  const [title, setTitle] = useState(""); // Name of food/festival/personality/tribe
-  const [caption, setCaption] = useState("");
-  const [personName, setPersonName] = useState("");
-  const [description, setDescription] = useState("");
-  const [ingredients, setIngredients] = useState("");
-  const [origin, setOrigin] = useState("");
-  const [whatSpecial, setWhatSpecial] = useState("");
-  const [district, setDistrict] = useState("Bihar");
+  const [title, setTitle] = useState('');
+  const [caption, setCaption] = useState('');
+  const [personName, setPersonName] = useState('');
+  const [district, setDistrict] = useState('Patna');
 
-  // Gallery specific
-  const [mediaType, setMediaType] = useState<"photo" | "video">("photo");
-  const [galleryCategory, setGalleryCategory] = useState("Community");
-  const [videoUrl, setVideoUrl] = useState("");
-
-  // Personality specific
-  const [personalityCategory, setPersonalityCategory] = useState("Historical");
-
-  // Media upload state (Gallery & Personality)
-  const [mediaFile, setMediaFile] = useState<string | null>(null); // Base64 data URL
-  const [fileName, setFileName] = useState("");
+  // Media upload state (Up to 3 photos/videos)
+  const [mediaList, setMediaList] = useState<MediaItem[]>([]);
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
-  // Specific media upload states (Food, Festival, Tribes)
-  const [photoFile, setPhotoFile] = useState<string | null>(null);
-  const [photoFileName, setPhotoFileName] = useState("");
-  const [videoFile, setVideoFile] = useState<string | null>(null);
-  const [videoFileName, setVideoFileName] = useState("");
-  const [activeDragZone, setActiveDragZone] = useState<"photo" | "video" | null>(null);
-  const photoInputRef = useRef<HTMLInputElement>(null);
-  const videoInputRef = useRef<HTMLInputElement>(null);
-
-  // Form Submission/Status state
+  // Status
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  // Reset scroll position to top whenever category changes
+  // Auto-fill logged in user account name
   useEffect(() => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [category]);
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        const name = user.displayName || user.email?.split('@')[0] || '';
+        setPersonName(name);
+      }
+    });
+    return () => unsubscribe();
+  }, []);
 
+  // Fetch Categories from Backend API
   useEffect(() => {
-    const fetchBackendCategories = async () => {
+    const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/categories');
+        const res = await fetch('http://localhost:5000/api/v1/categories?status=APPROVED');
         const data = await res.json();
         if (data.success && data.data?.categories) {
-          setCustomCategories(prev => {
-            const mergedMap = new Map<string, { id: string; title: string; image?: string }>();
-            prev.forEach(c => mergedMap.set(c.title.toLowerCase(), c));
-            data.data.categories.forEach((c: any) => mergedMap.set(c.title.toLowerCase(), c));
-            return Array.from(mergedMap.values());
-          });
+          const cats = data.data.categories as Category[];
+          setCategoriesList(cats);
+
+          // Check if category is passed via URL or state
+          const searchParams = new URLSearchParams(location.search);
+          const catParam = searchParams.get('category');
+          if (catParam) {
+            const matched = cats.find(
+              (c) => c.title.toLowerCase() === catParam.toLowerCase() || c.slug === catParam
+            );
+            if (matched) {
+              setSelectedCatId(matched.id);
+              if (matched.subcategories.length > 0) {
+                setSelectedSubId(matched.subcategories[0].id);
+              }
+              return;
+            }
+          }
+
+          if (cats.length > 0) {
+            setSelectedCatId(cats[0].id);
+            if (cats[0].subcategories.length > 0) {
+              setSelectedSubId(cats[0].id ? cats[0].subcategories[0]?.id || '' : '');
+            }
+          }
         }
       } catch (err) {
-        console.error('Failed to fetch backend categories in ShareStory:', err);
+        console.error('Error fetching categories in ShareStory:', err);
       }
     };
-    fetchBackendCategories();
-  }, []);
+
+    fetchCategories();
+  }, [location]);
+
+  // Selected Category & Available Subcategories
+  const selectedCategoryObj = categoriesList.find((c) => c.id === selectedCatId);
+  const availableSubcategories = selectedCategoryObj ? selectedCategoryObj.subcategories : [];
+
+  const handleCategoryChange = (catId: string) => {
+    setSelectedCatId(catId);
+    const cat = categoriesList.find((c) => c.id === catId);
+    if (cat && cat.subcategories.length > 0) {
+      setSelectedSubId(cat.subcategories[0].id);
+    } else {
+      setSelectedSubId('');
+    }
+  };
 
   // Drag and Drop handlers
   const handleDragOver = (e: React.DragEvent) => {
@@ -166,302 +140,139 @@ const ShareStory = () => {
     setIsDragging(false);
   };
 
-  const processFile = (file: File) => {
-    if (!file) return;
+  const processFiles = (files: FileList | File[]) => {
+    const fileArray = Array.from(files);
+    if (fileArray.length === 0) return;
 
-    const isVideo = file.type.startsWith("video/");
-    const maxSize = isVideo ? 15 * 1024 * 1024 : 5 * 1024 * 1024;
-
-    if (file.size > maxSize) {
-      setErrors((prev) => ({
-        ...prev,
-        media: `File size exceeds ${isVideo ? "15MB" : "5MB"} limit. Please choose a smaller file.`,
-      }));
+    if (mediaList.length >= 3) {
+      setErrors((prev) => ({ ...prev, media: "Maximum 3 media files can be uploaded." }));
       return;
     }
 
-    setFileName(file.name);
-    const type = isVideo ? "video" : "photo";
-    setMediaType(type);
+    const availableSlots = 3 - mediaList.length;
+    const filesToProcess = fileArray.slice(0, availableSlots);
 
-    setErrors((prev) => {
-      const copy = { ...prev };
-      delete copy.media;
-      return copy;
-    });
-
-    const reader = new FileReader();
-    reader.onloadend = () => {
-      const result = reader.result as string;
-      setMediaFile(result);
-      if (type === "video") {
-        setVideoFile(result);
-        setVideoFileName(file.name);
-        setPhotoFile(null);
-        setPhotoFileName("");
-      } else {
-        setPhotoFile(result);
-        setPhotoFileName(file.name);
-        setVideoFile(null);
-        setVideoFileName("");
-      }
-    };
-    reader.readAsDataURL(file);
-  };
-
-  const processPhotoFile = (file: File) => {
-    processFile(file);
-  };
-
-  const processVideoFile = (file: File) => {
-    processFile(file);
-  };
-
-  const handleDragOverZone = (e: React.DragEvent, zone: "photo" | "video") => {
-    e.preventDefault();
-    setIsDragging(true);
-    setActiveDragZone(zone);
-  };
-
-  const handleDragLeaveZone = () => {
-    setIsDragging(false);
-    setActiveDragZone(null);
-  };
-
-  const handleDropZone = (e: React.DragEvent, zone: "photo" | "video") => {
-    e.preventDefault();
-    setIsDragging(false);
-    setActiveDragZone(null);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      processFile(e.dataTransfer.files[0]);
+    if (fileArray.length > availableSlots) {
+      setErrors((prev) => ({ ...prev, media: `Only up to 3 files allowed. Processed first ${availableSlots} files.` }));
+    } else {
+      setErrors((prev) => {
+        const copy = { ...prev };
+        delete copy.media;
+        return copy;
+      });
     }
+
+    filesToProcess.forEach((file) => {
+      if (file.size > 5 * 1024 * 1024) {
+        setErrors((prev) => ({ ...prev, media: `${file.name} exceeds 5MB limit.` }));
+        return;
+      }
+
+      const isVideo = file.type.startsWith("video/");
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const newMediaItem: MediaItem = {
+          id: Math.random().toString(36).substring(2, 9),
+          url: reader.result as string,
+          type: isVideo ? "video" : "photo",
+          name: file.name,
+        };
+        setMediaList((prev) => {
+          if (prev.length >= 3) return prev;
+          return [...prev, newMediaItem];
+        });
+      };
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     setIsDragging(false);
-    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
-      processFile(e.dataTransfer.files[0]);
+    if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+      processFiles(e.dataTransfer.files);
     }
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files && e.target.files[0]) {
-      processFile(e.target.files[0]);
+    if (e.target.files && e.target.files.length > 0) {
+      processFiles(e.target.files);
+      // Reset input value to allow re-uploading same file if removed
+      if (fileInputRef.current) fileInputRef.current.value = "";
     }
   };
 
-  // Validation
+  const removeMediaItem = (id: string) => {
+    setMediaList((prev) => prev.filter((item) => item.id !== id));
+    setErrors((prev) => {
+      const copy = { ...prev };
+      delete copy.media;
+      return copy;
+    });
+  };
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
-    if (category === "gallery") {
-      if (!mediaFile) newErrors.media = "Please upload a photo/video file";
-      if (!caption.trim()) newErrors.caption = "Caption is required";
-    } else if (category === "personality") {
-      if (!mediaFile) newErrors.media = "Please upload a photo/video file";
-      if (!title.trim()) newErrors.title = "Personality name is required";
-      if (!description.trim()) newErrors.description = "Description is required";
-    } else {
-      const categoryLabel = category.charAt(0).toUpperCase() + category.slice(1);
-      if (!title.trim()) newErrors.title = `${categoryLabel} Title is required`;
-      if (!description.trim()) newErrors.description = `${categoryLabel} Description is required`;
-      if (!mediaFile && !photoFile && !videoFile) newErrors.media = `Please upload a ${categoryLabel.toLowerCase()} photo or video`;
-    }
+    if (!selectedCatId) newErrors.category = "Please select a Category";
+    if (!selectedSubId && availableSubcategories.length > 0) newErrors.subcategory = "Please select a Subcategory";
+    if (!caption.trim() && !title.trim()) newErrors.caption = "Title or description is required";
+    if (mediaList.length === 0) newErrors.media = "Please upload at least 1 photo or video (max 3)";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  // Submit Handler
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!auth.currentUser) {
-      setErrors({ submit: "Please log in to submit your story." });
-      navigate('/login', { state: { from: '/share-story' } });
-      return;
-    }
     if (!validateForm()) return;
 
     setIsSubmitting(true);
-    const authorName = auth.currentUser.displayName || auth.currentUser.email?.split('@')[0] || personName || "User";
 
     try {
-      if (isCustomCategoryInput && customCategoryName.trim()) {
-        const newCatTitle = customCategoryName.trim();
-        const newCatId = newCatTitle.toLowerCase().replace(/\s+/g, '-');
-        const mainMedia = mediaFile || photoFile || videoFile || "/images/placeholder.png";
-        const existing = customCategories.find(c => c.id === newCatId || c.title.toLowerCase() === newCatTitle.toLowerCase());
-        if (!existing) {
-          const newCatObj = {
-            id: newCatId,
-            title: newCatTitle,
-            description: `Explore ${newCatTitle} in Bihar`,
-            image: mainMedia,
-            badgeText: newCatTitle,
-            district: district || "BIHAR"
-          };
-          const updated = [...customCategories, newCatObj];
-          setCustomCategories(updated);
-          try {
-            localStorage.setItem('discover_custom_categories', JSON.stringify(updated));
-          } catch (err) {
-            console.error('Failed to save custom category:', err);
-          }
-        }
+      const formattedMediaFiles = mediaList.map((item) => ({
+        url: item.url,
+        type: item.type === 'video' ? 'VIDEO' : 'IMAGE',
+      }));
+
+      const userAvatar = localStorage.getItem('userAvatar') || null;
+      const currentUser = auth.currentUser;
+      const effectiveAuthorName = currentUser?.displayName || (currentUser?.email ? currentUser.email.split('@')[0] : '') || personName.trim() || 'Bihar Explorer';
+
+      const payload = {
+        title: title.trim() || caption.trim().slice(0, 60),
+        content: caption.trim() || title.trim(),
+        mediaUrl: formattedMediaFiles[0]?.url || '',
+        mediaType: formattedMediaFiles[0]?.type || 'IMAGE',
+        mediaFiles: formattedMediaFiles,
+        authorName: effectiveAuthorName,
+        authorAvatar: userAvatar || null,
+        district,
+        categoryId: selectedCatId,
+        subcategoryId: selectedSubId,
+      };
+
+      const res = await fetch('http://localhost:5000/api/v1/stories', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      if (data.success) {
+        setIsSubmitting(false);
+        setIsSuccess(true);
+        window.dispatchEvent(new Event('submissionCreated'));
+        window.dispatchEvent(new Event('storage'));
+      } else {
+        setIsSubmitting(false);
+        setErrors({ submit: data.message || "Failed to submit story. Please try again." });
       }
-
-      if (category === "food" || category === "festival" || (!["gallery", "personality", "tribes"].includes(category))) {
-        const isVid = mediaType === "video" || !!videoFile;
-        const mainMedia = mediaFile || photoFile || videoFile;
-        const subType = category === "festival" ? "Festival" : category === "food" ? "Food" : (category.charAt(0).toUpperCase() + category.slice(1));
-        await addCultureSubmission({
-          type: subType as any,
-          district: district || "Patna",
-          image: !isVid ? (mainMedia || "/images/placeholder.png") : "/images/placeholder.png",
-          videoUrl: isVid ? (mainMedia || "") : "",
-          title,
-          description: description,
-          submittedBy: authorName,
-          caption: title,
-          extendedDetails: [],
-        });
-
-        setIsSubmitting(false);
-        setIsSuccess(true);
-      } else if (category === "gallery") {
-        addGallerySubmission({
-          title: caption,
-          image: mediaFile || "/images/placeholder.png",
-          mediaType,
-          category: "Community",
-          photographer: authorName,
-          location: district || "Patna",
-          aspectRatio: "portrait",
-        });
-
-        setIsSubmitting(false);
-        setIsSuccess(true);
-      } else if (category === "personality") {
-        const finalCategory = personalityCategory === "Art & Cinema" ? "Arts & Cinema" : personalityCategory;
-        await addPersonalitySubmission({
-          name: title,
-          category: finalCategory as any,
-          district: district || "Patna",
-          description: description,
-          imageUrl: mediaFile || "https://via.placeholder.com/400x600?text=Profile+Coming+Soon",
-          author: authorName,
-        });
-
-        setIsSubmitting(false);
-        setIsSuccess(true);
-      } else if (category === "tribes") {
-        const today = new Date().toISOString().split('T')[0];
-        const wordCount = description.trim().split(/\s+/).length;
-        const readTime = Math.max(1, Math.ceil(wordCount / 200));
-
-        const mainMedia = mediaFile || photoFile || videoFile || "/images/placeholder.png";
-        const imagesList = mainMedia !== "/images/placeholder.png" ? [mainMedia] : ["/images/placeholder.png"];
-
-        await addArticle({
-          id: `user-${Date.now()}`,
-          headline: title,
-          description: description,
-          image: mainMedia,
-          images: imagesList,
-          author: personName,
-          tribe: title,
-          publishedDate: today,
-          readTime,
-          tags: [],
-          location: district || "Patna",
-        });
-
-        setIsSubmitting(false);
-        setIsSuccess(true);
-      }
-    } catch (err: any) {
-      console.error("Submission error:", err);
+    } catch (err) {
+      console.error(err);
       setIsSubmitting(false);
-      setErrors({ submit: err?.message || "An error occurred while saving your submission. Please try again." });
+      setErrors({ submit: "An error occurred while saving your submission. Please try again." });
     }
   };
-
-  const resetForm = () => {
-    setIsCustomSubCategoryInput(false);
-    setCustomSubCategoryName("");
-    const defaultSubCats = getWebsiteItemsForCategory(category);
-    setTitle(defaultSubCats[0] || "");
-    setCaption("");
-    setPersonName("");
-    setDescription("");
-    setIngredients("");
-    setOrigin("");
-    setWhatSpecial("");
-    setDistrict("Patna");
-    setVideoUrl("");
-    setPersonalityCategory("Historical");
-    setMediaFile(null);
-    setFileName("");
-    setPhotoFile(null);
-    setPhotoFileName("");
-    setVideoFile(null);
-    setVideoFileName("");
-    setIsSuccess(false);
-    setErrors({});
-  };
-
-  const changeCategory = (catId: string) => {
-    setCategory(catId);
-    setIsCustomSubCategoryInput(false);
-    setCustomSubCategoryName("");
-    const newSubCats = getWebsiteItemsForCategory(catId);
-    setTitle(newSubCats[0] || "");
-    resetForm();
-  };
-
-  const categories = [
-    {
-      id: "gallery" as const,
-      title: "Gallery",
-      description: "Share photographs and videos of Bihar's beauty, heritage and everyday life.",
-      icon: Camera,
-      buttonText: "Explore Gallery →",
-      bgImage: galleryBg,
-    },
-    {
-      id: "food" as const,
-      title: "Food",
-      description: "Showcase authentic Bihari dishes, recipes and culinary traditions.",
-      icon: Utensils,
-      buttonText: "Share Food →",
-      bgImage: foodBg,
-    },
-    {
-      id: "festival" as const,
-      title: "Festival",
-      description: "Celebrate Bihar's vibrant festivals, rituals and traditions.",
-      icon: PartyPopper,
-      buttonText: "Share Festival →",
-      bgImage: festivalBg,
-    },
-    {
-      id: "personality" as const,
-      title: "Personality",
-      description: "Discover and share stories of legendary personalities and pride of Bihar.",
-      icon: User,
-      buttonText: "Share Personality →",
-      bgImage: heritageBg,
-    },
-    {
-      id: "tribes" as const,
-      title: "Tribes",
-      description: "Celebrate Bihar's rich tribal heritage and indigenous cultures.",
-      icon: Camera,
-      buttonText: "Share Tribe Story →",
-      bgImage: heritageBg,
-    },
-  ];
 
   return (
     <div className="share-story-page-wrapper" style={{ backgroundImage: `url(${heroBg})` }}>
@@ -472,19 +283,6 @@ const ShareStory = () => {
           <circle cx="50" cy="50" r="35" strokeWidth="0.4" />
           <circle cx="50" cy="50" r="22" strokeWidth="0.6" />
           <path d="M 50 5 L 50 95 M 5 50 L 95 50 M 18 18 L 82 82 M 18 82 L 82 18" strokeWidth="0.2" />
-          {Array.from({ length: 16 }).map((_, i) => {
-            const angle = (i * 360) / 16;
-            return (
-              <line
-                key={i}
-                x1="50"
-                y1="50"
-                x2={50 + 40 * Math.cos((angle * Math.PI) / 180)}
-                y2={50 + 40 * Math.sin((angle * Math.PI) / 180)}
-                strokeWidth="0.3"
-              />
-            );
-          })}
         </svg>
       </div>
 
@@ -495,7 +293,6 @@ const ShareStory = () => {
           <path d="M 38 50 L 62 50 L 50 15 Z" strokeWidth="0.4" />
           <line x1="50" y1="15" x2="50" y2="5" strokeWidth="0.8" />
           <circle cx="50" cy="5" r="2.5" fill="currentColor" />
-          <path d="M 42 110 A 8 8 0 0 1 58 110 Z" strokeWidth="0.4" />
         </svg>
       </div>
 
@@ -522,1066 +319,262 @@ const ShareStory = () => {
               </p>
             </div>
 
-            {/* Category & District Dropdown Selection */}
-            <div className="share-story-form" style={{ gap: '16px', marginBottom: '24px' }}>
-              <div className="form-group-step">
-                <div className="step-title-row" style={{ justifyContent: 'space-between' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                    <span className="step-number">★</span>
-                    <h3 className="step-title">Category *</h3>
-                  </div>
-                  {!isCustomCategoryInput && (
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setIsCustomCategoryInput(true);
-                        setCustomCategoryName("");
-                      }}
-                      className="text-gold text-xs font-bold hover:underline flex items-center gap-1"
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#D4A017' }}
-                    >
-                      <Plus size={13} />
-                      <span>Add New Category</span>
-                    </button>
-                  )}
-                </div>
-
-                {!isCustomCategoryInput ? (
-                  <select
-                    value={category}
-                    onChange={(e) => {
-                      if (e.target.value === "ADD_NEW_CATEGORY") {
-                        setIsCustomCategoryInput(true);
-                        setCustomCategoryName("");
-                      } else {
-                        changeCategory(e.target.value as any);
-                      }
-                    }}
-                    className="form-control-dark font-semibold text-gold"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <option value="gallery">Gallery</option>
-                    <option value="food">Food</option>
-                    <option value="festival">Festival</option>
-                    <option value="personality">Personality</option>
-                    <option value="tribes">Tribes</option>
-                    {customCategories.map((c) => (
-                      <option key={c.id} value={c.title}>
-                        {c.title}
-                      </option>
-                    ))}
-                    <option value="ADD_NEW_CATEGORY">+ Add New Category...</option>
-                  </select>
-                ) : (
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                    <div style={{ display: 'flex', gap: '8px' }}>
-                      <input
-                        type="text"
-                        placeholder="Enter custom category name (e.g. Handicrafts, Monuments)"
-                        value={customCategoryName}
-                        onChange={(e) => {
-                          setCustomCategoryName(e.target.value);
-                          setCategory(e.target.value);
-                        }}
-                        className="form-control-dark font-semibold text-gold"
-                        style={{ flex: 1 }}
-                        autoFocus
-                      />
-                      <button
-                        type="button"
-                        onClick={() => {
-                          setIsCustomCategoryInput(false);
-                          setCustomCategoryName("");
-                          setCategory("gallery");
-                        }}
-                        className="form-control-dark"
-                        style={{ cursor: 'pointer', padding: '0 16px', background: 'rgba(255,255,255,0.1)', color: '#ccc', width: 'auto' }}
-                      >
-                        Cancel
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-
-              {/* Sub-Category / Item Name Selection */}
-              {(() => {
-                const subCats = getWebsiteItemsForCategory(category);
-                const hasExisting = subCats.length > 0;
-                const formattedCatName = category.charAt(0).toUpperCase() + category.slice(1);
-                const stepLabel = hasExisting && !isCustomSubCategoryInput
-                  ? `Select Existing ${formattedCatName} or Add New *`
-                  : `${formattedCatName} Title / Name *`;
-
-                return (
-                  <div className="form-group-step">
-                    <div className="step-title-row" style={{ justifyContent: 'space-between' }}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span className="step-number">★</span>
-                        <h3 className="step-title">{stepLabel}</h3>
-                      </div>
-                      {hasExisting && !isCustomSubCategoryInput && (
-                        <button
-                          type="button"
-                          onClick={() => {
-                            setIsCustomSubCategoryInput(true);
-                            setCustomSubCategoryName("");
-                            setTitle("");
-                          }}
-                          className="text-gold text-xs font-bold hover:underline flex items-center gap-1"
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#D4A017' }}
-                        >
-                          <Plus size={13} />
-                          <span>Add New {formattedCatName}</span>
-                        </button>
-                      )}
-                    </div>
-
-                    {!isCustomSubCategoryInput && hasExisting ? (
-                      <select
-                        value={title || subCats[0]}
-                        onChange={(e) => {
-                          if (e.target.value === "ADD_NEW_SUBCATEGORY") {
-                            setIsCustomSubCategoryInput(true);
-                            setCustomSubCategoryName("");
-                            setTitle("");
-                          } else {
-                            setTitle(e.target.value);
-                          }
-                        }}
-                        className="form-control-dark font-semibold text-gold"
-                        style={{ cursor: "pointer" }}
-                      >
-                        {subCats.map((sub) => (
-                          <option key={sub} value={sub}>
-                            {sub}
-                          </option>
-                        ))}
-                        <option value="ADD_NEW_SUBCATEGORY">+ Add New {formattedCatName}...</option>
-                      </select>
-                    ) : (
-                      <div style={{ display: 'flex', gap: '8px' }}>
-                        <input
-                          type="text"
-                          placeholder={`Enter title for ${formattedCatName}...`}
-                          value={title}
-                          onChange={(e) => {
-                            setCustomSubCategoryName(e.target.value);
-                            setTitle(e.target.value);
-                          }}
-                          className="form-control-dark font-semibold text-gold"
-                          style={{ flex: 1 }}
-                          autoFocus
-                        />
-                        {hasExisting && (
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setIsCustomSubCategoryInput(false);
-                              setCustomSubCategoryName("");
-                              setTitle(subCats[0]);
-                            }}
-                            className="form-control-dark"
-                            style={{ cursor: 'pointer', padding: '0 16px', background: 'rgba(255,255,255,0.1)', color: '#ccc', width: 'auto' }}
-                          >
-                            Cancel
-                          </button>
-                        )}
-                      </div>
-                    )}
-                  </div>
-                );
-              })()}
-
-              <div className="form-group-step">
-                <div className="step-title-row">
-                  <span className="step-number">★</span>
-                  <h3 className="step-title">District *</h3>
-                </div>
-                <select
-                  value={district}
-                  onChange={(e) => setDistrict(e.target.value)}
-                  className="form-control-dark font-semibold text-gold"
-                  style={{ cursor: "pointer" }}
-                >
-                  {BIHAR_DISTRICTS.map((dist) => (
-                    <option key={dist} value={dist}>
-                      {dist}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
             {errors.submit && (
-              <div className="form-control form-control-error" style={{ marginBottom: "24px", background: "rgba(217, 56, 56, 0.1)", color: "#f78888", border: "1px solid #d93838" }}>
+              <div className="form-control form-control-error" style={{ marginBottom: "24px", background: "rgba(217, 56, 56, 0.1)", color: "#f78888", border: "1px solid #d93838", padding: "12px", borderRadius: "12px" }}>
                 {errors.submit}
               </div>
             )}
 
-            {category === "gallery" && (
-              <form onSubmit={handleSubmit} className="share-story-form">
-                {/* Step 1: Upload Photo or Video */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
+            <form onSubmit={handleSubmit} className="share-story-form">
+              {/* Category Step */}
+              <div className="form-group-step">
+                <div className="step-title-row">
+                  <span className="step-number">★</span>
+                  <h3 className="step-title">Category *</h3>
+                </div>
+                <select
+                  value={selectedCatId}
+                  onChange={(e) => handleCategoryChange(e.target.value)}
+                  className={`form-control-dark font-semibold text-gold ${errors.category ? "form-control-error" : ""}`}
+                  style={{ cursor: "pointer" }}
+                >
+                  {categoriesList.map((cat) => (
+                    <option key={cat.id} value={cat.id} className="bg-neutral-900 text-white">
+                      {cat.title}
+                    </option>
+                  ))}
+                </select>
+                {errors.category && <p className="form-error-msg">{errors.category}</p>}
+              </div>
+
+              {/* Subcategory Step (Cascading) */}
+              <div className="form-group-step">
+                <div className="step-title-row">
+                  <span className="step-number">★</span>
+                  <h3 className="step-title">Subcategory *</h3>
+                </div>
+                <select
+                  value={selectedSubId}
+                  onChange={(e) => setSelectedSubId(e.target.value)}
+                  className={`form-control-dark font-semibold text-gold ${errors.subcategory ? "form-control-error" : ""}`}
+                  style={{ cursor: "pointer" }}
+                >
+                  {availableSubcategories.map((sub) => (
+                    <option key={sub.id} value={sub.id} className="bg-neutral-900 text-white">
+                      {sub.title}
+                    </option>
+                  ))}
+                </select>
+                {errors.subcategory && <p className="form-error-msg">{errors.subcategory}</p>}
+              </div>
+
+              {/* Step 1: Upload Photos or Videos (Max 3 items, mix supported) */}
+              <div className="form-group-step">
+                <div className="step-title-row flex items-center justify-between">
+                  <div className="flex items-center gap-2">
                     <span className="step-number">1</span>
-                    <h3 className="step-title">Upload Photo or Video</h3>
-                    <span className="step-subtitle-icon">
-                      <Camera size={14} className="gold-icon" /> Share your best moment
+                    <h3 className="step-title">Upload Photos or Videos</h3>
+                    <span className="step-subtitle-icon hidden sm:inline-flex">
+                      <Camera size={14} className="gold-icon" /> Mix of up to 3 files
                     </span>
                   </div>
+                  <span className="text-xs font-semibold text-gold bg-gold/10 border border-gold/20 px-2.5 py-0.5 rounded-full">
+                    {mediaList.length}/3 Uploaded
+                  </span>
+                </div>
 
-                  <div className="upload-split-layout">
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""}`}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*,video/*"
-                        style={{ display: "none" }}
-                      />
+                <div className="upload-split-layout">
+                  {/* File Upload Input */}
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    accept="image/*,video/*"
+                    multiple
+                    style={{ display: "none" }}
+                  />
 
-                      {mediaFile ? (
-                        <div className="preview-media-box-split">
-                          <div className="media-thumbnail-preview-split">
-                            {mediaType === "video" ? (
-                              <video src={mediaFile} muted />
+                  {/* Dropzone & Preview Box */}
+                  <div
+                    onDragOver={handleDragOver}
+                    onDragLeave={handleDragLeave}
+                    onDrop={handleDrop}
+                    onClick={() => {
+                      if (mediaList.length < 3) fileInputRef.current?.click();
+                    }}
+                    className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""} ${
+                      mediaList.length >= 3 ? "cursor-not-allowed opacity-90" : "cursor-pointer"
+                    }`}
+                  >
+                    {mediaList.length > 0 ? (
+                      <div className="w-full grid grid-cols-3 gap-2 p-2" onClick={(e) => e.stopPropagation()}>
+                        {mediaList.map((item, idx) => (
+                          <div key={item.id} className="relative aspect-square rounded-xl overflow-hidden group border border-white/10 bg-black/60">
+                            {item.type === 'video' ? (
+                              <video src={item.url} className="w-full h-full object-cover" />
                             ) : (
-                              <img src={mediaFile} alt="Preview" />
+                              <img src={item.url} alt={`Media ${idx + 1}`} className="w-full h-full object-cover" />
                             )}
+                            <button
+                              type="button"
+                              onClick={() => removeMediaItem(item.id)}
+                              className="absolute top-1 right-1 bg-red-600/90 text-white p-1 rounded-full hover:bg-red-700 transition-all shadow"
+                              title="Remove media"
+                            >
+                              <X size={12} />
+                            </button>
+                            <span className="absolute bottom-1 left-1 bg-black/70 text-white text-[9px] font-bold px-1.5 py-0.5 rounded uppercase">
+                              {item.type} {idx + 1}
+                            </span>
                           </div>
-                        </div>
-                      ) : (
-                        <div className="upload-icon-circle-split">
-                          <Upload size={24} className="gold-icon" />
-                        </div>
-                      )}
-                    </div>
+                        ))}
 
-                    <div className="upload-details-split">
-                      {mediaFile ? (
-                        <div className="uploaded-details-content">
-                          <p className="media-filename">{fileName}</p>
+                        {mediaList.length < 3 && (
+                          <div
+                            onClick={() => fileInputRef.current?.click()}
+                            className="aspect-square rounded-xl border border-dashed border-[#D4A017]/50 hover:border-[#D4A017] flex flex-col items-center justify-center cursor-pointer transition-colors bg-white/5 hover:bg-white/10"
+                          >
+                            <Plus size={20} className="gold-icon mb-1" />
+                            <span className="text-[10px] text-gold font-bold">+ Add ({3 - mediaList.length})</span>
+                          </div>
+                        )}
+                      </div>
+                    ) : (
+                      <div className="upload-icon-circle-split">
+                        <Upload size={24} className="gold-icon" />
+                      </div>
+                    )}
+                  </div>
+
+                  <div className="upload-details-split">
+                    {mediaList.length > 0 ? (
+                      <div className="uploaded-details-content space-y-2">
+                        <div className="flex items-center justify-between">
+                          <p className="media-filename text-gold font-bold text-sm">
+                            {mediaList.length} of 3 Media Files Selected
+                          </p>
                           <button
                             type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setMediaFile(null);
-                              setFileName("");
-                            }}
-                            className="btn-remove-media"
+                            onClick={() => setMediaList([])}
+                            className="text-xs text-red-400 hover:text-red-300 underline font-semibold"
                           >
-                            Remove file
+                            Clear All
                           </button>
                         </div>
-                      ) : (
-                        <>
-                          <p className="upload-primary-text">
-                            Drag & drop your photo or video here
-                          </p>
-                          <p className="upload-browse-text">
-                            or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
-                          </p>
-                          <p className="upload-secondary-text">
-                            Supports JPG, PNG, WEBP, MP4, WebM (Max 5MB)
-                          </p>
-                        </>
-                      )}
 
-                      <div className="upload-tip-box">
-                        <Sparkles size={14} className="gold-icon" />
-                        <span>Tip: High quality, good lighting photos get more love!</span>
-                      </div>
-                    </div>
-                  </div>
-                  {errors.media && <p className="form-error-msg">{errors.media}</p>}
-                </div>
+                        <ul className="space-y-1 text-xs text-gray-300 max-h-24 overflow-y-auto">
+                          {mediaList.map((m, i) => (
+                            <li key={m.id} className="flex items-center justify-between bg-white/5 px-2.5 py-1.5 rounded-lg border border-white/5">
+                              <span className="truncate max-w-[180px]">{i + 1}. {m.name}</span>
+                              <span className="text-[10px] text-gold uppercase font-bold">{m.type}</span>
+                            </li>
+                          ))}
+                        </ul>
 
-                {/* Step 2: Caption */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">2</span>
-                    <h3 className="step-title">Caption</h3>
-                    <Edit2 size={13} className="step-icon-indicator" />
-                  </div>
-                  <div className="textarea-wrapper">
-                    <textarea
-                      value={caption}
-                      onChange={(e) => setCaption(e.target.value.slice(0, 300))}
-                      placeholder="Write a beautiful caption about this moment..."
-                      className={`form-control-dark ${errors.caption ? "form-control-error" : ""}`}
-                      rows={3}
-                    />
-                    <span className="char-count">{caption.length}/300</span>
-                  </div>
-                  {errors.caption && <p className="form-error-msg">{errors.caption}</p>}
-                </div>
-
-                {/* Step 3: Author Name */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">3</span>
-                    <h3 className="step-title">Author Name</h3>
-                    <User size={13} className="step-icon-indicator" />
-                  </div>
-                  <input
-                    type="text"
-                    value={personName}
-                    onChange={(e) => setPersonName(e.target.value)}
-                    placeholder="e.g. Priya Kumari"
-                    className={`form-control-dark ${errors.personName ? "form-control-error" : ""}`}
-                  />
-                  {errors.personName && <p className="form-error-msg">{errors.personName}</p>}
-                </div>
-
-                {/* Action buttons */}
-                <div className="form-actions-bar">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-publish-gradient"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="spinner" />
-                        <span>Publishing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        <span>Submit Story</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {category === "food" && (
-              <form onSubmit={handleSubmit} className="share-story-form">
-                {/* Step 1: Food Media (photo or video) */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">1</span>
-                    <h3 className="step-title">Food Media (photo or video upload)</h3>
-                    <span className="step-subtitle-icon">
-                      <Utensils size={14} className="gold-icon" /> Showcase your dish
-                    </span>
-                  </div>
-
-                  <div className="upload-split-layout">
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""}`}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*,video/*"
-                        style={{ display: "none" }}
-                      />
-
-                      {mediaFile ? (
-                        <div className="preview-media-box-split">
-                          <div className="media-thumbnail-preview-split">
-                            {mediaType === "video" ? (
-                              <video src={mediaFile} muted controls />
-                            ) : (
-                              <img src={mediaFile} alt="Preview" />
-                            )}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="upload-icon-circle-split">
-                          <Upload size={24} className="gold-icon" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="upload-details-split">
-                      {mediaFile ? (
-                        <div className="uploaded-details-content">
-                          <p className="media-filename">{fileName}</p>
+                        {mediaList.length < 3 && (
                           <button
                             type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setMediaFile(null);
-                              setFileName("");
-                            }}
-                            className="btn-remove-media"
+                            onClick={() => fileInputRef.current?.click()}
+                            className="inline-flex items-center gap-1.5 text-xs text-gold hover:underline font-bold mt-1"
                           >
-                            Remove file
+                            <Plus size={14} /> Add another photo or video ({3 - mediaList.length} remaining)
                           </button>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="upload-primary-text">
-                            Drag & drop your food photo or video here
-                          </p>
-                          <p className="upload-browse-text">
-                            or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
-                          </p>
-                          <p className="upload-secondary-text">
-                            Supports JPG, PNG, WEBP, MP4, WebM (Max 15MB)
-                          </p>
-                        </>
-                      )}
-
-                      <div className="upload-tip-box">
-                        <Sparkles size={14} className="gold-icon" />
-                        <span>Tip: Clear, high-res food photos or engaging prep videos look most appetizing!</span>
+                        )}
                       </div>
-                    </div>
-                  </div>
-                  {errors.media && <p className="form-error-msg">{errors.media}</p>}
-                </div>
-
-                {/* Step 2: Food Title */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">2</span>
-                    <h3 className="step-title">Food Title</h3>
-                    <Tag size={13} className="step-icon-indicator" />
-                  </div>
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Litti Chokha"
-                    className={`form-control-dark ${errors.title ? "form-control-error" : ""}`}
-                  />
-                  {errors.title && <p className="form-error-msg">{errors.title}</p>}
-                </div>
-
-                {/* Step 3: Food Description */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">3</span>
-                    <h3 className="step-title">Food Description</h3>
-                    <FileText size={13} className="step-icon-indicator" />
-                  </div>
-                  <textarea
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Describe the heritage, taste, and preparation method..."
-                    className={`form-control-dark ${errors.description ? "form-control-error" : ""}`}
-                    style={{ resize: "none" }}
-                  />
-                  {errors.description && <p className="form-error-msg">{errors.description}</p>}
-                </div>
-
-
-
-                {/* Action buttons */}
-                <div className="form-actions-bar">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-publish-gradient"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="spinner" />
-                        <span>Publishing...</span>
-                      </>
                     ) : (
                       <>
-                        <Send size={15} />
-                        <span>Submit Story</span>
+                        <p className="upload-primary-text">
+                          Drag & drop photos or videos here
+                        </p>
+                        <p className="upload-browse-text">
+                          or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
+                        </p>
+                        <p className="upload-secondary-text">
+                          Upload up to 3 photos or videos (JPG, PNG, MP4, WebM - Max 5MB each)
+                        </p>
                       </>
                     )}
-                  </button>
-                </div>
-              </form>
-            )}
 
-            {category === "festival" && (
-              <form onSubmit={handleSubmit} className="share-story-form">
-                {/* Step 1: Festival Media (photo or video) */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">1</span>
-                    <h3 className="step-title">Festival Photos or Videos (image/video upload)</h3>
-                    <span className="step-subtitle-icon">
-                      <PartyPopper size={14} className="gold-icon" /> Share the celebration
-                    </span>
-                  </div>
-
-                  <div className="upload-split-layout">
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""}`}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*,video/*"
-                        style={{ display: "none" }}
-                      />
-
-                      {mediaFile ? (
-                        <div className="preview-media-box-split">
-                          <div className="media-thumbnail-preview-split">
-                            {mediaType === "video" ? (
-                              <video src={mediaFile} muted controls />
-                            ) : (
-                              <img src={mediaFile} alt="Preview" />
-                            )}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="upload-icon-circle-split">
-                          <Upload size={24} className="gold-icon" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="upload-details-split">
-                      {mediaFile ? (
-                        <div className="uploaded-details-content">
-                          <p className="media-filename">{fileName}</p>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setMediaFile(null);
-                              setFileName("");
-                            }}
-                            className="btn-remove-media"
-                          >
-                            Remove file
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="upload-primary-text">
-                            Drag & drop your festival photo or video here
-                          </p>
-                          <p className="upload-browse-text">
-                            or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
-                          </p>
-                          <p className="upload-secondary-text">
-                            Supports JPG, PNG, WEBP, MP4, WebM (Max 15MB)
-                          </p>
-                        </>
-                      )}
-
-                      <div className="upload-tip-box">
-                        <Sparkles size={14} className="gold-icon" />
-                        <span>Tip: Capture the vibrant colors, community dances and festive energy!</span>
-                      </div>
+                    <div className="upload-tip-box mt-3">
+                      <Sparkles size={14} className="gold-icon" />
+                      <span>Tip: You can upload up to 3 items (mix photos and videos)!</span>
                     </div>
                   </div>
-                  {errors.media && <p className="form-error-msg">{errors.media}</p>}
                 </div>
+                {errors.media && <p className="form-error-msg">{errors.media}</p>}
+              </div>
 
-                {/* Step 2: Festival Title */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">2</span>
-                    <h3 className="step-title">Festival Title</h3>
-                    <Tag size={13} className="step-icon-indicator" />
-                  </div>
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Chhath Puja"
-                    className={`form-control-dark ${errors.title ? "form-control-error" : ""}`}
-                  />
-                  {errors.title && <p className="form-error-msg">{errors.title}</p>}
+              {/* Step 2: Story Title & Caption */}
+              <div className="form-group-step">
+                <div className="step-title-row">
+                  <span className="step-number">2</span>
+                  <h3 className="step-title">Story Title & Description</h3>
+                  <FileText size={13} className="step-icon-indicator" />
                 </div>
+                <input
+                  type="text"
+                  value={title}
+                  onChange={(e) => setTitle(e.target.value)}
+                  placeholder="Story Title (e.g. Sunset at Mahabodhi Temple)"
+                  className="form-control-dark mb-3"
+                  style={{ marginBottom: "12px" }}
+                />
+                <textarea
+                  rows={4}
+                  value={caption}
+                  onChange={(e) => setCaption(e.target.value)}
+                  placeholder="Write a detailed description or story about this moment..."
+                  className={`form-control-dark ${errors.caption ? "form-control-error" : ""}`}
+                  style={{ resize: "none" }}
+                />
+                {errors.caption && <p className="form-error-msg">{errors.caption}</p>}
+              </div>
 
-                {/* Step 3: Festival Description */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">3</span>
-                    <h3 className="step-title">Festival Description</h3>
-                    <FileText size={13} className="step-icon-indicator" />
-                  </div>
-                  <textarea
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Describe the rituals, community spirit, and celebrations..."
-                    className={`form-control-dark ${errors.description ? "form-control-error" : ""}`}
-                    style={{ resize: "none" }}
-                  />
-                  {errors.description && <p className="form-error-msg">{errors.description}</p>}
+              {/* Step 3: District Selection */}
+              <div className="form-group-step">
+                <div className="step-title-row">
+                  <span className="step-number">3</span>
+                  <h3 className="step-title">District</h3>
+                  <MapPin size={13} className="step-icon-indicator" />
                 </div>
+                <select
+                  value={district}
+                  onChange={(e) => setDistrict(e.target.value)}
+                  className="form-control-dark font-semibold text-white"
+                  style={{ cursor: "pointer" }}
+                >
+                  {BIHAR_DISTRICTS.map((d) => (
+                    <option key={d} value={d} className="bg-neutral-900 text-white">
+                      {d}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-
-
-                {/* Action buttons */}
-                <div className="form-actions-bar">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-publish-gradient"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="spinner" />
-                        <span>Publishing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        <span>Submit Story</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {category === "tribes" && (
-              <form onSubmit={handleSubmit} className="share-story-form">
-                {/* Step 1: Tribe Media (photo or video) */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">1</span>
-                    <h3 className="step-title">Tribe Photos or Videos (image/video upload)</h3>
-                    <span className="step-subtitle-icon">
-                      <Camera size={14} className="gold-icon" /> Share tribe story media
-                    </span>
-                  </div>
-
-                  <div className="upload-split-layout">
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""}`}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*,video/*"
-                        style={{ display: "none" }}
-                      />
-
-                      {mediaFile ? (
-                        <div className="preview-media-box-split">
-                          <div className="media-thumbnail-preview-split">
-                            {mediaType === "video" ? (
-                              <video src={mediaFile} muted controls />
-                            ) : (
-                              <img src={mediaFile} alt="Preview" />
-                            )}
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="upload-icon-circle-split">
-                          <Upload size={24} className="gold-icon" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="upload-details-split">
-                      {mediaFile ? (
-                        <div className="uploaded-details-content">
-                          <p className="media-filename">{fileName}</p>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setMediaFile(null);
-                              setFileName("");
-                            }}
-                            className="btn-remove-media"
-                          >
-                            Remove file
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="upload-primary-text">
-                            Drag & drop your tribe photo or video here
-                          </p>
-                          <p className="upload-browse-text">
-                            or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
-                          </p>
-                          <p className="upload-secondary-text">
-                            Supports JPG, PNG, WEBP, MP4, WebM (Max 15MB)
-                          </p>
-                        </>
-                      )}
-
-                      <div className="upload-tip-box">
-                        <Sparkles size={14} className="gold-icon" />
-                        <span>Tip: High-quality representations of tribal life, dances and music look best!</span>
-                      </div>
-                    </div>
-                  </div>
-                  {errors.media && <p className="form-error-msg">{errors.media}</p>}
-                </div>
-
-                {/* Step 2: Tribe Title */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">2</span>
-                    <h3 className="step-title">Tribe Title</h3>
-                    <Tag size={13} className="step-icon-indicator" />
-                  </div>
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Santhal Tribe"
-                    className={`form-control-dark ${errors.title ? "form-control-error" : ""}`}
-                  />
-                  {errors.title && <p className="form-error-msg">{errors.title}</p>}
-                </div>
-
-                {/* Step 3: Tribe Description */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">3</span>
-                    <h3 className="step-title">Tribe Description</h3>
-                    <FileText size={13} className="step-icon-indicator" />
-                  </div>
-                  <textarea
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Describe the history, culture, and lifestyle of the tribe..."
-                    className={`form-control-dark ${errors.description ? "form-control-error" : ""}`}
-                    style={{ resize: "none" }}
-                  />
-                  {errors.description && <p className="form-error-msg">{errors.description}</p>}
-                </div>
-
-
-
-                {/* Action buttons */}
-                <div className="form-actions-bar">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-publish-gradient"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="spinner" />
-                        <span>Publishing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        <span>Submit Story</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {category === "personality" && (
-              <form onSubmit={handleSubmit} className="share-story-form">
-                {/* Step 1: Upload Personality Photo */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">1</span>
-                    <h3 className="step-title">Upload Personality Photo</h3>
-                    <span className="step-subtitle-icon">
-                      <Camera size={14} className="gold-icon" /> Share personality photo
-                    </span>
-                  </div>
-
-                  <div className="upload-split-layout">
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""}`}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*"
-                        style={{ display: "none" }}
-                      />
-
-                      {mediaFile ? (
-                        <div className="preview-media-box-split">
-                          <div className="media-thumbnail-preview-split">
-                            <img src={mediaFile} alt="Preview" />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="upload-icon-circle-split">
-                          <Upload size={24} className="gold-icon" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="upload-details-split">
-                      {mediaFile ? (
-                        <div className="uploaded-details-content">
-                          <p className="media-filename">{fileName}</p>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setMediaFile(null);
-                              setFileName("");
-                            }}
-                            className="btn-remove-media"
-                          >
-                            Remove file
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="upload-primary-text">
-                            Drag & drop your personality photo here
-                          </p>
-                          <p className="upload-browse-text">
-                            or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
-                          </p>
-                          <p className="upload-secondary-text">
-                            Supports JPG, PNG, WEBP (Max 5MB)
-                          </p>
-                        </>
-                      )}
-
-                      <div className="upload-tip-box">
-                        <Sparkles size={14} className="gold-icon" />
-                        <span>Tip: High-quality portraits look best for iconic legends!</span>
-                      </div>
-                    </div>
-                  </div>
-                  {errors.media && <p className="form-error-msg">{errors.media}</p>}
-                </div>
-
-                {/* Step 2: Personality Name */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">2</span>
-                    <h3 className="step-title">Personality Name</h3>
-                    <Tag size={13} className="step-icon-indicator" />
-                  </div>
-                  <input
-                    type="text"
-                    value={title}
-                    onChange={(e) => setTitle(e.target.value)}
-                    placeholder="e.g. Aryabhata"
-                    className={`form-control-dark ${errors.title ? "form-control-error" : ""}`}
-                  />
-                  {errors.title && <p className="form-error-msg">{errors.title}</p>}
-                </div>
-
-                {/* Step 3: Category Dropdown */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">3</span>
-                    <h3 className="step-title">Category</h3>
-                    <Sparkles size={13} className="step-icon-indicator" />
-                  </div>
-                  <select
-                    value={personalityCategory}
-                    onChange={(e) => setPersonalityCategory(e.target.value)}
-                    className="form-control-dark font-semibold text-white"
-                    style={{ cursor: "pointer" }}
-                  >
-                    <option value="Historical">Historical</option>
-                    <option value="Sports">Sports</option>
-                    <option value="Politician">Politician</option>
-                    <option value="Art & Cinema">Art & Cinema</option>
-                    <option value="Literature">Literature</option>
-                  </select>
-                </div>
-
-                {/* Step 4: Description */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">4</span>
-                    <h3 className="step-title">Description</h3>
-                    <FileText size={13} className="step-icon-indicator" />
-                  </div>
-                  <textarea
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder="Describe their achievements, contributions, and historical legacy..."
-                    className={`form-control-dark ${errors.description ? "form-control-error" : ""}`}
-                    style={{ resize: "none" }}
-                  />
-                  {errors.description && <p className="form-error-msg">{errors.description}</p>}
-                </div>
-
-
-
-                {/* Action buttons */}
-                <div className="form-actions-bar">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-publish-gradient"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="spinner" />
-                        <span>Publishing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        <span>Submit Story</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
-
-            {/* Custom Category Form Fallback */}
-            {!["gallery", "food", "festival", "personality", "tribes"].includes(category.toLowerCase()) && (
-              <form onSubmit={handleSubmit} className="share-story-form">
-                {/* Step 1: Cover Image (photo upload) */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">1</span>
-                    <h3 className="step-title">{category} Cover Image</h3>
-                    <span className="step-subtitle-icon">
-                      <Camera size={14} className="gold-icon" /> Showcase your story
-                    </span>
-                  </div>
-
-                  <div className="upload-split-layout">
-                    <div
-                      onDragOver={handleDragOver}
-                      onDragLeave={handleDragLeave}
-                      onDrop={handleDrop}
-                      onClick={() => fileInputRef.current?.click()}
-                      className={`drag-drop-zone-split ${isDragging ? "drag-drop-active" : ""}`}
-                    >
-                      <input
-                        type="file"
-                        ref={fileInputRef}
-                        onChange={handleFileChange}
-                        accept="image/*"
-                        style={{ display: "none" }}
-                      />
-
-                      {mediaFile ? (
-                        <div className="preview-media-box-split">
-                          <div className="media-thumbnail-preview-split">
-                            <img src={mediaFile} alt="Preview" />
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="upload-icon-circle-split">
-                          <Upload size={24} className="gold-icon" />
-                        </div>
-                      )}
-                    </div>
-
-                    <div className="upload-details-split">
-                      {mediaFile ? (
-                        <div className="uploaded-details-content">
-                          <p className="media-filename">{fileName}</p>
-                          <button
-                            type="button"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              setMediaFile(null);
-                              setFileName("");
-                            }}
-                            className="btn-remove-media"
-                          >
-                            Remove file
-                          </button>
-                        </div>
-                      ) : (
-                        <>
-                          <p className="upload-primary-text">
-                            Drag & drop your {category} photo here
-                          </p>
-                          <p className="upload-browse-text">
-                            or <span className="browse-link" onClick={() => fileInputRef.current?.click()}>browse files</span>
-                          </p>
-                          <p className="upload-secondary-text">
-                            Supports JPG, PNG, WEBP (Max 15MB)
-                          </p>
-                        </>
-                      )}
-
-                      <div className="upload-tip-box">
-                        <Sparkles size={14} className="gold-icon" />
-                        <span>Tip: High resolution photos look best!</span>
-                      </div>
-                    </div>
-                  </div>
-                  {errors.media && <p className="form-error-msg">{errors.media}</p>}
-                </div>
-
-                {/* Step 2: Description */}
-                <div className="form-group-step">
-                  <div className="step-title-row">
-                    <span className="step-number">2</span>
-                    <h3 className="step-title">Description</h3>
-                    <FileText size={13} className="step-icon-indicator" />
-                  </div>
-                  <textarea
-                    rows={4}
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    placeholder={`Describe ${category} details, history, or significance...`}
-                    className={`form-control-dark ${errors.description ? "form-control-error" : ""}`}
-                    style={{ resize: "none" }}
-                  />
-                  {errors.description && <p className="form-error-msg">{errors.description}</p>}
-                </div>
-
-
-
-                {/* Action buttons */}
-                <div className="form-actions-bar">
-                  <button
-                    type="submit"
-                    disabled={isSubmitting}
-                    className="btn-publish-gradient"
-                  >
-                    {isSubmitting ? (
-                      <>
-                        <div className="spinner" />
-                        <span>Publishing...</span>
-                      </>
-                    ) : (
-                      <>
-                        <Send size={15} />
-                        <span>Submit Story</span>
-                      </>
-                    )}
-                  </button>
-                </div>
-              </form>
-            )}
+              {/* Submit Action button */}
+              <div className="form-actions-bar">
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="btn-publish-gradient"
+                >
+                  {isSubmitting ? (
+                    <>
+                      <div className="spinner" />
+                      <span>Submitting...</span>
+                    </>
+                  ) : (
+                    <>
+                      <Send size={15} />
+                      <span>Submit Story</span>
+                    </>
+                  )}
+                </button>
+              </div>
+            </form>
 
             <div className="form-review-notice" style={{ marginTop: "24px", textAlign: "center", fontSize: "0.85rem", color: "#a58f7f" }}>
-              <span>🔒</span> Your content will be reviewed before it appears on the site.
+              <span>🔒</span> Your content will be reviewed by an admin before it appears on the site.
             </div>
           </div>
 
@@ -1609,20 +602,14 @@ const ShareStory = () => {
             <button
               onClick={() => {
                 setIsSuccess(false);
-                if (category === "food") {
-                  navigate("/discover?category=food", { state: { activeCategory: "Food" } });
-                } else if (category === "festival") {
-                  navigate("/discover?category=festival", { state: { activeCategory: "Festivals" } });
-                } else if (category === "personality") {
-                  const finalCategory = personalityCategory === "Art & Cinema" ? "Arts & Cinema" : personalityCategory;
-                  navigate(`/discover?category=personalities&subcategory=${finalCategory.toLowerCase()}`, {
-                    state: { activeCategory: "Personalities", activeSubcategory: finalCategory }
-                  });
-                } else if (category === "tribes") {
-                  navigate("/tribals");
-                } else {
-                  navigate("/gallery");
+                if (selectedCategoryObj && selectedSubId) {
+                  const subObj = availableSubcategories.find((s) => s.id === selectedSubId);
+                  if (subObj) {
+                    navigate(`/discover/${selectedCategoryObj.slug}/${subObj.slug}`);
+                    return;
+                  }
                 }
+                navigate('/discover');
               }}
               className="w-full py-3.5 bg-[#EAB308] hover:bg-[#EAB308]/90 text-black font-extrabold rounded-xl transition-all cursor-pointer uppercase tracking-wider text-xs shadow-lg hover:scale-105 duration-300"
             >

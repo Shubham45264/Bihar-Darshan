@@ -70,7 +70,7 @@ const Districts = () => {
       {/* ═══════════════════════════════════════════════════════
           SECTION 1 — Map & Overview
           ═══════════════════════════════════════════════════════ */}
-      <section className="relative pt-28 sm:pt-32 pb-16 sm:pb-20 lg:pb-24 overflow-hidden">
+      <section className="relative min-h-[90vh] md:min-h-[85vh] w-full flex flex-col pt-32 pb-24 md:pb-0 justify-center overflow-hidden">
         {/* Dark heritage background */}
         <div className="absolute inset-0 pointer-events-none">
           <img
@@ -88,13 +88,8 @@ const Districts = () => {
             {/* ── Left Side ── */}
             <div className="pt-4 lg:pt-8">
               {/* Heading */}
-              <h1 className="font-serif text-4xl sm:text-5xl lg:text-[3.4rem] font-bold text-white leading-[1.15] tracking-tight mb-3">
-                Explore Districts
-                <br />
-                of{" "}
-                <span className="text-gold italic" style={{ fontFamily: "var(--font-signature)" }}>
-                  Bihar
-                </span>
+              <h1 className="font-display font-extrabold text-5xl md:text-6xl lg:text-7xl text-white tracking-tight leading-none mb-4">
+                Explore Bihar's <span className="text-[#EAB308]">Districts</span>
               </h1>
 
               {/* Decorative gold line */}
