@@ -126,7 +126,8 @@ export const votePoll = catchAsync(async (req: Request, res: Response, next: Nex
 });
 
 export const viewPost = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  await communityService.incrementPostViews(req.params.id as string);
+  const { userId } = req.body;
+  await communityService.incrementPostViews(req.params.id as string, userId);
   sendSuccess(res, 200, 'View recorded');
 });
 

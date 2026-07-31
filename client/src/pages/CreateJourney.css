@@ -4,7 +4,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-family: 'Outfit', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-family: 'Source Sans 3', system-ui, -apple-system, sans-serif;
   color: #f7ede2;
   position: relative;
   overflow-x: hidden;
@@ -70,7 +70,7 @@
 
 /* Typography */
 .create-journey-title {
-  font-family: "Playfair Display", serif;
+  font-family: 'Marcellus', serif;
   font-size: 2.75rem;
   font-weight: 700;
   color: #ffffff;
@@ -107,7 +107,7 @@
 }
 
 .form-section-header h3 {
-  font-family: "Playfair Display", serif;
+  font-family: 'Marcellus', serif;
   font-size: 1.5rem;
   font-weight: 700;
   color: #ffffff;

@@ -1,23 +1,26 @@
 import Carousel from "../common/Carousel";
 import DistrictCard from "./DistrictCard";
+import { useAdminData } from "../../data/AdminContext";
 
-import nalandaImg from "../../assets/nalanda.png";
-import patnaImg from "../../assets/patna-district.png";
-import gayaImg from "../../assets/gaya-district.png";
-import bhagalpurImg from "../../assets/bhagalpur-district.png";
-import muzaffarpurImg from "../../assets/muzaffarpur-district.png";
-import darbhangaImg from "../../assets/darbhanga-district.png";
-
-const districts = [
-  { name: "Nalanda", image: nalandaImg },
-  { name: "Patna", image: patnaImg },
-  { name: "Gaya", image: gayaImg },
-  { name: "Bhagalpur", image: bhagalpurImg },
-  { name: "Muzaffarpur", image: muzaffarpurImg },
-  { name: "Darbhanga", image: darbhangaImg },
+const featuredNames = [
+  "Patna",
+  "Gaya",
+  "Nalanda",
+  "Bhagalpur",
+  "Muzaffarpur",
+  "Darbhanga",
 ];
 
 const DistrictSection = () => {
+  const { districts: allDistricts } = useAdminData();
+
+  // Find districts from admin context to ensure updated photos are rendered
+  const featuredDistricts = featuredNames
+    .map((name) => allDistricts.find((d) => d.name.toLowerCase() === name.toLowerCase()))
+    .filter((d): d is NonNullable<typeof d> => Boolean(d));
+
+  const displayDistricts = featuredDistricts.length > 0 ? featuredDistricts : allDistricts.slice(0, 6);
+
   return (
     <section id="districts" className="pt-32 pb-16 sm:pt-40 sm:pb-20 lg:pt-48 lg:pb-24 overflow-hidden">
       <Carousel
@@ -26,7 +29,7 @@ const DistrictSection = () => {
         actionLabel="View All Districts"
         actionHref="/districts"
       >
-        {districts.map((district, index) => (
+        {displayDistricts.map((district, index) => (
           <DistrictCard
             key={district.name}
             image={district.image}

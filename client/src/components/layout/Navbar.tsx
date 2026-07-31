@@ -29,6 +29,7 @@ interface NavbarProps {
 const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent = true }: NavbarProps = {}) => {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const getInitialLang = () => {
     const match = document.cookie.match(/googtrans=\/en\/([a-z]{2})/);
     if (match && match[1]) {
@@ -99,25 +100,30 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     return false;
   };
 
-  // Text/logo colour logic
-  const useDarkText = scrolled || forceDarkText;
+  // Text/logo colour & background logic (Active on scroll OR hover)
+  const showWhiteBg = scrolled || isHovered;
+  const useDarkText = showWhiteBg || forceDarkText;
 
   return (
-    <header className={`fixed top-0 left-0 w-full z-[200] transition-all duration-500 ${scrolled
+    <header
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      className={`fixed top-0 left-0 w-full z-[200] transition-all duration-500 ${showWhiteBg
         ? "bg-white/80 backdrop-blur-2xl shadow-md border-b border-black/5 py-2"
         : fullTransparent
           ? "bg-transparent py-3"
           : forceWhiteText
             ? "bg-black/30 backdrop-blur-sm py-3"
             : "bg-transparent py-3"
-      }`}>
+      }`}
+    >
       <div className="max-w-[1920px] mx-auto px-4 sm:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3 shrink-0">
           <Link to="/">
             <img
               src={logo}
               alt="Bihar Darshan"
-              className={`h-9 lg:h-11 w-auto object-contain transition-all duration-500 drop-shadow-md ${!scrolled && (forceWhiteText || !forceDarkText) ? "brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" : ""
+              className={`h-9 lg:h-11 w-auto object-contain transition-all duration-500 drop-shadow-md ${!showWhiteBg && (forceWhiteText || !forceDarkText) ? "brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" : ""
                 }`}
             />
           </Link>
@@ -188,7 +194,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
           {currentUser ? (
             <Link
               to="/profile"
-              className={`hidden lg:flex items-center justify-center w-9 h-9 rounded-full overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${scrolled || forceDarkText
+              className={`hidden lg:flex items-center justify-center w-9 h-9 rounded-full overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${showWhiteBg || forceDarkText
                 ? "border-black/20 hover:border-black/40"
                 : "border-white/20 hover:border-white/40"
                 }`}
@@ -196,7 +202,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
               {userAvatar || currentUser.photoURL ? (
                 <img src={(userAvatar || currentUser.photoURL)!} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <User size={18} className={scrolled || forceDarkText ? "text-black" : "text-white"} />
+                <User size={18} className={showWhiteBg || forceDarkText ? "text-black" : "text-white"} />
               )}
             </Link>
           ) : (

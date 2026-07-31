@@ -3,7 +3,8 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, X, ZoomIn } from "lucide-react";
 import { useAdminData } from "../../data/AdminContext";
-import type { GalleryItem } from "../../data/galleryData";
+import { useContributions } from "../../data/ContributionContext";
+import { galleryData as defaultGalleryData, type GalleryItem } from "../../data/galleryData";
 
 /* ─────────────────────────────────────────────────────────────────
    Mosaic layout  (matches reference screenshot)
@@ -34,10 +35,27 @@ const CFG: Cfg[] = [
 ];
 
 const GallerySection = () => {
-  const { gallery: galleryData } = useAdminData();
+  const { gallerySubmissions } = useContributions();
+  const { gallery: adminGallery } = useAdminData();
   const [lightboxItem, setLightboxItem] = useState<GalleryItem | null>(null);
 
-  const galleryItems = galleryData.slice(0, 9);
+  // Combine user uploaded community photos (latest first), admin photos, and default fallback photos
+  const combinedItems: GalleryItem[] = [
+    ...gallerySubmissions,
+    ...adminGallery,
+    ...defaultGalleryData
+  ];
+
+  // Deduplicate and select top 9 items
+  const uniqueMap = new Map<string | number, GalleryItem>();
+  combinedItems.forEach(item => {
+    const key = item.image || item.id;
+    if (key && !uniqueMap.has(key)) {
+      uniqueMap.set(key, item);
+    }
+  });
+
+  const galleryItems = Array.from(uniqueMap.values()).slice(0, 9);
 
   // Lock body scroll while lightbox is open
   useEffect(() => {

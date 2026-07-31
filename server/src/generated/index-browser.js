@@ -220,6 +220,24 @@ exports.Prisma.TribeScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.TribeVideoScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  caption: 'caption',
+  videoUrl: 'videoUrl',
+  uploaderName: 'uploaderName',
+  description: 'description',
+  tribeId: 'tribeId',
+  tribeName: 'tribeName',
+  thumbnail: 'thumbnail',
+  duration: 'duration',
+  status: 'status',
+  rejectionReason: 'rejectionReason',
+  userId: 'userId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.PersonalityScalarFieldEnum = {
   id: 'id',
   name: 'name',
@@ -286,6 +304,7 @@ exports.Prisma.CommunityPostScalarFieldEnum = {
   likes: 'likes',
   replies: 'replies',
   views: 'views',
+  viewedBy: 'viewedBy',
   mediaUrl: 'mediaUrl',
   mediaType: 'mediaType',
   pollData: 'pollData',
@@ -429,6 +448,54 @@ exports.Prisma.CardMediaScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.CategoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  image: 'image',
+  icon: 'icon',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.SubCategoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  slug: 'slug',
+  description: 'description',
+  image: 'image',
+  icon: 'icon',
+  categoryId: 'categoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
+exports.Prisma.CategoryStoryScalarFieldEnum = {
+  id: 'id',
+  title: 'title',
+  content: 'content',
+  mediaUrl: 'mediaUrl',
+  mediaType: 'mediaType',
+  mediaFiles: 'mediaFiles',
+  authorName: 'authorName',
+  authorAvatar: 'authorAvatar',
+  district: 'district',
+  views: 'views',
+  viewedBy: 'viewedBy',
+  likes: 'likes',
+  dislikes: 'dislikes',
+  likedBy: 'likedBy',
+  dislikedBy: 'dislikedBy',
+  status: 'status',
+  authorId: 'authorId',
+  categoryId: 'categoryId',
+  subcategoryId: 'subcategoryId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+};
+
 exports.Prisma.SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -500,6 +567,7 @@ exports.Prisma.ModelName = {
   TopAttraction: 'TopAttraction',
   DiscoverItem: 'DiscoverItem',
   Tribe: 'Tribe',
+  TribeVideo: 'TribeVideo',
   Personality: 'Personality',
   TribalArticle: 'TribalArticle',
   Community: 'Community',
@@ -511,7 +579,10 @@ exports.Prisma.ModelName = {
   MarketplaceProduct: 'MarketplaceProduct',
   SiteSettings: 'SiteSettings',
   CustomCategory: 'CustomCategory',
-  CardMedia: 'CardMedia'
+  CardMedia: 'CardMedia',
+  Category: 'Category',
+  SubCategory: 'SubCategory',
+  CategoryStory: 'CategoryStory'
 };
 
 /**

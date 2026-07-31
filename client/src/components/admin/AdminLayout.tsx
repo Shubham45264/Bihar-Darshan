@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import {
-  LayoutDashboard, MapPin, Palette, Plane, Image, Users, Store, Mountain, UserCircle, Settings, LogOut, Menu, X, ChevronRight, Shield, Sparkles
+  LayoutDashboard, MapPin, Palette, Plane, Image, Users, Store, Mountain, UserCircle, Settings, LogOut, Menu, X, ChevronRight, Shield, Sparkles, Layers
 } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 
 const sidebarItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { label: 'Categories', path: '/admin/categories', icon: Layers },
   { label: 'Districts', path: '/admin/districts', icon: MapPin },
   { label: 'Culture', path: '/admin/culture', icon: Palette },
   { label: 'Tourism', path: '/admin/tourism', icon: Plane },

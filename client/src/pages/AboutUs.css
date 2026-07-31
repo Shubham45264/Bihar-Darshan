@@ -4,7 +4,7 @@
   min-height: 100vh;
   background-color: #F8F5EF;
   color: #1A1814;
-  font-family: var(--font-sans, "DM Sans", sans-serif);
+  font-family: var(--font-sans, "Source Sans 3", sans-serif);
   overflow-x: hidden;
 }
 
@@ -90,7 +90,7 @@
 }
 
 .about-hero-title {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 44px;
   line-height: 1.15;
   font-weight: 700;
@@ -128,7 +128,7 @@
 
 .about-gold-accent {
   color: #D4A017;
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-style: italic;
 }
 
@@ -200,7 +200,7 @@
 }
 
 .about-section-heading {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 32px;
   font-weight: 700;
   color: #1A1814;
@@ -271,7 +271,7 @@
 }
 
 .pv-title {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 24px;
   font-weight: 700;
   color: #1A1814;
@@ -347,7 +347,7 @@
 }
 
 .explore-title {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 20px;
   font-weight: 700;
   color: #1A1814;
@@ -413,7 +413,7 @@
 }
 
 .contrib-title {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 30px;
   font-weight: 700;
   color: #FFFFFF;
@@ -494,7 +494,7 @@
 }
 
 .why-number {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 36px;
   font-weight: 700;
   color: rgba(212, 160, 23, 0.35);
@@ -502,7 +502,7 @@
 }
 
 .why-title {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 19px;
   font-weight: 700;
   color: #1A1814;
@@ -540,7 +540,7 @@
 }
 
 .team-title {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 28px;
   font-weight: 700;
   color: #1A1814;
@@ -581,7 +581,7 @@
 }
 
 .about-cta-heading {
-  font-family: var(--font-serif, "Lora", serif);
+  font-family: var(--font-serif, "Marcellus", serif);
   font-size: 36px;
   font-weight: 700;
   color: #FFFFFF;

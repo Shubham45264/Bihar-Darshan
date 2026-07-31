@@ -175,12 +175,13 @@ export const CardMediaGallery: React.FC<CardMediaGalleryProps> = ({
 
     setIsSubmitting(true);
     try {
+      const effectiveUploader = currentUser?.displayName || (currentUser?.email ? currentUser.email.split('@')[0] : '') || uploadedByName.trim() || 'Contributor';
       const payload = {
         url: finalUrl,
         mediaType,
         title: mediaTitle.trim() || `${itemTitle} ${mediaType === 'VIDEO' ? 'Video' : 'Image'}`,
         caption: mediaCaption.trim() || undefined,
-        uploadedBy: uploadedByName.trim() || currentUser?.displayName || currentUser?.email || 'Guest Contributor',
+        uploadedBy: effectiveUploader,
       };
 
       await fetch(`http://localhost:5000/api/v1/discover/${itemId}/media`, {
@@ -644,18 +645,6 @@ export const CardMediaGallery: React.FC<CardMediaGalleryProps> = ({
                     value={mediaCaption}
                     onChange={(e) => setMediaCaption(e.target.value)}
                     className="w-full bg-[#26231E] border border-[#8C7A60]/40 rounded-xl px-4 py-2.5 text-xs text-white placeholder-gray-500 focus:outline-none focus:border-brand-gold resize-none font-medium"
-                  />
-                </div>
-
-                {/* Username Input */}
-                <div>
-                  <label className="block text-xs font-bold uppercase tracking-wider text-brand-gold mb-1">
-                    Your Name / Username
-                  </label>
-                  <input
-                    type="text"
-                    placeholder="e.g. Priya Kumari"
-                    value={uploadedByName}
                   />
                 </div>
 

@@ -7,14 +7,21 @@ const router = Router();
 // --- Public Routes ---
 router.get('/', tribeController.getActiveTribes);
 router.get('/articles', tribeController.getApprovedArticles);
+router.get('/videos/approved', tribeController.getApprovedVideos);
+router.get('/videos/all', tribeController.getAllVideos);
 router.get('/:id', tribeController.getTribeById);
 
-// --- User Routes (Requires Auth for submission, but maybe public can submit? Let's assume auth for now or optional auth) ---
-// If the app allows anonymous submissions, we should use an optional auth middleware. 
-// For now, let's use a loose submission route, since the UI might not enforce login for sharing story.
+// --- User Submissions ---
 router.post('/articles', tribeController.submitArticle);
+router.post('/videos', tribeController.submitVideo);
 
-// --- Admin Routes ---
+// --- Admin Video & Article Routes ---
+router.get('/admin/videos/pending', authenticate, restrictTo('ADMIN'), tribeController.getPendingVideos);
+router.put('/admin/videos/:id/approve', authenticate, restrictTo('ADMIN'), tribeController.approveVideo);
+router.put('/admin/videos/:id/reject', authenticate, restrictTo('ADMIN'), tribeController.rejectVideo);
+router.delete('/admin/videos/:id', authenticate, restrictTo('ADMIN'), tribeController.deleteVideo);
+
+// --- Admin General Routes ---
 router.use(authenticate, restrictTo('ADMIN'));
 
 router.get('/admin/all', tribeController.getAdminAllTribes);

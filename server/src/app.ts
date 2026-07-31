@@ -71,6 +71,8 @@ if (env.NODE_ENV === 'development') {
   }));
 }
 
+import { storyRoutes } from './modules/story/story.route';
+
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/users', userRoutes);
@@ -85,6 +87,7 @@ app.use('/api/v1/admin', adminRoutes);
 app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/tribes', tribeRoutes);
 app.use('/api/v1/categories', categoryRoutes);
+app.use('/api/v1/stories', storyRoutes);
 
 app.get('/api/v1/health', (req: Request, res: Response) => {
   res.status(200).json({ success: true, message: 'Server is healthy' });

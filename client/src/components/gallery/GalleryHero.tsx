@@ -26,7 +26,7 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
   return (
     <section
       ref={ref}
-      className="relative h-[75vh] min-h-[520px] max-h-[750px] overflow-hidden"
+      className="relative min-h-[90vh] md:min-h-[85vh] w-full flex flex-col pt-32 pb-24 md:pb-0 justify-center overflow-hidden"
     >
       {/* Parallax Background Image */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
@@ -70,13 +70,8 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
           />
 
           {/* Heading */}
-          <h1 className="font-display font-bold text-5xl sm:text-6xl lg:text-7xl text-white leading-[1.1] tracking-tight drop-shadow-lg">
-            Bihar{" "}
-            <span className="text-brand-gold italic inline-block"
-            >
-              Media
-            </span>{" "}
-            Archive
+          <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight mb-4">
+            Discover Bihar's <span className="text-[#EAB308]">Gallery</span>
           </h1>
 
           {/* Ornament */}

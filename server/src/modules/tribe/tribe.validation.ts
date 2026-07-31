@@ -49,6 +49,19 @@ export const createTribalArticleSchema = z.object({
   }),
 });
 
+export const createTribeVideoSchema = z.object({
+  body: z.object({
+    caption: z.string().min(1, 'Caption is required'),
+    videoUrl: z.string().min(1, 'Video URL/file is required'),
+    title: z.string().optional(),
+    uploaderName: z.string().optional(),
+    description: z.string().optional(),
+    tribeId: z.string().min(1, 'Tribe ID is required'),
+    tribeName: z.string().min(1, 'Tribe Name is required'),
+  }),
+});
+
 export type CreateTribeInput = z.infer<typeof createTribeSchema>['body'];
 export type UpdateTribeInput = z.infer<typeof updateTribeSchema>['body'];
 export type CreateTribalArticleInput = z.infer<typeof createTribalArticleSchema>['body'];
+export type CreateTribeVideoInput = z.infer<typeof createTribeVideoSchema>['body'];
