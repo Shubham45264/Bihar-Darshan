@@ -22,6 +22,8 @@ export interface JourneySubmissionItem extends TourTrip {
 import type { Community } from './communityData';
 import { auth } from '../lib/firebase';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 export interface ProductItem {
   id: string | number;
   businessName: string;
@@ -84,7 +86,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
 
   const fetchApprovedJourneys = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/journeys');
+      const res = await fetch(`${API_BASE_URL}/journeys`);
       const result = await res.json();
       if (result.success && result.data && result.data.journeys) {
         const dbJourneys = result.data.journeys.map((j: any) => {
@@ -156,7 +158,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
 
   const fetchApprovedProducts = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/marketplace');
+      const res = await fetch(`${API_BASE_URL}/marketplace`);
       const result = await res.json();
       if (result.success && result.data && result.data.products) {
         setProductSubmissions(result.data.products);
@@ -190,7 +192,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
       localStorage.removeItem('bihar_community_submissions');
 
       // Fetch communities from backend
-      fetch('http://localhost:5000/api/v1/community')
+      fetch(`${API_BASE_URL}/community`)
         .then(res => res.json())
         .then(result => {
           if (result.success && result.data && result.data.communities) {

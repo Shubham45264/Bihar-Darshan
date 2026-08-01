@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import type { SelectHTMLAttributes, TextareaHTMLAttributes, InputHTMLAttributes } from 'react';
-import { Upload } from 'lucide-react';
+import { Upload, Loader2 } from 'lucide-react';
+import { uploadToCloudinary } from '../../utils/cloudinaryUpload';
 
 interface AdminFormFieldProps {
   label: string;
@@ -35,7 +36,7 @@ export const AdminSelect = ({ label, error, className = '', children, ...props }
     <label className="text-xs font-semibold text-white/50 uppercase tracking-wider">{label}</label>
     <select
       {...props}
-      className={`bg-[#0f0f18] border ${error ? 'border-red-500/50 focus:border-red-500/50' : 'border-white/10 focus:border-[#EAB308]/50'} rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 ${error ? 'focus:ring-red-500/20' : 'focus:ring-[#EAB308]/20'} transition-all w-full appearance-none`}
+      className={`bg-[#0d0d12] border ${error ? 'border-red-500/50 focus:border-red-500/50' : 'border-white/10 focus:border-[#EAB308]/50'} rounded-xl px-4 py-2.5 text-sm text-white focus:outline-none focus:ring-1 ${error ? 'focus:ring-red-500/20' : 'focus:ring-[#EAB308]/20'} transition-all w-full cursor-pointer`}
     >
       {children}
     </select>
@@ -43,10 +44,16 @@ export const AdminSelect = ({ label, error, className = '', children, ...props }
   </div>
 );
 
-export const AdminImagePreview = ({ url, alt = "Preview" }: { url: string, alt?: string }) => {
+interface AdminImagePreviewProps {
+  url: string;
+  alt: string;
+  className?: string;
+}
+
+export const AdminImagePreview = ({ url, alt, className = '' }: AdminImagePreviewProps) => {
   if (!url) return null;
   return (
-    <div className="mt-2 rounded-xl border border-white/10 overflow-hidden bg-white/5 relative aspect-video w-full max-w-sm">
+    <div className={`relative w-full aspect-video rounded-xl overflow-hidden bg-black/40 border border-white/10 ${className}`}>
       <img src={url} alt={alt} className="w-full h-full object-cover" />
     </div>
   );
@@ -61,6 +68,20 @@ interface AdminImageUploadProps {
 
 export const AdminImageUpload = ({ label, value, onChange, required = false }: AdminImageUploadProps) => {
   const [isDragging, setIsDragging] = useState(false);
+  const [isUploading, setIsUploading] = useState(false);
+
+  const handleFileUpload = async (file: File) => {
+    try {
+      setIsUploading(true);
+      const res = await uploadToCloudinary(file);
+      onChange(res.secure_url);
+    } catch (err) {
+      console.error('Cloudinary upload error:', err);
+      alert('Failed to upload image to Cloudinary. Please try again.');
+    } finally {
+      setIsUploading(false);
+    }
+  };
 
   return (
     <div className="flex flex-col gap-1.5 w-full">
@@ -81,14 +102,11 @@ export const AdminImageUpload = ({ label, value, onChange, required = false }: A
           setIsDragging(false);
           const file = e.dataTransfer.files?.[0];
           if (file && file.type.startsWith('image/')) {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-              onChange(reader.result as string);
-            };
-            reader.readAsDataURL(file);
+            handleFileUpload(file);
           }
         }}
         onClick={() => {
+          if (isUploading) return;
           const inputId = `file-input-${label.replace(/[^a-zA-Z0-9]/g, '-').toLowerCase()}`;
           document.getElementById(inputId)?.click();
         }}
@@ -100,15 +118,16 @@ export const AdminImageUpload = ({ label, value, onChange, required = false }: A
           className="hidden"
           onChange={(e) => {
             if (e.target.files && e.target.files[0]) {
-              const reader = new FileReader();
-              reader.onloadend = () => {
-                onChange(reader.result as string);
-              };
-              reader.readAsDataURL(e.target.files[0]);
+              handleFileUpload(e.target.files[0]);
             }
           }}
         />
-        {value ? (
+        {isUploading ? (
+          <div className="text-center py-4 flex flex-col items-center justify-center gap-2">
+            <Loader2 size={24} className="text-[#EAB308] animate-spin" />
+            <p className="text-xs font-semibold text-white">Uploading to Cloudinary...</p>
+          </div>
+        ) : value ? (
           <div className="relative w-full aspect-video max-h-[160px] rounded-lg overflow-hidden group/img flex items-center justify-center bg-[#07070b]">
             <img src={value} alt={label} className="max-w-full max-h-full object-contain" />
             <div className="absolute inset-0 bg-black/60 opacity-0 group-hover/img:opacity-100 flex items-center justify-center transition-opacity">
@@ -121,7 +140,7 @@ export const AdminImageUpload = ({ label, value, onChange, required = false }: A
           <div className="text-center py-2">
             <Upload size={20} className="text-white/40 mx-auto mb-2" />
             <p className="text-xs font-semibold text-white">Drag & drop image here</p>
-            <p className="text-[10px] text-white/40 mt-0.5">or click to browse files from system</p>
+            <p className="text-[10px] text-white/40 mt-0.5">or click to browse files (Cloudinary optimized)</p>
           </div>
         )}
       </div>
@@ -129,7 +148,7 @@ export const AdminImageUpload = ({ label, value, onChange, required = false }: A
       <div className="mt-1" onClick={(e) => e.stopPropagation()}>
         <input
           type="text"
-          placeholder={`Or paste ${label.toLowerCase()} URL or relative path...`}
+          placeholder={`Or paste ${label.toLowerCase()} Cloudinary URL...`}
           value={value}
           onChange={(e) => onChange(e.target.value)}
           required={required && !value}

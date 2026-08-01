@@ -186,13 +186,23 @@ const GalleryLightbox = ({
           >
             {/* Image/Media Area */}
             <div className="relative flex-1 bg-black/50 flex items-center justify-center overflow-hidden min-h-[40vh] md:min-h-0">
-              {item.mediaType === "video" ? (
+              {item.mediaType === "video" || item.image.includes('/video/upload/') || item.image.endsWith('.mp4') ? (
                 <video
-                  src={item.image}
+                  key={item.image}
                   controls
                   autoPlay
+                  playsInline
+                  preload="auto"
+                  poster={
+                    item.image.includes('cloudinary.com') || item.image.includes('res.cloudinary.com')
+                      ? item.image.replace(/\/video\/upload\/(v\d+\/)?/, '/video/upload/f_jpg,so_0/$1').replace(/\.(mp4|mov|webm|mkv)$/i, '.jpg')
+                      : undefined
+                  }
                   className="w-full h-full object-contain"
-                />
+                >
+                  <source src={item.image} type="video/mp4" />
+                  Your browser does not support the video tag.
+                </video>
               ) : (
                 <img
                   src={item.image}

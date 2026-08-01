@@ -36,6 +36,8 @@ export const uploadGalleryItem = async (userId: string, data: CreateGalleryItemI
   });
 };
 
+import { deleteFromCloudinary } from '../../utils/cloudinary';
+
 export const updateGalleryItemStatus = async (id: string, status: ApprovalStatus) => {
   const item = await db.galleryItem.findUnique({ where: { id } });
   if (!item) throw new AppError('Gallery item not found', 404);
@@ -44,4 +46,15 @@ export const updateGalleryItemStatus = async (id: string, status: ApprovalStatus
     where: { id },
     data: { status }
   });
+};
+
+export const deleteGalleryItem = async (id: string) => {
+  const item = await db.galleryItem.findUnique({ where: { id } });
+  if (!item) throw new AppError('Gallery item not found', 404);
+
+  if (item.publicId) {
+    await deleteFromCloudinary(item.publicId, 'image').catch(() => null);
+  }
+
+  return db.galleryItem.delete({ where: { id } });
 };

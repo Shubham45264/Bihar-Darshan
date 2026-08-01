@@ -1,6 +1,7 @@
 import { prisma as db } from '../../db';
 import { AppError } from '../../errors/AppError';
 import { CreateTribeInput, UpdateTribeInput, CreateTribalArticleInput, CreateTribeVideoInput } from './tribe.validation';
+import { deleteFromCloudinary } from '../../utils/cloudinary';
 
 // --- Tribes ---
 export const getAllTribes = async (includeInactive = false) => {
@@ -153,6 +154,7 @@ export const createTribeVideo = async (data: CreateTribeVideoInput, userRole: st
       title,
       caption,
       videoUrl: data.videoUrl,
+      publicId: (data as any).publicId || null,
       uploaderName,
       description: data.description || null,
       tribeId: data.tribeId,
@@ -197,5 +199,8 @@ export const rejectTribeVideo = async (id: string, rejectionReason?: string) => 
 export const deleteTribeVideo = async (id: string) => {
   const video = await (db as any).tribeVideo.findUnique({ where: { id } });
   if (!video) throw new AppError('Video not found', 404);
+  if (video.publicId) {
+    await deleteFromCloudinary(video.publicId, 'video').catch(() => null);
+  }
   return (db as any).tribeVideo.delete({ where: { id } });
 };

@@ -1,2 +1,0 @@
-// AdminCommunity page removed
-export {};

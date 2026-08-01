@@ -7,6 +7,7 @@ import { useContributions } from "../data/ContributionContext";
 import { product as initialProducts } from "../data/product";
 import heroBg from "../assets/hero.png";
 import "./ShareStory.css";
+import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 
 const CATEGORIES = ["Art & Craft", "Textiles", "Handicrafts", "Wood Craft", "Jewelry", "Others"];
 
@@ -71,13 +72,14 @@ const AddProduct = () => {
       });
     }
 
-    validFiles.forEach((file) => {
+    validFiles.forEach(async (file) => {
       setFileNames(prev => [...prev, file.name]);
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImageFiles(prev => [...prev, reader.result as string]);
-      };
-      reader.readAsDataURL(file);
+      try {
+        const res = await uploadToCloudinary(file);
+        setImageFiles(prev => [...prev, res.secure_url]);
+      } catch (err) {
+        console.error("Cloudinary product upload failed:", err);
+      }
     });
   };
 

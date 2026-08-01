@@ -161,6 +161,7 @@ model DiscoverItem {
   videoUrl        String?
   galleryImages   String[]         @default([])
   extendedDetails String[]         @default([])
+  publicId        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -200,6 +201,7 @@ model TribeVideo {
   status          ApprovalStatus @default(PENDING)
   rejectionReason String?        @db.Text
   userId          String?
+  publicId        String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -215,6 +217,7 @@ model Personality {
   fullBio     String?
   author      String?        @default("Admin")
   status      ApprovalStatus @default(PENDING)
+  publicId    String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -377,7 +380,8 @@ model Journey {
   authorId String
   author   User   @relation(fields: [authorId], references: [id], onDelete: Cascade)
 
-  status ApprovalStatus @default(PENDING)
+  status   ApprovalStatus @default(PENDING)
+  publicId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -395,7 +399,8 @@ model GalleryItem {
   uploaderId String
   uploader   User   @relation(fields: [uploaderId], references: [id], onDelete: Cascade)
 
-  status ApprovalStatus @default(PENDING)
+  status   ApprovalStatus @default(PENDING)
+  publicId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -419,7 +424,8 @@ model MarketplaceProduct {
   contact      String?
   email        String?
 
-  status ApprovalStatus @default(PENDING)
+  status   ApprovalStatus @default(PENDING)
+  publicId String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -470,6 +476,7 @@ model CardMedia {
   likedBy    String[]  @default([])
   dislikedBy String[]  @default([])
   uploadedBy String?   @default("Anonymous")
+  publicId   String?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -531,6 +538,7 @@ model CategoryStory {
   likedBy      String[]       @default([])
   dislikedBy   String[]       @default([])
   status       ApprovalStatus @default(PENDING)
+  publicId     String?
 
   authorId String?
   author   User?   @relation(fields: [authorId], references: [id], onDelete: SetNull)

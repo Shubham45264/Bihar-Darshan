@@ -21,6 +21,7 @@ import { adminRoutes } from './modules/admin/admin.route';
 import { notificationRoutes } from './modules/notification/notification.route';
 import { tribeRoutes } from './modules/tribe/tribe.route';
 import { categoryRoutes } from './modules/category/category.route';
+import uploadRoutes from './modules/upload/upload.route';
 
 const app: Application = express();
 
@@ -88,6 +89,7 @@ app.use('/api/v1/notifications', notificationRoutes);
 app.use('/api/v1/tribes', tribeRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/stories', storyRoutes);
+app.use('/api/v1/upload', uploadRoutes);
 
 app.get('/api/v1/health', (req: Request, res: Response) => {
   res.status(200).json({ success: true, message: 'Server is healthy' });

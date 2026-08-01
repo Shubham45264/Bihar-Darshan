@@ -7,6 +7,7 @@ import PremiumFooter from "../components/tourism/PremiumFooter";
 import { useContributions } from "../data/ContributionContext";
 import heroBg from "../assets/hero.png";
 import "./CreateJourney.css";
+import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Interface Definitions
@@ -183,22 +184,27 @@ const CreateJourney = () => {
   const galleryInputRef = useRef<HTMLInputElement>(null);
 
   // ── File Upload Handlers ──────────────────────────────────────────────────
-  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string | null>>) => {
+  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>, setter: React.Dispatch<React.SetStateAction<string | null>>) => {
     if (e.target.files && e.target.files[0]) {
-      const reader = new FileReader();
-      reader.onloadend = () => setter(reader.result as string);
-      reader.readAsDataURL(e.target.files[0]);
+      try {
+        const res = await uploadToCloudinary(e.target.files[0]);
+        setter(res.secure_url);
+      } catch (err) {
+        console.error("Cloudinary upload failed:", err);
+        alert("Failed to upload image to Cloudinary");
+      }
     }
   };
 
   const handleGalleryUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
-      Array.from(e.target.files).forEach((file, index) => {
-        const reader = new FileReader();
-        reader.onloadend = () => {
-          setGallery((prev) => [...prev, { id: Date.now().toString() + index, url: reader.result as string, title: "Gallery Memory" }]);
-        };
-        reader.readAsDataURL(file);
+      Array.from(e.target.files).forEach(async (file, index) => {
+        try {
+          const res = await uploadToCloudinary(file);
+          setGallery((prev) => [...prev, { id: res.public_id || (Date.now().toString() + index), url: res.secure_url, title: "Gallery Memory" }]);
+        } catch (err) {
+          console.error("Cloudinary upload failed:", err);
+        }
       });
     }
   };

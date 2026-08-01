@@ -9224,6 +9224,7 @@ export namespace Prisma {
     status: $Enums.ApprovalStatus | null
     longDescription: string | null
     videoUrl: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9240,6 +9241,7 @@ export namespace Prisma {
     status: $Enums.ApprovalStatus | null
     longDescription: string | null
     videoUrl: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -9258,6 +9260,7 @@ export namespace Prisma {
     videoUrl: number
     galleryImages: number
     extendedDetails: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -9276,6 +9279,7 @@ export namespace Prisma {
     status?: true
     longDescription?: true
     videoUrl?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9292,6 +9296,7 @@ export namespace Prisma {
     status?: true
     longDescription?: true
     videoUrl?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -9310,6 +9315,7 @@ export namespace Prisma {
     videoUrl?: true
     galleryImages?: true
     extendedDetails?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -9401,6 +9407,7 @@ export namespace Prisma {
     videoUrl: string | null
     galleryImages: string[]
     extendedDetails: string[]
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: DiscoverItemCountAggregateOutputType | null
@@ -9436,6 +9443,7 @@ export namespace Prisma {
     videoUrl?: boolean
     galleryImages?: boolean
     extendedDetails?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["discoverItem"]>
@@ -9454,6 +9462,7 @@ export namespace Prisma {
     videoUrl?: boolean
     galleryImages?: boolean
     extendedDetails?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["discoverItem"]>
@@ -9472,6 +9481,7 @@ export namespace Prisma {
     videoUrl?: boolean
     galleryImages?: boolean
     extendedDetails?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["discoverItem"]>
@@ -9490,11 +9500,12 @@ export namespace Prisma {
     videoUrl?: boolean
     galleryImages?: boolean
     extendedDetails?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type DiscoverItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "category" | "image" | "description" | "featured" | "author" | "district" | "status" | "longDescription" | "videoUrl" | "galleryImages" | "extendedDetails" | "createdAt" | "updatedAt", ExtArgs["result"]["discoverItem"]>
+  export type DiscoverItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "category" | "image" | "description" | "featured" | "author" | "district" | "status" | "longDescription" | "videoUrl" | "galleryImages" | "extendedDetails" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["discoverItem"]>
 
   export type $DiscoverItemPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "DiscoverItem"
@@ -9513,6 +9524,7 @@ export namespace Prisma {
       videoUrl: string | null
       galleryImages: string[]
       extendedDetails: string[]
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["discoverItem"]>
@@ -9951,6 +9963,7 @@ export namespace Prisma {
     readonly videoUrl: FieldRef<"DiscoverItem", 'String'>
     readonly galleryImages: FieldRef<"DiscoverItem", 'String[]'>
     readonly extendedDetails: FieldRef<"DiscoverItem", 'String[]'>
+    readonly publicId: FieldRef<"DiscoverItem", 'String'>
     readonly createdAt: FieldRef<"DiscoverItem", 'DateTime'>
     readonly updatedAt: FieldRef<"DiscoverItem", 'DateTime'>
   }
@@ -11474,6 +11487,7 @@ export namespace Prisma {
     status: $Enums.ApprovalStatus | null
     rejectionReason: string | null
     userId: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11492,6 +11506,7 @@ export namespace Prisma {
     status: $Enums.ApprovalStatus | null
     rejectionReason: string | null
     userId: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -11510,6 +11525,7 @@ export namespace Prisma {
     status: number
     rejectionReason: number
     userId: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -11530,6 +11546,7 @@ export namespace Prisma {
     status?: true
     rejectionReason?: true
     userId?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11548,6 +11565,7 @@ export namespace Prisma {
     status?: true
     rejectionReason?: true
     userId?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -11566,6 +11584,7 @@ export namespace Prisma {
     status?: true
     rejectionReason?: true
     userId?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -11657,6 +11676,7 @@ export namespace Prisma {
     status: $Enums.ApprovalStatus
     rejectionReason: string | null
     userId: string | null
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: TribeVideoCountAggregateOutputType | null
@@ -11692,6 +11712,7 @@ export namespace Prisma {
     status?: boolean
     rejectionReason?: boolean
     userId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tribeVideo"]>
@@ -11710,6 +11731,7 @@ export namespace Prisma {
     status?: boolean
     rejectionReason?: boolean
     userId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tribeVideo"]>
@@ -11728,6 +11750,7 @@ export namespace Prisma {
     status?: boolean
     rejectionReason?: boolean
     userId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["tribeVideo"]>
@@ -11746,11 +11769,12 @@ export namespace Prisma {
     status?: boolean
     rejectionReason?: boolean
     userId?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type TribeVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "caption" | "videoUrl" | "uploaderName" | "description" | "tribeId" | "tribeName" | "thumbnail" | "duration" | "status" | "rejectionReason" | "userId" | "createdAt" | "updatedAt", ExtArgs["result"]["tribeVideo"]>
+  export type TribeVideoOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "caption" | "videoUrl" | "uploaderName" | "description" | "tribeId" | "tribeName" | "thumbnail" | "duration" | "status" | "rejectionReason" | "userId" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["tribeVideo"]>
 
   export type $TribeVideoPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "TribeVideo"
@@ -11769,6 +11793,7 @@ export namespace Prisma {
       status: $Enums.ApprovalStatus
       rejectionReason: string | null
       userId: string | null
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["tribeVideo"]>
@@ -12207,6 +12232,7 @@ export namespace Prisma {
     readonly status: FieldRef<"TribeVideo", 'ApprovalStatus'>
     readonly rejectionReason: FieldRef<"TribeVideo", 'String'>
     readonly userId: FieldRef<"TribeVideo", 'String'>
+    readonly publicId: FieldRef<"TribeVideo", 'String'>
     readonly createdAt: FieldRef<"TribeVideo", 'DateTime'>
     readonly updatedAt: FieldRef<"TribeVideo", 'DateTime'>
   }
@@ -12600,6 +12626,7 @@ export namespace Prisma {
     fullBio: string | null
     author: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12614,6 +12641,7 @@ export namespace Prisma {
     fullBio: string | null
     author: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -12628,6 +12656,7 @@ export namespace Prisma {
     fullBio: number
     author: number
     status: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -12644,6 +12673,7 @@ export namespace Prisma {
     fullBio?: true
     author?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12658,6 +12688,7 @@ export namespace Prisma {
     fullBio?: true
     author?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -12672,6 +12703,7 @@ export namespace Prisma {
     fullBio?: true
     author?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -12759,6 +12791,7 @@ export namespace Prisma {
     fullBio: string | null
     author: string | null
     status: $Enums.ApprovalStatus
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: PersonalityCountAggregateOutputType | null
@@ -12790,6 +12823,7 @@ export namespace Prisma {
     fullBio?: boolean
     author?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["personality"]>
@@ -12804,6 +12838,7 @@ export namespace Prisma {
     fullBio?: boolean
     author?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["personality"]>
@@ -12818,6 +12853,7 @@ export namespace Prisma {
     fullBio?: boolean
     author?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["personality"]>
@@ -12832,11 +12868,12 @@ export namespace Prisma {
     fullBio?: boolean
     author?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type PersonalityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "district" | "description" | "imageUrl" | "fullBio" | "author" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["personality"]>
+  export type PersonalityOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "name" | "category" | "district" | "description" | "imageUrl" | "fullBio" | "author" | "status" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["personality"]>
 
   export type $PersonalityPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Personality"
@@ -12851,6 +12888,7 @@ export namespace Prisma {
       fullBio: string | null
       author: string | null
       status: $Enums.ApprovalStatus
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["personality"]>
@@ -13285,6 +13323,7 @@ export namespace Prisma {
     readonly fullBio: FieldRef<"Personality", 'String'>
     readonly author: FieldRef<"Personality", 'String'>
     readonly status: FieldRef<"Personality", 'ApprovalStatus'>
+    readonly publicId: FieldRef<"Personality", 'String'>
     readonly createdAt: FieldRef<"Personality", 'DateTime'>
     readonly updatedAt: FieldRef<"Personality", 'DateTime'>
   }
@@ -19680,6 +19719,7 @@ export namespace Prisma {
     guideWhatsapp: string | null
     authorId: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19721,6 +19761,7 @@ export namespace Prisma {
     guideWhatsapp: string | null
     authorId: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -19769,6 +19810,7 @@ export namespace Prisma {
     guideWhatsapp: number
     authorId: number
     status: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -19822,6 +19864,7 @@ export namespace Prisma {
     guideWhatsapp?: true
     authorId?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19863,6 +19906,7 @@ export namespace Prisma {
     guideWhatsapp?: true
     authorId?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -19911,6 +19955,7 @@ export namespace Prisma {
     guideWhatsapp?: true
     authorId?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -20046,6 +20091,7 @@ export namespace Prisma {
     guideWhatsapp: string | null
     authorId: string
     status: $Enums.ApprovalStatus
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: JourneyCountAggregateOutputType | null
@@ -20113,6 +20159,7 @@ export namespace Prisma {
     guideWhatsapp?: boolean
     authorId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -20162,6 +20209,7 @@ export namespace Prisma {
     guideWhatsapp?: boolean
     authorId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -20211,6 +20259,7 @@ export namespace Prisma {
     guideWhatsapp?: boolean
     authorId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -20260,11 +20309,12 @@ export namespace Prisma {
     guideWhatsapp?: boolean
     authorId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type JourneyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "shortDesc" | "description" | "overviewText" | "image" | "duration" | "tripDuration" | "budget" | "price" | "district" | "stops" | "phone" | "whatsapp" | "difficulty" | "bestTime" | "groupSize" | "transportation" | "startPoint" | "endPoint" | "emergencyContact" | "email" | "quote" | "galleryImages" | "timeline" | "category" | "companyName" | "rating" | "userRating" | "highlights" | "includedServices" | "excludedServices" | "googleMapsLink" | "guideName" | "guideImage" | "guideExperience" | "guideLanguages" | "guideIntro" | "guidePhone" | "guideEmail" | "guideWhatsapp" | "authorId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["journey"]>
+  export type JourneyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "shortDesc" | "description" | "overviewText" | "image" | "duration" | "tripDuration" | "budget" | "price" | "district" | "stops" | "phone" | "whatsapp" | "difficulty" | "bestTime" | "groupSize" | "transportation" | "startPoint" | "endPoint" | "emergencyContact" | "email" | "quote" | "galleryImages" | "timeline" | "category" | "companyName" | "rating" | "userRating" | "highlights" | "includedServices" | "excludedServices" | "googleMapsLink" | "guideName" | "guideImage" | "guideExperience" | "guideLanguages" | "guideIntro" | "guidePhone" | "guideEmail" | "guideWhatsapp" | "authorId" | "status" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["journey"]>
   export type JourneyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -20324,6 +20374,7 @@ export namespace Prisma {
       guideWhatsapp: string | null
       authorId: string
       status: $Enums.ApprovalStatus
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["journey"]>
@@ -20793,6 +20844,7 @@ export namespace Prisma {
     readonly guideWhatsapp: FieldRef<"Journey", 'String'>
     readonly authorId: FieldRef<"Journey", 'String'>
     readonly status: FieldRef<"Journey", 'ApprovalStatus'>
+    readonly publicId: FieldRef<"Journey", 'String'>
     readonly createdAt: FieldRef<"Journey", 'DateTime'>
     readonly updatedAt: FieldRef<"Journey", 'DateTime'>
   }
@@ -21246,6 +21298,7 @@ export namespace Prisma {
     views: number | null
     uploaderId: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21260,6 +21313,7 @@ export namespace Prisma {
     views: number | null
     uploaderId: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -21274,6 +21328,7 @@ export namespace Prisma {
     views: number
     uploaderId: number
     status: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -21300,6 +21355,7 @@ export namespace Prisma {
     views?: true
     uploaderId?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21314,6 +21370,7 @@ export namespace Prisma {
     views?: true
     uploaderId?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -21328,6 +21385,7 @@ export namespace Prisma {
     views?: true
     uploaderId?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -21429,6 +21487,7 @@ export namespace Prisma {
     views: number
     uploaderId: string
     status: $Enums.ApprovalStatus
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: GalleryItemCountAggregateOutputType | null
@@ -21462,6 +21521,7 @@ export namespace Prisma {
     views?: boolean
     uploaderId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     uploader?: boolean | UserDefaultArgs<ExtArgs>
@@ -21477,6 +21537,7 @@ export namespace Prisma {
     views?: boolean
     uploaderId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     uploader?: boolean | UserDefaultArgs<ExtArgs>
@@ -21492,6 +21553,7 @@ export namespace Prisma {
     views?: boolean
     uploaderId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     uploader?: boolean | UserDefaultArgs<ExtArgs>
@@ -21507,11 +21569,12 @@ export namespace Prisma {
     views?: boolean
     uploaderId?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type GalleryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "image" | "category" | "likes" | "views" | "uploaderId" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["galleryItem"]>
+  export type GalleryItemOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "description" | "image" | "category" | "likes" | "views" | "uploaderId" | "status" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["galleryItem"]>
   export type GalleryItemInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     uploader?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -21537,6 +21600,7 @@ export namespace Prisma {
       views: number
       uploaderId: string
       status: $Enums.ApprovalStatus
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["galleryItem"]>
@@ -21972,6 +22036,7 @@ export namespace Prisma {
     readonly views: FieldRef<"GalleryItem", 'Int'>
     readonly uploaderId: FieldRef<"GalleryItem", 'String'>
     readonly status: FieldRef<"GalleryItem", 'ApprovalStatus'>
+    readonly publicId: FieldRef<"GalleryItem", 'String'>
     readonly createdAt: FieldRef<"GalleryItem", 'DateTime'>
     readonly updatedAt: FieldRef<"GalleryItem", 'DateTime'>
   }
@@ -22416,6 +22481,7 @@ export namespace Prisma {
     contact: string | null
     email: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -22433,6 +22499,7 @@ export namespace Prisma {
     contact: string | null
     email: string | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -22451,6 +22518,7 @@ export namespace Prisma {
     contact: number
     email: number
     status: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -22470,6 +22538,7 @@ export namespace Prisma {
     contact?: true
     email?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -22487,6 +22556,7 @@ export namespace Prisma {
     contact?: true
     email?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -22505,6 +22575,7 @@ export namespace Prisma {
     contact?: true
     email?: true
     status?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -22596,6 +22667,7 @@ export namespace Prisma {
     contact: string | null
     email: string | null
     status: $Enums.ApprovalStatus
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: MarketplaceProductCountAggregateOutputType | null
@@ -22631,6 +22703,7 @@ export namespace Prisma {
     contact?: boolean
     email?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["marketplaceProduct"]>
@@ -22649,6 +22722,7 @@ export namespace Prisma {
     contact?: boolean
     email?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["marketplaceProduct"]>
@@ -22667,6 +22741,7 @@ export namespace Prisma {
     contact?: boolean
     email?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["marketplaceProduct"]>
@@ -22685,11 +22760,12 @@ export namespace Prisma {
     contact?: boolean
     email?: boolean
     status?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MarketplaceProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessName" | "productName" | "category" | "image" | "images" | "description" | "address" | "website" | "mapLink" | "contact" | "email" | "status" | "createdAt" | "updatedAt", ExtArgs["result"]["marketplaceProduct"]>
+  export type MarketplaceProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessName" | "productName" | "category" | "image" | "images" | "description" | "address" | "website" | "mapLink" | "contact" | "email" | "status" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["marketplaceProduct"]>
 
   export type $MarketplaceProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MarketplaceProduct"
@@ -22708,6 +22784,7 @@ export namespace Prisma {
       contact: string | null
       email: string | null
       status: $Enums.ApprovalStatus
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["marketplaceProduct"]>
@@ -23146,6 +23223,7 @@ export namespace Prisma {
     readonly contact: FieldRef<"MarketplaceProduct", 'String'>
     readonly email: FieldRef<"MarketplaceProduct", 'String'>
     readonly status: FieldRef<"MarketplaceProduct", 'ApprovalStatus'>
+    readonly publicId: FieldRef<"MarketplaceProduct", 'String'>
     readonly createdAt: FieldRef<"MarketplaceProduct", 'DateTime'>
     readonly updatedAt: FieldRef<"MarketplaceProduct", 'DateTime'>
   }
@@ -25728,6 +25806,7 @@ export namespace Prisma {
     likes: number | null
     dislikes: number | null
     uploadedBy: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -25742,6 +25821,7 @@ export namespace Prisma {
     likes: number | null
     dislikes: number | null
     uploadedBy: string | null
+    publicId: string | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -25758,6 +25838,7 @@ export namespace Prisma {
     likedBy: number
     dislikedBy: number
     uploadedBy: number
+    publicId: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -25784,6 +25865,7 @@ export namespace Prisma {
     likes?: true
     dislikes?: true
     uploadedBy?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -25798,6 +25880,7 @@ export namespace Prisma {
     likes?: true
     dislikes?: true
     uploadedBy?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -25814,6 +25897,7 @@ export namespace Prisma {
     likedBy?: true
     dislikedBy?: true
     uploadedBy?: true
+    publicId?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -25917,6 +26001,7 @@ export namespace Prisma {
     likedBy: string[]
     dislikedBy: string[]
     uploadedBy: string | null
+    publicId: string | null
     createdAt: Date
     updatedAt: Date
     _count: CardMediaCountAggregateOutputType | null
@@ -25952,6 +26037,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     uploadedBy?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cardMedia"]>
@@ -25968,6 +26054,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     uploadedBy?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cardMedia"]>
@@ -25984,6 +26071,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     uploadedBy?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["cardMedia"]>
@@ -26000,11 +26088,12 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     uploadedBy?: boolean
+    publicId?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type CardMediaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "url" | "mediaType" | "title" | "caption" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "uploadedBy" | "createdAt" | "updatedAt", ExtArgs["result"]["cardMedia"]>
+  export type CardMediaOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "itemId" | "url" | "mediaType" | "title" | "caption" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "uploadedBy" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["cardMedia"]>
 
   export type $CardMediaPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "CardMedia"
@@ -26021,6 +26110,7 @@ export namespace Prisma {
       likedBy: string[]
       dislikedBy: string[]
       uploadedBy: string | null
+      publicId: string | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["cardMedia"]>
@@ -26457,6 +26547,7 @@ export namespace Prisma {
     readonly likedBy: FieldRef<"CardMedia", 'String[]'>
     readonly dislikedBy: FieldRef<"CardMedia", 'String[]'>
     readonly uploadedBy: FieldRef<"CardMedia", 'String'>
+    readonly publicId: FieldRef<"CardMedia", 'String'>
     readonly createdAt: FieldRef<"CardMedia", 'DateTime'>
     readonly updatedAt: FieldRef<"CardMedia", 'DateTime'>
   }
@@ -29167,6 +29258,7 @@ export namespace Prisma {
     likes: number | null
     dislikes: number | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     authorId: string | null
     categoryId: string | null
     subcategoryId: string | null
@@ -29187,6 +29279,7 @@ export namespace Prisma {
     likes: number | null
     dislikes: number | null
     status: $Enums.ApprovalStatus | null
+    publicId: string | null
     authorId: string | null
     categoryId: string | null
     subcategoryId: string | null
@@ -29211,6 +29304,7 @@ export namespace Prisma {
     likedBy: number
     dislikedBy: number
     status: number
+    publicId: number
     authorId: number
     categoryId: number
     subcategoryId: number
@@ -29245,6 +29339,7 @@ export namespace Prisma {
     likes?: true
     dislikes?: true
     status?: true
+    publicId?: true
     authorId?: true
     categoryId?: true
     subcategoryId?: true
@@ -29265,6 +29360,7 @@ export namespace Prisma {
     likes?: true
     dislikes?: true
     status?: true
+    publicId?: true
     authorId?: true
     categoryId?: true
     subcategoryId?: true
@@ -29289,6 +29385,7 @@ export namespace Prisma {
     likedBy?: true
     dislikedBy?: true
     status?: true
+    publicId?: true
     authorId?: true
     categoryId?: true
     subcategoryId?: true
@@ -29400,6 +29497,7 @@ export namespace Prisma {
     likedBy: string[]
     dislikedBy: string[]
     status: $Enums.ApprovalStatus
+    publicId: string | null
     authorId: string | null
     categoryId: string
     subcategoryId: string
@@ -29443,6 +29541,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     status?: boolean
+    publicId?: boolean
     authorId?: boolean
     categoryId?: boolean
     subcategoryId?: boolean
@@ -29470,6 +29569,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     status?: boolean
+    publicId?: boolean
     authorId?: boolean
     categoryId?: boolean
     subcategoryId?: boolean
@@ -29497,6 +29597,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     status?: boolean
+    publicId?: boolean
     authorId?: boolean
     categoryId?: boolean
     subcategoryId?: boolean
@@ -29524,6 +29625,7 @@ export namespace Prisma {
     likedBy?: boolean
     dislikedBy?: boolean
     status?: boolean
+    publicId?: boolean
     authorId?: boolean
     categoryId?: boolean
     subcategoryId?: boolean
@@ -29531,7 +29633,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CategoryStoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "mediaUrl" | "mediaType" | "mediaFiles" | "authorName" | "authorAvatar" | "district" | "views" | "viewedBy" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "status" | "authorId" | "categoryId" | "subcategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["categoryStory"]>
+  export type CategoryStoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "mediaUrl" | "mediaType" | "mediaFiles" | "authorName" | "authorAvatar" | "district" | "views" | "viewedBy" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "status" | "publicId" | "authorId" | "categoryId" | "subcategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["categoryStory"]>
   export type CategoryStoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | CategoryStory$authorArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -29572,6 +29674,7 @@ export namespace Prisma {
       likedBy: string[]
       dislikedBy: string[]
       status: $Enums.ApprovalStatus
+      publicId: string | null
       authorId: string | null
       categoryId: string
       subcategoryId: string
@@ -30019,6 +30122,7 @@ export namespace Prisma {
     readonly likedBy: FieldRef<"CategoryStory", 'String[]'>
     readonly dislikedBy: FieldRef<"CategoryStory", 'String[]'>
     readonly status: FieldRef<"CategoryStory", 'ApprovalStatus'>
+    readonly publicId: FieldRef<"CategoryStory", 'String'>
     readonly authorId: FieldRef<"CategoryStory", 'String'>
     readonly categoryId: FieldRef<"CategoryStory", 'String'>
     readonly subcategoryId: FieldRef<"CategoryStory", 'String'>
@@ -30569,6 +30673,7 @@ export namespace Prisma {
     videoUrl: 'videoUrl',
     galleryImages: 'galleryImages',
     extendedDetails: 'extendedDetails',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30611,6 +30716,7 @@ export namespace Prisma {
     status: 'status',
     rejectionReason: 'rejectionReason',
     userId: 'userId',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30628,6 +30734,7 @@ export namespace Prisma {
     fullBio: 'fullBio',
     author: 'author',
     status: 'status',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30767,6 +30874,7 @@ export namespace Prisma {
     guideWhatsapp: 'guideWhatsapp',
     authorId: 'authorId',
     status: 'status',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30784,6 +30892,7 @@ export namespace Prisma {
     views: 'views',
     uploaderId: 'uploaderId',
     status: 'status',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30805,6 +30914,7 @@ export namespace Prisma {
     contact: 'contact',
     email: 'email',
     status: 'status',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30857,6 +30967,7 @@ export namespace Prisma {
     likedBy: 'likedBy',
     dislikedBy: 'dislikedBy',
     uploadedBy: 'uploadedBy',
+    publicId: 'publicId',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -30911,6 +31022,7 @@ export namespace Prisma {
     likedBy: 'likedBy',
     dislikedBy: 'dislikedBy',
     status: 'status',
+    publicId: 'publicId',
     authorId: 'authorId',
     categoryId: 'categoryId',
     subcategoryId: 'subcategoryId',
@@ -31571,6 +31683,7 @@ export namespace Prisma {
     videoUrl?: StringNullableFilter<"DiscoverItem"> | string | null
     galleryImages?: StringNullableListFilter<"DiscoverItem">
     extendedDetails?: StringNullableListFilter<"DiscoverItem">
+    publicId?: StringNullableFilter<"DiscoverItem"> | string | null
     createdAt?: DateTimeFilter<"DiscoverItem"> | Date | string
     updatedAt?: DateTimeFilter<"DiscoverItem"> | Date | string
   }
@@ -31589,6 +31702,7 @@ export namespace Prisma {
     videoUrl?: SortOrderInput | SortOrder
     galleryImages?: SortOrder
     extendedDetails?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31610,6 +31724,7 @@ export namespace Prisma {
     videoUrl?: StringNullableFilter<"DiscoverItem"> | string | null
     galleryImages?: StringNullableListFilter<"DiscoverItem">
     extendedDetails?: StringNullableListFilter<"DiscoverItem">
+    publicId?: StringNullableFilter<"DiscoverItem"> | string | null
     createdAt?: DateTimeFilter<"DiscoverItem"> | Date | string
     updatedAt?: DateTimeFilter<"DiscoverItem"> | Date | string
   }, "id">
@@ -31628,6 +31743,7 @@ export namespace Prisma {
     videoUrl?: SortOrderInput | SortOrder
     galleryImages?: SortOrder
     extendedDetails?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: DiscoverItemCountOrderByAggregateInput
@@ -31652,6 +31768,7 @@ export namespace Prisma {
     videoUrl?: StringNullableWithAggregatesFilter<"DiscoverItem"> | string | null
     galleryImages?: StringNullableListFilter<"DiscoverItem">
     extendedDetails?: StringNullableListFilter<"DiscoverItem">
+    publicId?: StringNullableWithAggregatesFilter<"DiscoverItem"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"DiscoverItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"DiscoverItem"> | Date | string
   }
@@ -31775,6 +31892,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusFilter<"TribeVideo"> | $Enums.ApprovalStatus
     rejectionReason?: StringNullableFilter<"TribeVideo"> | string | null
     userId?: StringNullableFilter<"TribeVideo"> | string | null
+    publicId?: StringNullableFilter<"TribeVideo"> | string | null
     createdAt?: DateTimeFilter<"TribeVideo"> | Date | string
     updatedAt?: DateTimeFilter<"TribeVideo"> | Date | string
   }
@@ -31793,6 +31911,7 @@ export namespace Prisma {
     status?: SortOrder
     rejectionReason?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31814,6 +31933,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusFilter<"TribeVideo"> | $Enums.ApprovalStatus
     rejectionReason?: StringNullableFilter<"TribeVideo"> | string | null
     userId?: StringNullableFilter<"TribeVideo"> | string | null
+    publicId?: StringNullableFilter<"TribeVideo"> | string | null
     createdAt?: DateTimeFilter<"TribeVideo"> | Date | string
     updatedAt?: DateTimeFilter<"TribeVideo"> | Date | string
   }, "id">
@@ -31832,6 +31952,7 @@ export namespace Prisma {
     status?: SortOrder
     rejectionReason?: SortOrderInput | SortOrder
     userId?: SortOrderInput | SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: TribeVideoCountOrderByAggregateInput
@@ -31856,6 +31977,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusWithAggregatesFilter<"TribeVideo"> | $Enums.ApprovalStatus
     rejectionReason?: StringNullableWithAggregatesFilter<"TribeVideo"> | string | null
     userId?: StringNullableWithAggregatesFilter<"TribeVideo"> | string | null
+    publicId?: StringNullableWithAggregatesFilter<"TribeVideo"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"TribeVideo"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"TribeVideo"> | Date | string
   }
@@ -31873,6 +31995,7 @@ export namespace Prisma {
     fullBio?: StringNullableFilter<"Personality"> | string | null
     author?: StringNullableFilter<"Personality"> | string | null
     status?: EnumApprovalStatusFilter<"Personality"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"Personality"> | string | null
     createdAt?: DateTimeFilter<"Personality"> | Date | string
     updatedAt?: DateTimeFilter<"Personality"> | Date | string
   }
@@ -31887,6 +32010,7 @@ export namespace Prisma {
     fullBio?: SortOrderInput | SortOrder
     author?: SortOrderInput | SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -31904,6 +32028,7 @@ export namespace Prisma {
     fullBio?: StringNullableFilter<"Personality"> | string | null
     author?: StringNullableFilter<"Personality"> | string | null
     status?: EnumApprovalStatusFilter<"Personality"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"Personality"> | string | null
     createdAt?: DateTimeFilter<"Personality"> | Date | string
     updatedAt?: DateTimeFilter<"Personality"> | Date | string
   }, "id">
@@ -31918,6 +32043,7 @@ export namespace Prisma {
     fullBio?: SortOrderInput | SortOrder
     author?: SortOrderInput | SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: PersonalityCountOrderByAggregateInput
@@ -31938,6 +32064,7 @@ export namespace Prisma {
     fullBio?: StringNullableWithAggregatesFilter<"Personality"> | string | null
     author?: StringNullableWithAggregatesFilter<"Personality"> | string | null
     status?: EnumApprovalStatusWithAggregatesFilter<"Personality"> | $Enums.ApprovalStatus
+    publicId?: StringNullableWithAggregatesFilter<"Personality"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Personality"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Personality"> | Date | string
   }
@@ -32457,6 +32584,7 @@ export namespace Prisma {
     guideWhatsapp?: StringNullableFilter<"Journey"> | string | null
     authorId?: StringFilter<"Journey"> | string
     status?: EnumApprovalStatusFilter<"Journey"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"Journey"> | string | null
     createdAt?: DateTimeFilter<"Journey"> | Date | string
     updatedAt?: DateTimeFilter<"Journey"> | Date | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -32506,6 +32634,7 @@ export namespace Prisma {
     guideWhatsapp?: SortOrderInput | SortOrder
     authorId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     author?: UserOrderByWithRelationInput
@@ -32558,6 +32687,7 @@ export namespace Prisma {
     guideWhatsapp?: StringNullableFilter<"Journey"> | string | null
     authorId?: StringFilter<"Journey"> | string
     status?: EnumApprovalStatusFilter<"Journey"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"Journey"> | string | null
     createdAt?: DateTimeFilter<"Journey"> | Date | string
     updatedAt?: DateTimeFilter<"Journey"> | Date | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -32607,6 +32737,7 @@ export namespace Prisma {
     guideWhatsapp?: SortOrderInput | SortOrder
     authorId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: JourneyCountOrderByAggregateInput
@@ -32663,6 +32794,7 @@ export namespace Prisma {
     guideWhatsapp?: StringNullableWithAggregatesFilter<"Journey"> | string | null
     authorId?: StringWithAggregatesFilter<"Journey"> | string
     status?: EnumApprovalStatusWithAggregatesFilter<"Journey"> | $Enums.ApprovalStatus
+    publicId?: StringNullableWithAggregatesFilter<"Journey"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Journey"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Journey"> | Date | string
   }
@@ -32680,6 +32812,7 @@ export namespace Prisma {
     views?: IntFilter<"GalleryItem"> | number
     uploaderId?: StringFilter<"GalleryItem"> | string
     status?: EnumApprovalStatusFilter<"GalleryItem"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"GalleryItem"> | string | null
     createdAt?: DateTimeFilter<"GalleryItem"> | Date | string
     updatedAt?: DateTimeFilter<"GalleryItem"> | Date | string
     uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -32695,6 +32828,7 @@ export namespace Prisma {
     views?: SortOrder
     uploaderId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     uploader?: UserOrderByWithRelationInput
@@ -32713,6 +32847,7 @@ export namespace Prisma {
     views?: IntFilter<"GalleryItem"> | number
     uploaderId?: StringFilter<"GalleryItem"> | string
     status?: EnumApprovalStatusFilter<"GalleryItem"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"GalleryItem"> | string | null
     createdAt?: DateTimeFilter<"GalleryItem"> | Date | string
     updatedAt?: DateTimeFilter<"GalleryItem"> | Date | string
     uploader?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -32728,6 +32863,7 @@ export namespace Prisma {
     views?: SortOrder
     uploaderId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: GalleryItemCountOrderByAggregateInput
@@ -32750,6 +32886,7 @@ export namespace Prisma {
     views?: IntWithAggregatesFilter<"GalleryItem"> | number
     uploaderId?: StringWithAggregatesFilter<"GalleryItem"> | string
     status?: EnumApprovalStatusWithAggregatesFilter<"GalleryItem"> | $Enums.ApprovalStatus
+    publicId?: StringNullableWithAggregatesFilter<"GalleryItem"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"GalleryItem"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"GalleryItem"> | Date | string
   }
@@ -32771,6 +32908,7 @@ export namespace Prisma {
     contact?: StringNullableFilter<"MarketplaceProduct"> | string | null
     email?: StringNullableFilter<"MarketplaceProduct"> | string | null
     status?: EnumApprovalStatusFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"MarketplaceProduct"> | string | null
     createdAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
   }
@@ -32789,6 +32927,7 @@ export namespace Prisma {
     contact?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -32810,6 +32949,7 @@ export namespace Prisma {
     contact?: StringNullableFilter<"MarketplaceProduct"> | string | null
     email?: StringNullableFilter<"MarketplaceProduct"> | string | null
     status?: EnumApprovalStatusFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"MarketplaceProduct"> | string | null
     createdAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
   }, "id">
@@ -32828,6 +32968,7 @@ export namespace Prisma {
     contact?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MarketplaceProductCountOrderByAggregateInput
@@ -32852,6 +32993,7 @@ export namespace Prisma {
     contact?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
     email?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
     status?: EnumApprovalStatusWithAggregatesFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
+    publicId?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MarketplaceProduct"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MarketplaceProduct"> | Date | string
   }
@@ -33032,6 +33174,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CardMedia">
     dislikedBy?: StringNullableListFilter<"CardMedia">
     uploadedBy?: StringNullableFilter<"CardMedia"> | string | null
+    publicId?: StringNullableFilter<"CardMedia"> | string | null
     createdAt?: DateTimeFilter<"CardMedia"> | Date | string
     updatedAt?: DateTimeFilter<"CardMedia"> | Date | string
   }
@@ -33048,6 +33191,7 @@ export namespace Prisma {
     likedBy?: SortOrder
     dislikedBy?: SortOrder
     uploadedBy?: SortOrderInput | SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -33067,6 +33211,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CardMedia">
     dislikedBy?: StringNullableListFilter<"CardMedia">
     uploadedBy?: StringNullableFilter<"CardMedia"> | string | null
+    publicId?: StringNullableFilter<"CardMedia"> | string | null
     createdAt?: DateTimeFilter<"CardMedia"> | Date | string
     updatedAt?: DateTimeFilter<"CardMedia"> | Date | string
   }, "id">
@@ -33083,6 +33228,7 @@ export namespace Prisma {
     likedBy?: SortOrder
     dislikedBy?: SortOrder
     uploadedBy?: SortOrderInput | SortOrder
+    publicId?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: CardMediaCountOrderByAggregateInput
@@ -33107,6 +33253,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CardMedia">
     dislikedBy?: StringNullableListFilter<"CardMedia">
     uploadedBy?: StringNullableWithAggregatesFilter<"CardMedia"> | string | null
+    publicId?: StringNullableWithAggregatesFilter<"CardMedia"> | string | null
     createdAt?: DateTimeWithAggregatesFilter<"CardMedia"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"CardMedia"> | Date | string
   }
@@ -33288,6 +33435,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusFilter<"CategoryStory"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"CategoryStory"> | string | null
     authorId?: StringNullableFilter<"CategoryStory"> | string | null
     categoryId?: StringFilter<"CategoryStory"> | string
     subcategoryId?: StringFilter<"CategoryStory"> | string
@@ -33315,6 +33463,7 @@ export namespace Prisma {
     likedBy?: SortOrder
     dislikedBy?: SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     authorId?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     subcategoryId?: SortOrder
@@ -33345,6 +33494,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusFilter<"CategoryStory"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"CategoryStory"> | string | null
     authorId?: StringNullableFilter<"CategoryStory"> | string | null
     categoryId?: StringFilter<"CategoryStory"> | string
     subcategoryId?: StringFilter<"CategoryStory"> | string
@@ -33372,6 +33522,7 @@ export namespace Prisma {
     likedBy?: SortOrder
     dislikedBy?: SortOrder
     status?: SortOrder
+    publicId?: SortOrderInput | SortOrder
     authorId?: SortOrderInput | SortOrder
     categoryId?: SortOrder
     subcategoryId?: SortOrder
@@ -33404,6 +33555,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusWithAggregatesFilter<"CategoryStory"> | $Enums.ApprovalStatus
+    publicId?: StringNullableWithAggregatesFilter<"CategoryStory"> | string | null
     authorId?: StringNullableWithAggregatesFilter<"CategoryStory"> | string | null
     categoryId?: StringWithAggregatesFilter<"CategoryStory"> | string
     subcategoryId?: StringWithAggregatesFilter<"CategoryStory"> | string
@@ -33910,6 +34062,7 @@ export namespace Prisma {
     videoUrl?: string | null
     galleryImages?: DiscoverItemCreategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemCreateextendedDetailsInput | string[]
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33928,6 +34081,7 @@ export namespace Prisma {
     videoUrl?: string | null
     galleryImages?: DiscoverItemCreategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemCreateextendedDetailsInput | string[]
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -33946,6 +34100,7 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     galleryImages?: DiscoverItemUpdategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemUpdateextendedDetailsInput | string[]
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33964,6 +34119,7 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     galleryImages?: DiscoverItemUpdategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemUpdateextendedDetailsInput | string[]
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33982,6 +34138,7 @@ export namespace Prisma {
     videoUrl?: string | null
     galleryImages?: DiscoverItemCreategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemCreateextendedDetailsInput | string[]
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34000,6 +34157,7 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     galleryImages?: DiscoverItemUpdategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemUpdateextendedDetailsInput | string[]
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34018,6 +34176,7 @@ export namespace Prisma {
     videoUrl?: NullableStringFieldUpdateOperationsInput | string | null
     galleryImages?: DiscoverItemUpdategalleryImagesInput | string[]
     extendedDetails?: DiscoverItemUpdateextendedDetailsInput | string[]
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34162,6 +34321,7 @@ export namespace Prisma {
     status?: $Enums.ApprovalStatus
     rejectionReason?: string | null
     userId?: string | null
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34180,6 +34340,7 @@ export namespace Prisma {
     status?: $Enums.ApprovalStatus
     rejectionReason?: string | null
     userId?: string | null
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34198,6 +34359,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34216,6 +34378,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34234,6 +34397,7 @@ export namespace Prisma {
     status?: $Enums.ApprovalStatus
     rejectionReason?: string | null
     userId?: string | null
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34252,6 +34416,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34270,6 +34435,7 @@ export namespace Prisma {
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     rejectionReason?: NullableStringFieldUpdateOperationsInput | string | null
     userId?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34284,6 +34450,7 @@ export namespace Prisma {
     fullBio?: string | null
     author?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34298,6 +34465,7 @@ export namespace Prisma {
     fullBio?: string | null
     author?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34312,6 +34480,7 @@ export namespace Prisma {
     fullBio?: NullableStringFieldUpdateOperationsInput | string | null
     author?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34326,6 +34495,7 @@ export namespace Prisma {
     fullBio?: NullableStringFieldUpdateOperationsInput | string | null
     author?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34340,6 +34510,7 @@ export namespace Prisma {
     fullBio?: string | null
     author?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -34354,6 +34525,7 @@ export namespace Prisma {
     fullBio?: NullableStringFieldUpdateOperationsInput | string | null
     author?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34368,6 +34540,7 @@ export namespace Prisma {
     fullBio?: NullableStringFieldUpdateOperationsInput | string | null
     author?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -34934,6 +35107,7 @@ export namespace Prisma {
     guideEmail?: string | null
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author: UserCreateNestedOneWithoutJourneysInput
@@ -34983,6 +35157,7 @@ export namespace Prisma {
     guideWhatsapp?: string | null
     authorId: string
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35030,6 +35205,7 @@ export namespace Prisma {
     guideEmail?: NullableStringFieldUpdateOperationsInput | string | null
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutJourneysNestedInput
@@ -35079,6 +35255,7 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35127,6 +35304,7 @@ export namespace Prisma {
     guideWhatsapp?: string | null
     authorId: string
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35174,6 +35352,7 @@ export namespace Prisma {
     guideEmail?: NullableStringFieldUpdateOperationsInput | string | null
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35222,6 +35401,7 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: StringFieldUpdateOperationsInput | string
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35235,6 +35415,7 @@ export namespace Prisma {
     likes?: number
     views?: number
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     uploader: UserCreateNestedOneWithoutGalleryItemsInput
@@ -35250,6 +35431,7 @@ export namespace Prisma {
     views?: number
     uploaderId: string
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35263,6 +35445,7 @@ export namespace Prisma {
     likes?: IntFieldUpdateOperationsInput | number
     views?: IntFieldUpdateOperationsInput | number
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     uploader?: UserUpdateOneRequiredWithoutGalleryItemsNestedInput
@@ -35278,6 +35461,7 @@ export namespace Prisma {
     views?: IntFieldUpdateOperationsInput | number
     uploaderId?: StringFieldUpdateOperationsInput | string
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35292,6 +35476,7 @@ export namespace Prisma {
     views?: number
     uploaderId: string
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35305,6 +35490,7 @@ export namespace Prisma {
     likes?: IntFieldUpdateOperationsInput | number
     views?: IntFieldUpdateOperationsInput | number
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35319,6 +35505,7 @@ export namespace Prisma {
     views?: IntFieldUpdateOperationsInput | number
     uploaderId?: StringFieldUpdateOperationsInput | string
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35337,6 +35524,7 @@ export namespace Prisma {
     contact?: string | null
     email?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35355,6 +35543,7 @@ export namespace Prisma {
     contact?: string | null
     email?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35373,6 +35562,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35391,6 +35581,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35409,6 +35600,7 @@ export namespace Prisma {
     contact?: string | null
     email?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35427,6 +35619,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35445,6 +35638,7 @@ export namespace Prisma {
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35650,6 +35844,7 @@ export namespace Prisma {
     likedBy?: CardMediaCreatelikedByInput | string[]
     dislikedBy?: CardMediaCreatedislikedByInput | string[]
     uploadedBy?: string | null
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35666,6 +35861,7 @@ export namespace Prisma {
     likedBy?: CardMediaCreatelikedByInput | string[]
     dislikedBy?: CardMediaCreatedislikedByInput | string[]
     uploadedBy?: string | null
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35682,6 +35878,7 @@ export namespace Prisma {
     likedBy?: CardMediaUpdatelikedByInput | string[]
     dislikedBy?: CardMediaUpdatedislikedByInput | string[]
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35698,6 +35895,7 @@ export namespace Prisma {
     likedBy?: CardMediaUpdatelikedByInput | string[]
     dislikedBy?: CardMediaUpdatedislikedByInput | string[]
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35714,6 +35912,7 @@ export namespace Prisma {
     likedBy?: CardMediaCreatelikedByInput | string[]
     dislikedBy?: CardMediaCreatedislikedByInput | string[]
     uploadedBy?: string | null
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -35730,6 +35929,7 @@ export namespace Prisma {
     likedBy?: CardMediaUpdatelikedByInput | string[]
     dislikedBy?: CardMediaUpdatedislikedByInput | string[]
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35746,6 +35946,7 @@ export namespace Prisma {
     likedBy?: CardMediaUpdatelikedByInput | string[]
     dislikedBy?: CardMediaUpdatedislikedByInput | string[]
     uploadedBy?: NullableStringFieldUpdateOperationsInput | string | null
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -35946,6 +36147,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author?: UserCreateNestedOneWithoutCategoryStoriesInput
@@ -35970,6 +36172,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     authorId?: string | null
     categoryId: string
     subcategoryId: string
@@ -35994,6 +36197,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneWithoutCategoryStoriesNestedInput
@@ -36018,6 +36222,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
     subcategoryId?: StringFieldUpdateOperationsInput | string
@@ -36042,6 +36247,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     authorId?: string | null
     categoryId: string
     subcategoryId: string
@@ -36066,6 +36272,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -36087,6 +36294,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
     subcategoryId?: StringFieldUpdateOperationsInput | string
@@ -36645,6 +36853,7 @@ export namespace Prisma {
     videoUrl?: SortOrder
     galleryImages?: SortOrder
     extendedDetails?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36661,6 +36870,7 @@ export namespace Prisma {
     status?: SortOrder
     longDescription?: SortOrder
     videoUrl?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36677,6 +36887,7 @@ export namespace Prisma {
     status?: SortOrder
     longDescription?: SortOrder
     videoUrl?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36816,6 +37027,7 @@ export namespace Prisma {
     status?: SortOrder
     rejectionReason?: SortOrder
     userId?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36834,6 +37046,7 @@ export namespace Prisma {
     status?: SortOrder
     rejectionReason?: SortOrder
     userId?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36852,6 +37065,7 @@ export namespace Prisma {
     status?: SortOrder
     rejectionReason?: SortOrder
     userId?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36866,6 +37080,7 @@ export namespace Prisma {
     fullBio?: SortOrder
     author?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36880,6 +37095,7 @@ export namespace Prisma {
     fullBio?: SortOrder
     author?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -36894,6 +37110,7 @@ export namespace Prisma {
     fullBio?: SortOrder
     author?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37267,6 +37484,7 @@ export namespace Prisma {
     guideWhatsapp?: SortOrder
     authorId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37313,6 +37531,7 @@ export namespace Prisma {
     guideWhatsapp?: SortOrder
     authorId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37354,6 +37573,7 @@ export namespace Prisma {
     guideWhatsapp?: SortOrder
     authorId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37373,6 +37593,7 @@ export namespace Prisma {
     views?: SortOrder
     uploaderId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37392,6 +37613,7 @@ export namespace Prisma {
     views?: SortOrder
     uploaderId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37406,6 +37628,7 @@ export namespace Prisma {
     views?: SortOrder
     uploaderId?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37429,6 +37652,7 @@ export namespace Prisma {
     contact?: SortOrder
     email?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37446,6 +37670,7 @@ export namespace Prisma {
     contact?: SortOrder
     email?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37463,6 +37688,7 @@ export namespace Prisma {
     contact?: SortOrder
     email?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37575,6 +37801,7 @@ export namespace Prisma {
     likedBy?: SortOrder
     dislikedBy?: SortOrder
     uploadedBy?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37594,6 +37821,7 @@ export namespace Prisma {
     likes?: SortOrder
     dislikes?: SortOrder
     uploadedBy?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37608,6 +37836,7 @@ export namespace Prisma {
     likes?: SortOrder
     dislikes?: SortOrder
     uploadedBy?: SortOrder
+    publicId?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -37741,6 +37970,7 @@ export namespace Prisma {
     likedBy?: SortOrder
     dislikedBy?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     authorId?: SortOrder
     categoryId?: SortOrder
     subcategoryId?: SortOrder
@@ -37767,6 +37997,7 @@ export namespace Prisma {
     likes?: SortOrder
     dislikes?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     authorId?: SortOrder
     categoryId?: SortOrder
     subcategoryId?: SortOrder
@@ -37787,6 +38018,7 @@ export namespace Prisma {
     likes?: SortOrder
     dislikes?: SortOrder
     status?: SortOrder
+    publicId?: SortOrder
     authorId?: SortOrder
     categoryId?: SortOrder
     subcategoryId?: SortOrder
@@ -39450,6 +39682,7 @@ export namespace Prisma {
     guideEmail?: string | null
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39497,6 +39730,7 @@ export namespace Prisma {
     guideEmail?: string | null
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39520,6 +39754,7 @@ export namespace Prisma {
     likes?: number
     views?: number
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39533,6 +39768,7 @@ export namespace Prisma {
     likes?: number
     views?: number
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -39670,6 +39906,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     category: CategoryCreateNestedOneWithoutStoriesInput
@@ -39693,6 +39930,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     categoryId: string
     subcategoryId: string
     createdAt?: Date | string
@@ -39838,6 +40076,7 @@ export namespace Prisma {
     guideWhatsapp?: StringNullableFilter<"Journey"> | string | null
     authorId?: StringFilter<"Journey"> | string
     status?: EnumApprovalStatusFilter<"Journey"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"Journey"> | string | null
     createdAt?: DateTimeFilter<"Journey"> | Date | string
     updatedAt?: DateTimeFilter<"Journey"> | Date | string
   }
@@ -39871,6 +40110,7 @@ export namespace Prisma {
     views?: IntFilter<"GalleryItem"> | number
     uploaderId?: StringFilter<"GalleryItem"> | string
     status?: EnumApprovalStatusFilter<"GalleryItem"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"GalleryItem"> | string | null
     createdAt?: DateTimeFilter<"GalleryItem"> | Date | string
     updatedAt?: DateTimeFilter<"GalleryItem"> | Date | string
   }
@@ -40007,6 +40247,7 @@ export namespace Prisma {
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusFilter<"CategoryStory"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"CategoryStory"> | string | null
     authorId?: StringNullableFilter<"CategoryStory"> | string | null
     categoryId?: StringFilter<"CategoryStory"> | string
     subcategoryId?: StringFilter<"CategoryStory"> | string
@@ -41649,6 +41890,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author?: UserCreateNestedOneWithoutCategoryStoriesInput
@@ -41672,6 +41914,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     authorId?: string | null
     subcategoryId: string
     createdAt?: Date | string
@@ -41783,6 +42026,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author?: UserCreateNestedOneWithoutCategoryStoriesInput
@@ -41806,6 +42050,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     authorId?: string | null
     categoryId: string
     createdAt?: Date | string
@@ -42184,6 +42429,7 @@ export namespace Prisma {
     guideEmail?: string | null
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -42197,6 +42443,7 @@ export namespace Prisma {
     likes?: number
     views?: number
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -42254,6 +42501,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     categoryId: string
     subcategoryId: string
     createdAt?: Date | string
@@ -42385,6 +42633,7 @@ export namespace Prisma {
     guideEmail?: NullableStringFieldUpdateOperationsInput | string | null
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42432,6 +42681,7 @@ export namespace Prisma {
     guideEmail?: NullableStringFieldUpdateOperationsInput | string | null
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42479,6 +42729,7 @@ export namespace Prisma {
     guideEmail?: NullableStringFieldUpdateOperationsInput | string | null
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42492,6 +42743,7 @@ export namespace Prisma {
     likes?: IntFieldUpdateOperationsInput | number
     views?: IntFieldUpdateOperationsInput | number
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42505,6 +42757,7 @@ export namespace Prisma {
     likes?: IntFieldUpdateOperationsInput | number
     views?: IntFieldUpdateOperationsInput | number
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42518,6 +42771,7 @@ export namespace Prisma {
     likes?: IntFieldUpdateOperationsInput | number
     views?: IntFieldUpdateOperationsInput | number
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -42651,6 +42905,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     category?: CategoryUpdateOneRequiredWithoutStoriesNestedInput
@@ -42674,6 +42929,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
     subcategoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42697,6 +42953,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
     subcategoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42977,6 +43234,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     authorId?: string | null
     subcategoryId: string
     createdAt?: Date | string
@@ -43035,6 +43293,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneWithoutCategoryStoriesNestedInput
@@ -43058,6 +43317,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
     subcategoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43081,6 +43341,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
     subcategoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43104,6 +43365,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
     status?: $Enums.ApprovalStatus
+    publicId?: string | null
     authorId?: string | null
     categoryId: string
     createdAt?: Date | string
@@ -43127,6 +43389,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneWithoutCategoryStoriesNestedInput
@@ -43150,6 +43413,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43173,6 +43437,7 @@ export namespace Prisma {
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string

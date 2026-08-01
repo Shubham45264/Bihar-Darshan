@@ -198,6 +198,7 @@ exports.Prisma.DiscoverItemScalarFieldEnum = {
   videoUrl: 'videoUrl',
   galleryImages: 'galleryImages',
   extendedDetails: 'extendedDetails',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -234,6 +235,7 @@ exports.Prisma.TribeVideoScalarFieldEnum = {
   status: 'status',
   rejectionReason: 'rejectionReason',
   userId: 'userId',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -248,6 +250,7 @@ exports.Prisma.PersonalityScalarFieldEnum = {
   fullBio: 'fullBio',
   author: 'author',
   status: 'status',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -369,6 +372,7 @@ exports.Prisma.JourneyScalarFieldEnum = {
   guideWhatsapp: 'guideWhatsapp',
   authorId: 'authorId',
   status: 'status',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -383,6 +387,7 @@ exports.Prisma.GalleryItemScalarFieldEnum = {
   views: 'views',
   uploaderId: 'uploaderId',
   status: 'status',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -401,6 +406,7 @@ exports.Prisma.MarketplaceProductScalarFieldEnum = {
   contact: 'contact',
   email: 'email',
   status: 'status',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -444,6 +450,7 @@ exports.Prisma.CardMediaScalarFieldEnum = {
   likedBy: 'likedBy',
   dislikedBy: 'dislikedBy',
   uploadedBy: 'uploadedBy',
+  publicId: 'publicId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -489,6 +496,7 @@ exports.Prisma.CategoryStoryScalarFieldEnum = {
   likedBy: 'likedBy',
   dislikedBy: 'dislikedBy',
   status: 'status',
+  publicId: 'publicId',
   authorId: 'authorId',
   categoryId: 'categoryId',
   subcategoryId: 'subcategoryId',

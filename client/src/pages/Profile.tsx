@@ -68,14 +68,16 @@ const Profile = () => {
       const headers: Record<string, string> = {};
       if (token) headers['Authorization'] = `Bearer ${token}`;
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
       // Fetch user profile and all post collections concurrently
       const [profileRes, storiesData, discoverData, personalityData, videoData, articlesData] = await Promise.all([
-        fetch('http://localhost:5000/api/v1/users/profile', { headers }).then(r => r.json()).catch(() => null),
-        fetch('http://localhost:5000/api/v1/stories?status=all').then(r => r.json()).catch(() => null),
-        fetch('http://localhost:5000/api/v1/discover?status=all').then(r => r.json()).catch(() => null),
-        fetch('http://localhost:5000/api/v1/culture/personalities?status=all').then(r => r.json()).catch(() => null),
-        fetch('http://localhost:5000/api/v1/tribes/videos/all').then(r => r.json()).catch(() => null),
-        fetch('http://localhost:5000/api/v1/tribes/articles').then(r => r.json()).catch(() => null)
+        fetch(`${API_BASE_URL}/users/profile`, { headers }).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE_URL}/stories?status=all`).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE_URL}/discover?status=all`).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE_URL}/culture/personalities?status=all`).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE_URL}/tribes/videos/all`).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE_URL}/tribes/articles`).then(r => r.json()).catch(() => null)
       ]);
 
       const dbUser = profileRes?.success && profileRes.data?.user ? profileRes.data.user : null;

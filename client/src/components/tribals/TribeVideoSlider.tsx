@@ -2,6 +2,7 @@ import { useState, useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, ChevronLeft, ChevronRight, Upload, X, Film, CheckCircle2, AlertCircle, Video, Clock } from 'lucide-react';
+import { uploadToCloudinary } from '../../utils/cloudinaryUpload';
 
 export interface TribeVideoItem {
   id: string;
@@ -93,7 +94,12 @@ const TribeVideoCard = ({ item, idx, onClick }: TribeVideoCardProps) => {
         <video
           ref={videoRef}
           src={item.videoUrl}
-          poster={item.thumbnail}
+          poster={
+            item.thumbnail ||
+            (item.videoUrl.includes('cloudinary.com') || item.videoUrl.includes('res.cloudinary.com')
+              ? item.videoUrl.replace(/\/video\/upload\/(v\d+\/)?/, '/video/upload/f_jpg,so_0/$1').replace(/\.(mp4|mov|webm|mkv)$/i, '.jpg')
+              : undefined)
+          }
           muted
           loop
           playsInline
@@ -231,35 +237,31 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
     setIsSubmitting(true);
 
     try {
-      const reader = new FileReader();
-      reader.onloadend = async () => {
-        const base64Video = reader.result as string;
+      const uploadRes = await uploadToCloudinary(selectedFile);
 
-        const payload = {
-          caption: caption.trim(),
-          title: caption.trim(),
-          videoUrl: base64Video,
-          tribeId,
-          tribeName,
-        };
-
-        const res = await fetch('http://localhost:5000/api/v1/tribes/videos', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payload),
-        });
-
-        const data = await res.json();
-        setIsSubmitting(false);
-
-        if (data.success) {
-          setIsSuccess(true);
-        } else {
-          setUploadError(data.message || 'Failed to submit video. Please try again.');
-        }
+      const payload = {
+        caption: caption.trim(),
+        title: caption.trim(),
+        videoUrl: uploadRes.secure_url,
+        publicId: uploadRes.public_id,
+        tribeId,
+        tribeName,
       };
 
-      reader.readAsDataURL(selectedFile);
+      const res = await fetch('http://localhost:5000/api/v1/tribes/videos', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await res.json();
+      setIsSubmitting(false);
+
+      if (data.success) {
+        setIsSuccess(true);
+      } else {
+        setUploadError(data.message || 'Failed to submit video. Please try again.');
+      }
     } catch (err) {
       console.error(err);
       setIsSubmitting(false);
@@ -385,13 +387,24 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
                 </button>
 
                 {/* Video Player */}
-                <div className="w-full aspect-video bg-black flex items-center justify-center">
+                <div className="w-full aspect-video bg-black flex items-center justify-center relative">
                   <video
-                    src={selectedVideo.videoUrl}
+                    key={selectedVideo.videoUrl}
                     controls
                     autoPlay
+                    playsInline
+                    preload="auto"
+                    poster={
+                      selectedVideo.thumbnail ||
+                      (selectedVideo.videoUrl.includes('cloudinary.com') || selectedVideo.videoUrl.includes('res.cloudinary.com')
+                        ? selectedVideo.videoUrl.replace(/\/video\/upload\/(v\d+\/)?/, '/video/upload/f_jpg,so_0/$1').replace(/\.(mp4|mov|webm|mkv)$/i, '.jpg')
+                        : undefined)
+                    }
                     className="w-full h-full object-contain"
-                  />
+                  >
+                    <source src={selectedVideo.videoUrl} type="video/mp4" />
+                    Your browser does not support the video tag.
+                  </video>
                 </div>
 
                 {/* Caption Overlay Bar */}

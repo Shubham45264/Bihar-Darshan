@@ -7,6 +7,7 @@ import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
 import heroBg from "../assets/hero.png";
 import "./ShareStory.css";
+import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 
 const BIHAR_DISTRICTS = [
   "Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur",
@@ -162,18 +163,13 @@ const ShareStory = () => {
       });
     }
 
-    filesToProcess.forEach((file) => {
-      if (file.size > 5 * 1024 * 1024) {
-        setErrors((prev) => ({ ...prev, media: `${file.name} exceeds 5MB limit.` }));
-        return;
-      }
-
+    filesToProcess.forEach(async (file) => {
       const isVideo = file.type.startsWith("video/");
-      const reader = new FileReader();
-      reader.onloadend = () => {
+      try {
+        const uploadRes = await uploadToCloudinary(file);
         const newMediaItem: MediaItem = {
-          id: Math.random().toString(36).substring(2, 9),
-          url: reader.result as string,
+          id: uploadRes.public_id || Math.random().toString(36).substring(2, 9),
+          url: uploadRes.secure_url,
           type: isVideo ? "video" : "photo",
           name: file.name,
         };
@@ -181,8 +177,10 @@ const ShareStory = () => {
           if (prev.length >= 3) return prev;
           return [...prev, newMediaItem];
         });
-      };
-      reader.readAsDataURL(file);
+      } catch (err) {
+        console.error("Cloudinary upload failed:", err);
+        alert("Failed to upload file to Cloudinary");
+      }
     });
   };
 
