@@ -596,19 +596,19 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
           </div>
 
           {/* Stats Row */}
-          <div className={`grid grid-cols-1 ${!isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4 mb-8`}>
+          <div className={`grid grid-cols-2 ${!isAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-3 sm:gap-4 mb-8`}>
             {[
-              ...(!isAdmin ? [{ icon: <Award className="w-6 h-6 text-[#D97706]" />, label: 'Contribution Points', value: profile.rewardPoints, bg: 'bg-[#FEF3C7]' }] : []),
-              { icon: <FileText className="w-6 h-6 text-[#8B3E2F]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FFF3E5]' },
-              { icon: <Clock className="w-6 h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' },
+              ...(!isAdmin ? [{ icon: <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[#D97706]" />, label: 'Contribution Points', value: profile.rewardPoints, bg: 'bg-[#FEF3C7]' }] : []),
+              { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#8B3E2F]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FFF3E5]' },
+              { icon: <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' },
             ].map((stat, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition">
-                <div className={`w-12 h-12 rounded-full ${stat.bg} flex items-center justify-center shrink-0`}>
+              <div key={idx} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
+                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${stat.bg} flex items-center justify-center shrink-0`}>
                   {stat.icon}
                 </div>
                 <div>
-                  <div className="font-bold text-2xl text-gray-800">{stat.value}</div>
-                  <div className="text-xs text-gray-500 font-semibold leading-tight mt-0.5">{stat.label.split(' ').map((w, i) => <span key={i} className="block">{w}</span>)}</div>
+                  <div className="font-bold text-xl sm:text-2xl text-gray-800">{stat.value}</div>
+                  <div className="text-[11px] sm:text-xs text-gray-500 font-semibold leading-tight mt-0.5">{stat.label.split(' ').map((w, i) => <span key={i} className="block">{w}</span>)}</div>
                 </div>
               </div>
             ))}

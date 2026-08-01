@@ -194,7 +194,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
           {currentUser ? (
             <Link
               to="/profile"
-              className={`hidden lg:flex items-center justify-center w-9 h-9 rounded-full overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${showWhiteBg || forceDarkText
+              className={`flex items-center justify-center w-8 h-8 sm:w-9 sm:h-9 rounded-full overflow-hidden border-2 transition-all duration-300 hover:scale-105 ${showWhiteBg || forceDarkText
                 ? "border-black/20 hover:border-black/40"
                 : "border-white/20 hover:border-white/40"
                 }`}
@@ -202,7 +202,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
               {userAvatar || currentUser.photoURL ? (
                 <img src={(userAvatar || currentUser.photoURL)!} alt="Profile" className="w-full h-full object-cover" />
               ) : (
-                <User size={18} className={showWhiteBg || forceDarkText ? "text-black" : "text-white"} />
+                <User size={16} className={showWhiteBg || forceDarkText ? "text-black" : "text-white"} />
               )}
             </Link>
           ) : (
