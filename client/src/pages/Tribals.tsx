@@ -68,7 +68,7 @@ export const Tribals = () => {
               className="mb-6 inline-block"
             >
               <span className="px-4 py-1.5 rounded-full border border-[#D4A017]/40 bg-[#FEF3C7]/90 text-[#B45309] text-sm tracking-[0.2em] font-semibold uppercase backdrop-blur-md shadow-sm">
-                Indigenous Heritage
+                ANCIENT TRADITIONS
               </span>
             </motion.div>
 
@@ -78,7 +78,7 @@ export const Tribals = () => {
               transition={{ duration: 0.8, delay: 0.2 }}
               className="text-5xl md:text-7xl lg:text-8xl font-serif text-[#451A03] tracking-wide mb-4 font-bold"
             >
-              Tribes of <span className="text-[#D4A017] drop-shadow-sm">Bihar</span>
+              Living Indigenous Cultures of <span className="text-[#D4A017] drop-shadow-sm">Bihar</span>
             </motion.h1>
 
             <motion.h2
@@ -87,7 +87,7 @@ export const Tribals = () => {
               transition={{ duration: 0.8, delay: 0.4 }}
               className="text-3xl md:text-4xl text-[#B45309] font-signature italic mb-8"
             >
-              आदिवासी
+              बिहार की जीवंत जनजाति एवं लोक संस्कृति
             </motion.h2>
 
             <motion.p
@@ -96,7 +96,7 @@ export const Tribals = () => {
               transition={{ duration: 0.8, delay: 0.6 }}
               className="text-lg md:text-xl text-[#582C12] max-w-2xl leading-relaxed mx-auto md:mx-0 font-medium"
             >
-              Discover the rich, ancient cultures, arts, and traditions of Bihar's indigenous communities. Explore their vibrant legacy and unbreakable bond with nature.
+              Step into the sacred heritage of Bihar's indigenous communities—where centuries of art, music, and sacred harmony with nature endure.
             </motion.p>
           </div>
 

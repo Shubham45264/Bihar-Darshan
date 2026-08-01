@@ -49,7 +49,7 @@ const FeaturedJourneys = () => {
               className="flex items-center gap-4 mb-3"
             >
               <span className="text-[#c19a5b] text-[11px] font-bold uppercase tracking-[0.2em] font-sans">
-                COMMUNITY CONTRIBS
+                CURATED EXPERIENCES
               </span>
             </motion.div>
             <motion.h2
@@ -59,7 +59,7 @@ const FeaturedJourneys = () => {
               transition={{ delay: 0.1 }}
               className="text-4xl md:text-5xl font-serif text-[#3e2723] flex items-center gap-4"
             >
-              Featured Journeys
+              Signature Journeys & Itineraries
               <div className="hidden md:block h-[2px] w-12 bg-[#c19a5b]" />
             </motion.h2>
           </div>

@@ -77,13 +77,13 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
           {/* Eyebrow Header */}
           <div className="flex items-center gap-2.5 text-[#D4A017] uppercase tracking-[0.2em] text-xs sm:text-sm font-bold font-sans mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             <Landmark size={18} className="text-[#D4A017] shrink-0" />
-            <span>THE LAND OF WISDOM. THE HOME OF CULTURE.</span>
+            <span>The Cradle of Enlightenment. The Soul of Heritage.</span>
           </div>
 
           {/* Main Title (Strict 2-Line Arrangement with Crisp Shadow) */}
           <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-[76px] text-white tracking-tight leading-[1.05] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
             <span className="block whitespace-nowrap">
-              {settings ? settings.heroTitle : "Discover the Soul of"}
+              {settings ? settings.heroTitle : "Unveil the Eternal Heritage of"}
             </span>
             <span className="block text-[#D4A017] text-5xl sm:text-7xl md:text-8xl lg:text-[105px] font-extrabold mt-1 font-display drop-shadow-[0_4px_20px_rgba(212,160,23,0.4)]">
               {settings ? settings.heroSubtitle : "Bihar"}
@@ -99,7 +99,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
 
           {/* Description */}
           <p className="text-white/90 text-base sm:text-lg max-w-xl font-sans leading-relaxed mb-8 drop-shadow-[0_2px_8px_rgba(0,0,0,0.9)] font-medium">
-            {settings ? settings.heroDescription : "Ancient traditions, local stories, iconic landmarks, authentic cuisine, vibrant festivals, and the people who shape Bihar."}
+            {settings ? settings.heroDescription : "Step into a timeless realm of sacred landmarks, living traditions, authentic flavors, and enduring stories."}
           </p>
 
           {/* Action Buttons */}
@@ -108,13 +108,13 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
               href="/discover"
               className="px-7 py-3.5 rounded-xl bg-[#D4A017] hover:bg-[#E6B52F] text-[#1A110B] font-extrabold text-sm tracking-wide transition-all shadow-[0_0_25px_rgba(212,160,23,0.45)] hover:shadow-[0_0_35px_rgba(212,160,23,0.7)] flex items-center gap-2.5 cursor-pointer active:scale-95"
             >
-              <Compass size={18} /> Explore Bihar
+              <Compass size={18} /> Begin the Journey
             </a>
             <a
               href="/districts"
               className="px-7 py-3.5 rounded-xl border border-white/50 hover:border-white text-white hover:bg-white/15 font-semibold text-sm tracking-wide transition-all backdrop-blur-md shadow-lg flex items-center gap-2.5 cursor-pointer active:scale-95"
             >
-              <Map size={18} /> Browse Districts
+              <Map size={18} /> Explore Districts
             </a>
           </div>
 

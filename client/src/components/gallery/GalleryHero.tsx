@@ -71,7 +71,7 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
 
           {/* Heading */}
           <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight mb-4">
-            Discover Bihar's <span className="text-[#EAB308]">Gallery</span>
+            Visual Archive of <span className="text-[#EAB308]">Bihar</span>
           </h1>
 
           {/* Ornament */}
@@ -93,8 +93,7 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
             transition={{ delay: 1, duration: 0.8 }}
             className="text-white/80 text-base sm:text-lg max-w-2xl mx-auto font-light leading-relaxed mb-10 drop-shadow"
           >
-            Explore thousands of photographs and videos celebrating Bihar's heritage,
-            festivals, traditions, cuisine, wildlife, and stories shared by our community.
+            A visual ode to sacred monuments, timeless architecture, and the everyday beauty of Bihar.
           </motion.p>
 
           {/* Stats — warm card style */}

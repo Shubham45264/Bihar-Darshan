@@ -72,11 +72,11 @@ const MarketPlace = () => {
               </span>
 
               <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight mb-6">
-                Discover Bihar's <span className="text-[#EAB308]">Marketplace</span>
+                Handcrafted <span className="text-[#EAB308]">Elegance</span>
               </h1>
 
               <p className="text-white/80 text-lg md:text-xl max-w-md mb-10 font-medium leading-relaxed">
-                Explore authentic products, handicrafts, and artworks crafted by talented artisans across Bihar.
+                Explore authentic handicrafts, fine art, and cultural creations meticulously crafted by master artisans of Bihar.
               </p>
 
             </motion.div>

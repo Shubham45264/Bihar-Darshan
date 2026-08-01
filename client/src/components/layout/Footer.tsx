@@ -53,16 +53,14 @@ const Footer = () => {
               />
             </div>
             <p className="text-[#AFA28F] text-[14px] leading-[1.7] max-w-[280px]">
-              Your gateway to explore, experience
-              and contribute to the rich heritage
-              and culture of Bihar.
+              Your portal to the timeless heritage, sacred landscapes, and living traditions of Bihar.
             </p>
           </div>
 
           {/* Quick Links */}
           <div className="md:ml-4">
             <h3 className="text-[#E8DCC4] font-serif font-bold text-[16px] tracking-wide mb-6">
-              Quick Links
+              Explore Bihar
             </h3>
             <ul className="space-y-4">
               {quickLinks.map((link) => (
@@ -90,7 +88,7 @@ const Footer = () => {
           {/* Connect */}
           <div>
             <h3 className="text-[#E8DCC4] font-serif font-bold text-[16px] tracking-wide mb-6">
-              Connect
+              Information & Assistance
             </h3>
             <ul className="space-y-4">
               {connectLinks.map((link) => (
@@ -118,7 +116,7 @@ const Footer = () => {
           {/* Social */}
           <div>
             <h3 className="text-[#E8DCC4] font-serif font-bold text-[16px] tracking-wide mb-6">
-              Follow Us
+              Connect With Us
             </h3>
             <div className="flex gap-4">
               {socialLinks.map((social) => (

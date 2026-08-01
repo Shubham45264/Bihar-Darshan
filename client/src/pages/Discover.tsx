@@ -111,10 +111,10 @@ const Discover = () => {
               HERITAGE & CULTURE
             </span>
             <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight">
-              Discover Bihar's <span className="text-[#EAB308]">Heritage</span>
+              Explore the <span className="text-[#EAB308]">Treasures</span> of Bihar
             </h1>
             <p className="text-white/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-medium">
-              Explore authentic local cuisines, sacred grand festivals, and legendary icons representing Bihar's glorious legacy.
+              Immerse yourself in authentic culinary art, majestic festivals, and legendary landmarks that define Bihar's golden legacy.
             </p>
           </div>
         </Container>
