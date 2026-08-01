@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Globe, Menu, X, User } from "lucide-react";
+import { Globe, Menu, X, User, Shield } from "lucide-react";
 import { Link, useLocation } from "react-router-dom";
 import logo from "../../assets/new-logo.png";
 import { onAuthStateChanged, type User as FirebaseUser } from "firebase/auth";

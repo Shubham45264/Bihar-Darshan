@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Share2, FileText, Clock, Edit3, X, LogOut, Users, Eye, Trash2, XCircle } from 'lucide-react';
+import { Share2, FileText, Clock, Edit3, X, LogOut, Eye, Trash2, XCircle, Shield, Award } from 'lucide-react';
 import { Navigate, useNavigate } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
@@ -18,7 +18,7 @@ interface UserPostItem {
   status: 'published' | 'pending' | 'rejected';
   image: string;
   videoUrl?: string;
-  type: 'journey' | 'gallery' | 'culture' | 'personality' | 'tribe_video';
+  type: 'story' | 'journey' | 'gallery' | 'culture' | 'personality' | 'tribe_video' | 'article' | 'community_post';
   rejectionReason?: string;
 }
 
@@ -44,6 +44,7 @@ const Profile = () => {
   const [authChecking, setAuthChecking] = useState(true);
   const [loading, setLoading] = useState(true);
   const [userPosts, setUserPosts] = useState<UserPostItem[]>([]);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   // Profile State
   const [profile, setProfile] = useState({
@@ -63,18 +64,28 @@ const Profile = () => {
   const fetchProfile = async (firebaseUser: FirebaseUser, isInitial = false) => {
     if (isInitial) setLoading(true);
     try {
-      const token = await firebaseUser.getIdToken();
-      const res = await fetch('http://localhost:5000/api/v1/users/profile', {
-        headers: {
-          'Authorization': `Bearer ${token}`
-        }
-      });
-      const data = await res.json();
-      const dbUser = data.success && data.data?.user ? data.data.user : null;
+      const token = await firebaseUser.getIdToken().catch(() => null);
+      const headers: Record<string, string> = {};
+      if (token) headers['Authorization'] = `Bearer ${token}`;
+
+      // Fetch user profile and all post collections concurrently
+      const [profileRes, storiesData, discoverData, personalityData, videoData, articlesData] = await Promise.all([
+        fetch('http://localhost:5000/api/v1/users/profile', { headers }).then(r => r.json()).catch(() => null),
+        fetch('http://localhost:5000/api/v1/stories?status=all').then(r => r.json()).catch(() => null),
+        fetch('http://localhost:5000/api/v1/discover?status=all').then(r => r.json()).catch(() => null),
+        fetch('http://localhost:5000/api/v1/culture/personalities?status=all').then(r => r.json()).catch(() => null),
+        fetch('http://localhost:5000/api/v1/tribes/videos/all').then(r => r.json()).catch(() => null),
+        fetch('http://localhost:5000/api/v1/tribes/articles').then(r => r.json()).catch(() => null)
+      ]);
+
+      const dbUser = profileRes?.success && profileRes.data?.user ? profileRes.data.user : null;
 
       const userName = (dbUser?.name || firebaseUser.displayName || "").toLowerCase().trim();
       const userEmail = (dbUser?.email || firebaseUser.email || "").toLowerCase().trim();
       const userUid = firebaseUser.uid;
+
+      const isUserAdmin = userEmail === 'bihardarshanofficial@gmail.com' || dbUser?.role === 'ADMIN';
+      setIsAdmin(isUserAdmin);
 
       const matchUser = (authorNameOrEmail: string | null | undefined, authorId?: string | null) => {
         if (authorId && authorId === userUid) return true;
@@ -84,108 +95,103 @@ const Profile = () => {
         return authorStr === userName || authorStr === userEmail || (userEmail && authorStr.includes(userEmail)) || (userName && (authorStr.includes(userName) || userName.includes(authorStr)));
       };
 
-      // 1. Fetch Category Stories from DB (/api/v1/stories?status=all)
+      // 1. Stories
       let storyPosts: UserPostItem[] = [];
-      try {
-        const storiesRes = await fetch('http://localhost:5000/api/v1/stories?status=all');
-        const storiesData = await storiesRes.json();
-        if (storiesData.success && Array.isArray(storiesData.data?.stories)) {
-          const matchedStories = storiesData.data.stories.filter((s: any) => matchUser(s.authorName, s.authorId));
-          storyPosts = matchedStories.map((s: any) => ({
-            id: s.id,
-            title: s.title,
-            date: new Date(s.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            views: `${s.views || 0} Views`,
-            category: s.category?.title || s.district || "Story",
-            status: s.status === "APPROVED" ? "published" : s.status === "REJECTED" ? "rejected" : "pending",
-            image: s.mediaUrl || (Array.isArray(s.mediaFiles) && s.mediaFiles[0]?.url) || "/images/culture/hero-artwork.png",
-            type: "story",
-            rejectionReason: s.rejectionReason || "Content does not meet site community guidelines."
-          }));
-        }
-      } catch (err) {
-        console.error('Failed to fetch stories in Profile:', err);
+      if (storiesData?.success && Array.isArray(storiesData.data?.stories)) {
+        const matchedStories = storiesData.data.stories.filter((s: any) => matchUser(s.authorName, s.authorId));
+        storyPosts = matchedStories.map((s: any) => ({
+          id: s.id,
+          title: s.title,
+          date: new Date(s.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `${s.views ?? 0} Views`,
+          category: s.category?.title || s.district || "Story",
+          status: s.status === "APPROVED" ? "published" : s.status === "REJECTED" ? "rejected" : "pending",
+          image: s.mediaUrl || (Array.isArray(s.mediaFiles) && s.mediaFiles[0]?.url) || "/images/culture/hero-artwork.png",
+          type: "story",
+          rejectionReason: s.rejectionReason || ""
+        }));
       }
 
-      // 2. Fetch Discover / Culture Items from DB (/api/v1/discover?status=all)
+      // 2. Discover Items
       let culturePosts: UserPostItem[] = [];
-      try {
-        const discoverRes = await fetch('http://localhost:5000/api/v1/discover?status=all');
-        const discoverData = await discoverRes.json();
-        if (discoverData.success && discoverData.data?.items) {
-          const matchedDiscover = discoverData.data.items.filter((d: any) => matchUser(d.author));
-          culturePosts = matchedDiscover.map((d: any) => ({
-            id: d.id,
-            title: d.title,
-            date: new Date(d.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            views: `${d.views || 100} Views`,
-            category: d.category === "FOOD" ? "Food" : "Festival",
-            status: d.status === "APPROVED" ? "published" : d.status === "REJECTED" ? "rejected" : "pending",
-            image: d.image || "/images/culture/hero-artwork.png",
-            type: "culture",
-            rejectionReason: d.rejectionReason || "Content does not meet site community guidelines."
-          }));
-        }
-      } catch (err) {
-        console.error('Failed to fetch culture items:', err);
+      if (discoverData?.success && discoverData.data?.items) {
+        const matchedDiscover = discoverData.data.items.filter((d: any) => matchUser(d.author));
+        culturePosts = matchedDiscover.map((d: any) => ({
+          id: d.id,
+          title: d.title,
+          date: new Date(d.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `${d.views ?? 0} Views`,
+          category: d.category ? (d.category.charAt(0) + d.category.slice(1).toLowerCase()) : "Culture",
+          status: d.status === "APPROVED" ? "published" : d.status === "REJECTED" ? "rejected" : "pending",
+          image: d.image || "/images/culture/hero-artwork.png",
+          type: "culture",
+          rejectionReason: d.rejectionReason || ""
+        }));
       }
 
-      // 3. Fetch Personalities from DB (/api/v1/culture/personalities?status=all)
+      // 3. Personalities
       let personalityPosts: UserPostItem[] = [];
-      try {
-        const personalityRes = await fetch('http://localhost:5000/api/v1/culture/personalities?status=all');
-        const personalityData = await personalityRes.json();
-        if (personalityData.success && personalityData.data?.personalities) {
-          const matchedPersonalities = personalityData.data.personalities.filter((p: any) => matchUser(p.author));
-          personalityPosts = matchedPersonalities.map((p: any) => ({
-            id: p.id,
-            title: p.name,
-            date: new Date(p.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            views: `${p.views || 20} Views`,
-            category: p.category || "Personality",
-            status: p.status === "APPROVED" ? "published" : p.status === "REJECTED" ? "rejected" : "pending",
-            image: p.imageUrl || "/images/culture/hero-artwork.png",
-            type: "personality",
-            rejectionReason: p.rejectionReason || "Content does not meet site community guidelines."
-          }));
-        }
-      } catch (err) {
-        console.error('Failed to fetch personalities:', err);
+      if (personalityData?.success && personalityData.data?.personalities) {
+        const matchedPersonalities = personalityData.data.personalities.filter((p: any) => matchUser(p.author));
+        personalityPosts = matchedPersonalities.map((p: any) => ({
+          id: p.id,
+          title: p.name,
+          date: new Date(p.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `${p.views ?? 0} Views`,
+          category: p.category || "Personality",
+          status: p.status === "APPROVED" ? "published" : p.status === "REJECTED" ? "rejected" : "pending",
+          image: p.imageUrl || "/images/culture/hero-artwork.png",
+          type: "personality",
+          rejectionReason: p.rejectionReason || ""
+        }));
       }
 
-      // 4. Fetch Tribe Videos from DB (/api/v1/tribes/videos/all)
+      // 4. Tribe Videos
       let videoPosts: UserPostItem[] = [];
-      try {
-        const videoRes = await fetch('http://localhost:5000/api/v1/tribes/videos/all');
-        const videoData = await videoRes.json();
-        if (videoData.success && videoData.data?.videos) {
-          const matchedVideos = videoData.data.videos.filter((v: any) => matchUser(v.uploaderName));
-          videoPosts = matchedVideos.map((v: any) => ({
-            id: v.id,
-            title: v.caption || v.title || `${v.tribeName} Video`,
-            date: new Date(v.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-            views: "Video Clip",
-            category: `${v.tribeName} Video`,
-            status: v.status === "APPROVED" ? "published" : v.status === "REJECTED" ? "rejected" : "pending",
-            image: v.thumbnail || "/images/culture/hero-artwork.png",
-            videoUrl: v.videoUrl,
-            type: "tribe_video",
-            rejectionReason: v.rejectionReason || "Content does not meet site community guidelines.",
-          }));
-        }
-      } catch (err) {
-        console.error('Failed to fetch tribe videos:', err);
+      if (videoData?.success && videoData.data?.videos) {
+        const matchedVideos = videoData.data.videos.filter((v: any) => matchUser(v.uploaderName, v.userId));
+        videoPosts = matchedVideos.map((v: any) => ({
+          id: v.id,
+          title: v.caption || v.title || `${v.tribeName} Video`,
+          date: new Date(v.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `${v.views ?? 0} Views`,
+          category: `${v.tribeName} Video`,
+          status: v.status === "APPROVED" ? "published" : v.status === "REJECTED" ? "rejected" : "pending",
+          image: v.thumbnail || "/images/culture/hero-artwork.png",
+          videoUrl: v.videoUrl,
+          type: "tribe_video",
+          rejectionReason: v.rejectionReason || "",
+        }));
       }
 
-      // 5. Journeys and Gallery items from profile
+      // 5. Tribal Articles
+      let tribalArticles: UserPostItem[] = [];
+      if (articlesData?.success && Array.isArray(articlesData.data?.articles)) {
+        const matchedArticles = articlesData.data.articles.filter((art: any) => matchUser(art.author));
+        tribalArticles = matchedArticles.map((art: any) => ({
+          id: art.id,
+          title: art.headline || art.title,
+          date: art.publishedDate || new Date(art.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `${art.views ?? 0} Views`,
+          category: art.tribe || "Article",
+          status: art.status === "APPROVED" ? "published" : art.status === "REJECTED" ? "rejected" : "pending",
+          image: art.image || art.images?.[0] || "/images/culture/hero-artwork.png",
+          type: "article",
+          rejectionReason: art.rejectionReason || ""
+        }));
+      }
+
+      // 6. Direct User Relations from DB Profile
       const journeys = dbUser?.journeys || [];
       const galleryItems = dbUser?.galleryItems || [];
+      const communityPosts = dbUser?.communityPosts || [];
+      const userCategoryStories = dbUser?.categoryStories || [];
 
       const mappedJourneys: UserPostItem[] = journeys.map((j: any) => ({
         id: j.id,
         title: j.title,
         date: new Date(j.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        views: `${j.views || 50} Views`,
+        views: `${j.views ?? 0} Views`,
         category: j.category || "Tourism",
         status: j.status === "APPROVED" ? "published" : j.status === "REJECTED" ? "rejected" : "pending",
         image: j.image || "/images/culture/hero-artwork.png",
@@ -197,7 +203,7 @@ const Profile = () => {
         id: g.id,
         title: g.title,
         date: new Date(g.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        views: `${g.views || 0} Views`,
+        views: `${g.views ?? 0} Views`,
         category: g.category || "Gallery",
         status: g.status === "APPROVED" ? "published" : g.status === "REJECTED" ? "rejected" : "pending",
         image: g.image || "/images/culture/hero-artwork.png",
@@ -205,7 +211,31 @@ const Profile = () => {
         rejectionReason: g.rejectionReason
       }));
 
-      // 6. Check Local Storage Submissions
+      const mappedCommunityPosts: UserPostItem[] = communityPosts.map((cp: any) => ({
+        id: cp.id,
+        title: cp.title,
+        date: new Date(cp.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        views: `${cp.views ?? 0} Views`,
+        category: cp.community?.name || "Community",
+        status: cp.status === "APPROVED" ? "published" : cp.status === "REJECTED" ? "rejected" : "pending",
+        image: cp.mediaUrl || "/images/culture/hero-artwork.png",
+        type: "journey",
+        rejectionReason: cp.rejectionReason
+      }));
+
+      const mappedUserCategoryStories: UserPostItem[] = userCategoryStories.map((cs: any) => ({
+        id: cs.id,
+        title: cs.title,
+        date: new Date(cs.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        views: `${cs.views ?? 0} Views`,
+        category: cs.district || "Story",
+        status: cs.status === "APPROVED" ? "published" : cs.status === "REJECTED" ? "rejected" : "pending",
+        image: cs.mediaUrl || (Array.isArray(cs.mediaFiles) && cs.mediaFiles[0]?.url) || "/images/culture/hero-artwork.png",
+        type: "story",
+        rejectionReason: cs.rejectionReason
+      }));
+
+      // 7. Check Local Storage Submissions as backup
       let localPosts: UserPostItem[] = [];
       try {
         const storedArticlesStr = localStorage.getItem('bihar_community_submissions');
@@ -217,7 +247,7 @@ const Profile = () => {
               id: art.id,
               title: art.headline || art.title,
               date: art.publishedDate || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-              views: "Tribal Article",
+              views: `${art.views ?? 0} Views`,
               category: art.tribe || "Community",
               status: art.status === "APPROVED" ? "published" : art.status === "REJECTED" ? "rejected" : "pending",
               image: art.image || art.images?.[0] || "/images/culture/hero-artwork.png",
@@ -233,11 +263,14 @@ const Profile = () => {
       // Combine all posts and deduplicate by string ID
       const rawAllCombined = [
         ...storyPosts,
+        ...mappedUserCategoryStories,
         ...mappedJourneys,
         ...mappedGallery,
+        ...mappedCommunityPosts,
         ...culturePosts,
         ...personalityPosts,
         ...videoPosts,
+        ...tribalArticles,
         ...localPosts
       ];
 
@@ -257,13 +290,17 @@ const Profile = () => {
       const pendingCount = deduplicatedPosts.filter(p => p.status === 'pending').length;
       const rejectedCount = deduplicatedPosts.filter(p => p.status === 'rejected').length;
 
+      // Award 10 points for every accepted/approved contribution (images, videos, posts)
+      const acceptedPoints = publishedCount * 10;
+      const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints);
+
       setProfile({
         name: dbUser?.name || firebaseUser.displayName || "User",
         title: dbUser?.title || "Cultural Enthusiast",
         bio: dbUser?.bio || "Explore and discover the rich culture & destinations of Bihar!",
         avatar: dbUser?.avatar || firebaseUser.photoURL || "/images/culture/avatar-man1.png",
         background: dbUser?.background || "/images/culture/hero-artwork.png",
-        rewardPoints: dbUser?.rewardPoints || 0,
+        rewardPoints: totalRewardPoints,
         totalPosts: publishedCount,
         pendingPosts: pendingCount,
         rejectedPosts: rejectedCount,
@@ -274,20 +311,18 @@ const Profile = () => {
     } catch (err) {
       console.error('Error fetching user profile:', err);
     } finally {
-      if (isInitial) {
-        setAuthChecking(false);
-        setLoading(false);
-      }
+      setAuthChecking(false);
+      setLoading(false);
     }
   };
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
+      setAuthChecking(false);
       if (user) {
         fetchProfile(user, true);
       } else {
-        setAuthChecking(false);
         setLoading(false);
       }
     });
@@ -335,7 +370,12 @@ const Profile = () => {
   }
 
   if (authChecking || loading) {
-    return <div className="min-h-screen bg-[#0a0a0f] text-white flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="min-h-screen bg-[#FDFBF7] flex flex-col items-center justify-center">
+        <div className="w-12 h-12 border-4 border-[#8B3E2F]/20 border-t-[#8B3E2F] rounded-full animate-spin" />
+        <p className="text-[#8B3E2F] mt-4 text-sm font-semibold tracking-wider animate-pulse uppercase">Loading Profile...</p>
+      </div>
+    );
   }
 
   const handleShare = async () => {
@@ -519,6 +559,11 @@ const Profile = () => {
                 <p className="text-gray-700 text-sm mb-6 max-w-xl">{profile.bio}</p>
 
                 <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                  {!isAdmin && (
+                    <div className="flex items-center gap-2 bg-white/70 border border-[#F4A261]/30 px-4 py-2 rounded-lg text-sm text-[#8B3E2F] font-bold shadow-sm">
+                      <Award className="w-4 h-4 text-[#D97706]" /> {profile.rewardPoints} Points
+                    </div>
+                  )}
                   <div className="flex items-center gap-2 bg-white/70 border border-[#F4A261]/30 px-4 py-2 rounded-lg text-sm text-[#8B3E2F] font-bold shadow-sm">
                     <FileText className="w-4 h-4 text-[#8B3E2F]" /> {profile.totalPosts} Posts
                   </div>
@@ -527,6 +572,14 @@ const Profile = () => {
 
               {/* Action Buttons */}
               <div className="flex flex-wrap justify-center gap-3 mt-4 lg:mt-0">
+                {isAdmin && (
+                  <button
+                    onClick={() => navigate('/admin')}
+                    className="px-5 py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-[#7a3528] transition shadow-sm border border-[#F4A261]/40 cursor-pointer"
+                  >
+                    <Shield className="w-4 h-4 text-[#F4A261]" /> Admin Dashboard
+                  </button>
+                )}
                 <button onClick={openEditModal} className="px-5 py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-gray-50 transition shadow-sm">
                   <Edit3 className="w-4 h-4" /> Edit Profile
                 </button>
@@ -541,10 +594,10 @@ const Profile = () => {
           </div>
 
           {/* Stats Row */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+          <div className={`grid grid-cols-1 ${!isAdmin ? 'md:grid-cols-3' : 'md:grid-cols-2'} gap-4 mb-8`}>
             {[
-              { icon: <Users className="w-6 h-6 text-[#8B3E2F]" />, label: 'Communities Joined', value: profile.communitiesJoined, bg: 'bg-[#FFF3E5]' },
-              { icon: <FileText className="w-6 h-6 text-[#D97706]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FEF3C7]' },
+              ...(!isAdmin ? [{ icon: <Award className="w-6 h-6 text-[#D97706]" />, label: 'Contribution Points', value: profile.rewardPoints, bg: 'bg-[#FEF3C7]' }] : []),
+              { icon: <FileText className="w-6 h-6 text-[#8B3E2F]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FFF3E5]' },
               { icon: <Clock className="w-6 h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' },
             ].map((stat, idx) => (
               <div key={idx} className="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm flex items-center gap-4 hover:shadow-md transition">
