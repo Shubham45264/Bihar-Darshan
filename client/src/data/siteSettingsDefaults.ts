@@ -12,9 +12,9 @@ export interface SiteSettings {
 }
 
 export const defaultSiteSettings: SiteSettings = {
-  heroTitle: "Discover the Soul of",
+  heroTitle: "Explore the Rich Heritage of",
   heroSubtitle: "Bihar",
-  heroDescription: "Ancient ruins, sacred temples, breathtaking landscapes, living festivals, authentic cuisines and stories waiting to be explored through immersive storytelling.",
+  heroDescription: "Step into a timeless realm of sacred landmarks, living traditions, authentic flavors, and enduring stories.",
   heroImage: "",
   statPlaces: "500+",
   statDistricts: "38",
