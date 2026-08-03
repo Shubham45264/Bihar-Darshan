@@ -12,13 +12,15 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
     <section id="home" className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden pt-28 lg:pt-36 pb-12 bg-black">
       {/* Background Video with Enhanced Brightness & Saturation */}
       <video
+        key={settings?.heroVideo || "default-hero-video"}
         autoPlay
         loop
         muted
         playsInline
+        poster={settings?.heroImage || undefined}
         className="absolute inset-0 w-full h-full object-cover brightness-[0.88] contrast-[1.08] saturate-[1.12]"
       >
-        <source src={heroVideo} type="video/mp4" />
+        <source src={settings?.heroVideo || heroVideo} type="video/mp4" />
       </video>
 
       {/* Lightweight Cinematic Gradient (Left Text Readability without Pitch Darkness) */}
@@ -77,7 +79,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
           {/* Eyebrow Header */}
           <div className="flex items-center gap-2.5 text-[#D4A017] uppercase tracking-[0.2em] text-xs sm:text-sm font-bold font-sans mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
             <Landmark size={18} className="text-[#D4A017] shrink-0" />
-            <span>The Cradle of Enlightenment. The Soul of Heritage.</span>
+            <span>{settings?.heroEyebrow || "The Cradle of Enlightenment. The Soul of Heritage."}</span>
           </div>
 
           {/* Main Title (Strict 2-Line Arrangement with Crisp Shadow) */}
@@ -125,7 +127,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
                 <Landmark size={20} />
               </div>
               <div>
-                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">38</p>
+                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">{settings?.statDistricts || "38"}</p>
                 <p className="text-white/70 text-xs font-sans">Districts</p>
               </div>
             </div>
@@ -135,7 +137,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
                 <Hourglass size={20} />
               </div>
               <div>
-                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">5000+</p>
+                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">{settings?.statPlaces || "5000+"}</p>
                 <p className="text-white/70 text-xs font-sans">Years of History</p>
               </div>
             </div>
@@ -145,7 +147,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
                 <Sparkles size={20} />
               </div>
               <div>
-                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">100+</p>
+                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">{settings?.statFestivals || "100+"}</p>
                 <p className="text-white/70 text-xs font-sans">Festivals</p>
               </div>
             </div>
@@ -155,7 +157,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
                 <BookOpen size={20} />
               </div>
               <div>
-                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">Countless</p>
+                <p className="font-display text-xl font-bold text-white leading-tight drop-shadow">{settings?.statTourists || "Countless"}</p>
                 <p className="text-white/70 text-xs font-sans">Stories</p>
               </div>
             </div>

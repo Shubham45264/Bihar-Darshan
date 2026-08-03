@@ -555,12 +555,24 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || 'Failed to delete district');
-      await fetchDistricts();
     } catch (error) {
       console.error('Error deleting district:', error);
       throw error;
     }
   };
+
+  const fetchSiteSettings = useCallback(async () => {
+    try {
+      const res = await fetch('http://localhost:5000/api/v1/admin/settings');
+      const result = await res.json();
+      if (result.success && result.data?.settings) {
+        setSiteSettings(result.data.settings);
+        saveToStorage(KEYS.siteSettings, result.data.settings);
+      }
+    } catch (e) {
+      console.error('AdminContext: Failed to fetch site settings:', e);
+    }
+  }, []);
 
   // Fetch communities, discover items, and personalities from backend database on mount matching auth status
   useEffect(() => {
@@ -632,10 +644,11 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       fetchTribalArticles();
       fetchProducts();
       fetchDistricts();
+      fetchSiteSettings();
     });
 
     return () => unsubscribe();
-  }, [fetchCulture, fetchPersonalities, fetchTribes, fetchTribalArticles, fetchProducts, fetchDistricts]);
+  }, [fetchCulture, fetchPersonalities, fetchTribes, fetchTribalArticles, fetchProducts, fetchDistricts, fetchSiteSettings]);
 
   // Auto-save on change
   const createUpdater = <T,>(key: string, setter: React.Dispatch<React.SetStateAction<T>>) =>
@@ -655,7 +668,26 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
   const updateTribes = createUpdater(KEYS.tribes, setTribes);
   const updateTribalArticles = createUpdater(KEYS.tribalArticles, setTribalArticlesState);
   const updatePersonalities = createUpdater(KEYS.personalities, setPersonalities);
-  const updateSiteSettings = createUpdater(KEYS.siteSettings, setSiteSettings);
+  const updateSiteSettings = useCallback(async (data: SiteSettings) => {
+    setSiteSettings(data);
+    saveToStorage(KEYS.siteSettings, data);
+    try {
+      const user = auth.currentUser;
+      if (user) {
+        const token = await user.getIdToken();
+        await fetch('http://localhost:5000/api/v1/admin/settings', {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`
+          },
+          body: JSON.stringify(data)
+        });
+      }
+    } catch (err) {
+      console.error('AdminContext: Failed to save site settings to server:', err);
+    }
+  }, []);
   const updatePopularPlaces = createUpdater(KEYS.popularPlaces, setPopularPlaces);
 
   const approveProduct = async (id: string | number) => {

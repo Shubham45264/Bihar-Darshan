@@ -23619,10 +23619,12 @@ export namespace Prisma {
 
   export type SiteSettingsMinAggregateOutputType = {
     id: number | null
+    heroEyebrow: string | null
     heroTitle: string | null
     heroSubtitle: string | null
     heroDescription: string | null
     heroImage: string | null
+    heroVideo: string | null
     statPlaces: string | null
     statDistricts: string | null
     statCulturalSites: string | null
@@ -23634,10 +23636,12 @@ export namespace Prisma {
 
   export type SiteSettingsMaxAggregateOutputType = {
     id: number | null
+    heroEyebrow: string | null
     heroTitle: string | null
     heroSubtitle: string | null
     heroDescription: string | null
     heroImage: string | null
+    heroVideo: string | null
     statPlaces: string | null
     statDistricts: string | null
     statCulturalSites: string | null
@@ -23649,10 +23653,12 @@ export namespace Prisma {
 
   export type SiteSettingsCountAggregateOutputType = {
     id: number
+    heroEyebrow: number
     heroTitle: number
     heroSubtitle: number
     heroDescription: number
     heroImage: number
+    heroVideo: number
     statPlaces: number
     statDistricts: number
     statCulturalSites: number
@@ -23674,10 +23680,12 @@ export namespace Prisma {
 
   export type SiteSettingsMinAggregateInputType = {
     id?: true
+    heroEyebrow?: true
     heroTitle?: true
     heroSubtitle?: true
     heroDescription?: true
     heroImage?: true
+    heroVideo?: true
     statPlaces?: true
     statDistricts?: true
     statCulturalSites?: true
@@ -23689,10 +23697,12 @@ export namespace Prisma {
 
   export type SiteSettingsMaxAggregateInputType = {
     id?: true
+    heroEyebrow?: true
     heroTitle?: true
     heroSubtitle?: true
     heroDescription?: true
     heroImage?: true
+    heroVideo?: true
     statPlaces?: true
     statDistricts?: true
     statCulturalSites?: true
@@ -23704,10 +23714,12 @@ export namespace Prisma {
 
   export type SiteSettingsCountAggregateInputType = {
     id?: true
+    heroEyebrow?: true
     heroTitle?: true
     heroSubtitle?: true
     heroDescription?: true
     heroImage?: true
+    heroVideo?: true
     statPlaces?: true
     statDistricts?: true
     statCulturalSites?: true
@@ -23806,10 +23818,12 @@ export namespace Prisma {
 
   export type SiteSettingsGroupByOutputType = {
     id: number
+    heroEyebrow: string
     heroTitle: string
     heroSubtitle: string
     heroDescription: string
     heroImage: string
+    heroVideo: string
     statPlaces: string
     statDistricts: string
     statCulturalSites: string
@@ -23840,10 +23854,12 @@ export namespace Prisma {
 
   export type SiteSettingsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    heroEyebrow?: boolean
     heroTitle?: boolean
     heroSubtitle?: boolean
     heroDescription?: boolean
     heroImage?: boolean
+    heroVideo?: boolean
     statPlaces?: boolean
     statDistricts?: boolean
     statCulturalSites?: boolean
@@ -23855,10 +23871,12 @@ export namespace Prisma {
 
   export type SiteSettingsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    heroEyebrow?: boolean
     heroTitle?: boolean
     heroSubtitle?: boolean
     heroDescription?: boolean
     heroImage?: boolean
+    heroVideo?: boolean
     statPlaces?: boolean
     statDistricts?: boolean
     statCulturalSites?: boolean
@@ -23870,10 +23888,12 @@ export namespace Prisma {
 
   export type SiteSettingsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
+    heroEyebrow?: boolean
     heroTitle?: boolean
     heroSubtitle?: boolean
     heroDescription?: boolean
     heroImage?: boolean
+    heroVideo?: boolean
     statPlaces?: boolean
     statDistricts?: boolean
     statCulturalSites?: boolean
@@ -23885,10 +23905,12 @@ export namespace Prisma {
 
   export type SiteSettingsSelectScalar = {
     id?: boolean
+    heroEyebrow?: boolean
     heroTitle?: boolean
     heroSubtitle?: boolean
     heroDescription?: boolean
     heroImage?: boolean
+    heroVideo?: boolean
     statPlaces?: boolean
     statDistricts?: boolean
     statCulturalSites?: boolean
@@ -23898,17 +23920,19 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type SiteSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "heroTitle" | "heroSubtitle" | "heroDescription" | "heroImage" | "statPlaces" | "statDistricts" | "statCulturalSites" | "statFestivals" | "statTourists" | "footerAbout" | "updatedAt", ExtArgs["result"]["siteSettings"]>
+  export type SiteSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "heroEyebrow" | "heroTitle" | "heroSubtitle" | "heroDescription" | "heroImage" | "heroVideo" | "statPlaces" | "statDistricts" | "statCulturalSites" | "statFestivals" | "statTourists" | "footerAbout" | "updatedAt", ExtArgs["result"]["siteSettings"]>
 
   export type $SiteSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSettings"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: number
+      heroEyebrow: string
       heroTitle: string
       heroSubtitle: string
       heroDescription: string
       heroImage: string
+      heroVideo: string
       statPlaces: string
       statDistricts: string
       statCulturalSites: string
@@ -24340,10 +24364,12 @@ export namespace Prisma {
    */
   interface SiteSettingsFieldRefs {
     readonly id: FieldRef<"SiteSettings", 'Int'>
+    readonly heroEyebrow: FieldRef<"SiteSettings", 'String'>
     readonly heroTitle: FieldRef<"SiteSettings", 'String'>
     readonly heroSubtitle: FieldRef<"SiteSettings", 'String'>
     readonly heroDescription: FieldRef<"SiteSettings", 'String'>
     readonly heroImage: FieldRef<"SiteSettings", 'String'>
+    readonly heroVideo: FieldRef<"SiteSettings", 'String'>
     readonly statPlaces: FieldRef<"SiteSettings", 'String'>
     readonly statDistricts: FieldRef<"SiteSettings", 'String'>
     readonly statCulturalSites: FieldRef<"SiteSettings", 'String'>
@@ -30924,10 +30950,12 @@ export namespace Prisma {
 
   export const SiteSettingsScalarFieldEnum: {
     id: 'id',
+    heroEyebrow: 'heroEyebrow',
     heroTitle: 'heroTitle',
     heroSubtitle: 'heroSubtitle',
     heroDescription: 'heroDescription',
     heroImage: 'heroImage',
+    heroVideo: 'heroVideo',
     statPlaces: 'statPlaces',
     statDistricts: 'statDistricts',
     statCulturalSites: 'statCulturalSites',
@@ -33003,10 +33031,12 @@ export namespace Prisma {
     OR?: SiteSettingsWhereInput[]
     NOT?: SiteSettingsWhereInput | SiteSettingsWhereInput[]
     id?: IntFilter<"SiteSettings"> | number
+    heroEyebrow?: StringFilter<"SiteSettings"> | string
     heroTitle?: StringFilter<"SiteSettings"> | string
     heroSubtitle?: StringFilter<"SiteSettings"> | string
     heroDescription?: StringFilter<"SiteSettings"> | string
     heroImage?: StringFilter<"SiteSettings"> | string
+    heroVideo?: StringFilter<"SiteSettings"> | string
     statPlaces?: StringFilter<"SiteSettings"> | string
     statDistricts?: StringFilter<"SiteSettings"> | string
     statCulturalSites?: StringFilter<"SiteSettings"> | string
@@ -33018,10 +33048,12 @@ export namespace Prisma {
 
   export type SiteSettingsOrderByWithRelationInput = {
     id?: SortOrder
+    heroEyebrow?: SortOrder
     heroTitle?: SortOrder
     heroSubtitle?: SortOrder
     heroDescription?: SortOrder
     heroImage?: SortOrder
+    heroVideo?: SortOrder
     statPlaces?: SortOrder
     statDistricts?: SortOrder
     statCulturalSites?: SortOrder
@@ -33036,10 +33068,12 @@ export namespace Prisma {
     AND?: SiteSettingsWhereInput | SiteSettingsWhereInput[]
     OR?: SiteSettingsWhereInput[]
     NOT?: SiteSettingsWhereInput | SiteSettingsWhereInput[]
+    heroEyebrow?: StringFilter<"SiteSettings"> | string
     heroTitle?: StringFilter<"SiteSettings"> | string
     heroSubtitle?: StringFilter<"SiteSettings"> | string
     heroDescription?: StringFilter<"SiteSettings"> | string
     heroImage?: StringFilter<"SiteSettings"> | string
+    heroVideo?: StringFilter<"SiteSettings"> | string
     statPlaces?: StringFilter<"SiteSettings"> | string
     statDistricts?: StringFilter<"SiteSettings"> | string
     statCulturalSites?: StringFilter<"SiteSettings"> | string
@@ -33051,10 +33085,12 @@ export namespace Prisma {
 
   export type SiteSettingsOrderByWithAggregationInput = {
     id?: SortOrder
+    heroEyebrow?: SortOrder
     heroTitle?: SortOrder
     heroSubtitle?: SortOrder
     heroDescription?: SortOrder
     heroImage?: SortOrder
+    heroVideo?: SortOrder
     statPlaces?: SortOrder
     statDistricts?: SortOrder
     statCulturalSites?: SortOrder
@@ -33074,10 +33110,12 @@ export namespace Prisma {
     OR?: SiteSettingsScalarWhereWithAggregatesInput[]
     NOT?: SiteSettingsScalarWhereWithAggregatesInput | SiteSettingsScalarWhereWithAggregatesInput[]
     id?: IntWithAggregatesFilter<"SiteSettings"> | number
+    heroEyebrow?: StringWithAggregatesFilter<"SiteSettings"> | string
     heroTitle?: StringWithAggregatesFilter<"SiteSettings"> | string
     heroSubtitle?: StringWithAggregatesFilter<"SiteSettings"> | string
     heroDescription?: StringWithAggregatesFilter<"SiteSettings"> | string
     heroImage?: StringWithAggregatesFilter<"SiteSettings"> | string
+    heroVideo?: StringWithAggregatesFilter<"SiteSettings"> | string
     statPlaces?: StringWithAggregatesFilter<"SiteSettings"> | string
     statDistricts?: StringWithAggregatesFilter<"SiteSettings"> | string
     statCulturalSites?: StringWithAggregatesFilter<"SiteSettings"> | string
@@ -35645,10 +35683,12 @@ export namespace Prisma {
 
   export type SiteSettingsCreateInput = {
     id?: number
+    heroEyebrow?: string
     heroTitle?: string
     heroSubtitle?: string
     heroDescription?: string
     heroImage?: string
+    heroVideo?: string
     statPlaces?: string
     statDistricts?: string
     statCulturalSites?: string
@@ -35660,10 +35700,12 @@ export namespace Prisma {
 
   export type SiteSettingsUncheckedCreateInput = {
     id?: number
+    heroEyebrow?: string
     heroTitle?: string
     heroSubtitle?: string
     heroDescription?: string
     heroImage?: string
+    heroVideo?: string
     statPlaces?: string
     statDistricts?: string
     statCulturalSites?: string
@@ -35675,10 +35717,12 @@ export namespace Prisma {
 
   export type SiteSettingsUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    heroEyebrow?: StringFieldUpdateOperationsInput | string
     heroTitle?: StringFieldUpdateOperationsInput | string
     heroSubtitle?: StringFieldUpdateOperationsInput | string
     heroDescription?: StringFieldUpdateOperationsInput | string
     heroImage?: StringFieldUpdateOperationsInput | string
+    heroVideo?: StringFieldUpdateOperationsInput | string
     statPlaces?: StringFieldUpdateOperationsInput | string
     statDistricts?: StringFieldUpdateOperationsInput | string
     statCulturalSites?: StringFieldUpdateOperationsInput | string
@@ -35690,10 +35734,12 @@ export namespace Prisma {
 
   export type SiteSettingsUncheckedUpdateInput = {
     id?: IntFieldUpdateOperationsInput | number
+    heroEyebrow?: StringFieldUpdateOperationsInput | string
     heroTitle?: StringFieldUpdateOperationsInput | string
     heroSubtitle?: StringFieldUpdateOperationsInput | string
     heroDescription?: StringFieldUpdateOperationsInput | string
     heroImage?: StringFieldUpdateOperationsInput | string
+    heroVideo?: StringFieldUpdateOperationsInput | string
     statPlaces?: StringFieldUpdateOperationsInput | string
     statDistricts?: StringFieldUpdateOperationsInput | string
     statCulturalSites?: StringFieldUpdateOperationsInput | string
@@ -35705,10 +35751,12 @@ export namespace Prisma {
 
   export type SiteSettingsCreateManyInput = {
     id?: number
+    heroEyebrow?: string
     heroTitle?: string
     heroSubtitle?: string
     heroDescription?: string
     heroImage?: string
+    heroVideo?: string
     statPlaces?: string
     statDistricts?: string
     statCulturalSites?: string
@@ -35720,10 +35768,12 @@ export namespace Prisma {
 
   export type SiteSettingsUpdateManyMutationInput = {
     id?: IntFieldUpdateOperationsInput | number
+    heroEyebrow?: StringFieldUpdateOperationsInput | string
     heroTitle?: StringFieldUpdateOperationsInput | string
     heroSubtitle?: StringFieldUpdateOperationsInput | string
     heroDescription?: StringFieldUpdateOperationsInput | string
     heroImage?: StringFieldUpdateOperationsInput | string
+    heroVideo?: StringFieldUpdateOperationsInput | string
     statPlaces?: StringFieldUpdateOperationsInput | string
     statDistricts?: StringFieldUpdateOperationsInput | string
     statCulturalSites?: StringFieldUpdateOperationsInput | string
@@ -35735,10 +35785,12 @@ export namespace Prisma {
 
   export type SiteSettingsUncheckedUpdateManyInput = {
     id?: IntFieldUpdateOperationsInput | number
+    heroEyebrow?: StringFieldUpdateOperationsInput | string
     heroTitle?: StringFieldUpdateOperationsInput | string
     heroSubtitle?: StringFieldUpdateOperationsInput | string
     heroDescription?: StringFieldUpdateOperationsInput | string
     heroImage?: StringFieldUpdateOperationsInput | string
+    heroVideo?: StringFieldUpdateOperationsInput | string
     statPlaces?: StringFieldUpdateOperationsInput | string
     statDistricts?: StringFieldUpdateOperationsInput | string
     statCulturalSites?: StringFieldUpdateOperationsInput | string
@@ -37695,10 +37747,12 @@ export namespace Prisma {
 
   export type SiteSettingsCountOrderByAggregateInput = {
     id?: SortOrder
+    heroEyebrow?: SortOrder
     heroTitle?: SortOrder
     heroSubtitle?: SortOrder
     heroDescription?: SortOrder
     heroImage?: SortOrder
+    heroVideo?: SortOrder
     statPlaces?: SortOrder
     statDistricts?: SortOrder
     statCulturalSites?: SortOrder
@@ -37714,10 +37768,12 @@ export namespace Prisma {
 
   export type SiteSettingsMaxOrderByAggregateInput = {
     id?: SortOrder
+    heroEyebrow?: SortOrder
     heroTitle?: SortOrder
     heroSubtitle?: SortOrder
     heroDescription?: SortOrder
     heroImage?: SortOrder
+    heroVideo?: SortOrder
     statPlaces?: SortOrder
     statDistricts?: SortOrder
     statCulturalSites?: SortOrder
@@ -37729,10 +37785,12 @@ export namespace Prisma {
 
   export type SiteSettingsMinOrderByAggregateInput = {
     id?: SortOrder
+    heroEyebrow?: SortOrder
     heroTitle?: SortOrder
     heroSubtitle?: SortOrder
     heroDescription?: SortOrder
     heroImage?: SortOrder
+    heroVideo?: SortOrder
     statPlaces?: SortOrder
     statDistricts?: SortOrder
     statCulturalSites?: SortOrder

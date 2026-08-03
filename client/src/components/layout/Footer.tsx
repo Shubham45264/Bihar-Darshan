@@ -3,6 +3,8 @@ import { Link } from "react-router-dom";
 import logo from "../../assets/new-logo.png";
 import templeBg from "../../assets/bihar-temple.png";
 
+import { useAdminData } from "../../data/AdminContext";
+
 const quickLinks = [
   { label: "Home", href: "/" },
   { label: "Districts", href: "/districts" },
@@ -23,6 +25,8 @@ const socialLinks = [
 ];
 
 const Footer = () => {
+  const { siteSettings } = useAdminData();
+
   return (
     <footer className="relative bg-[#1A1814] text-[#C4B59D] overflow-hidden border-b-[5px] border-[#5b7a66]">
       {/* Faint Background Image */}
@@ -53,7 +57,7 @@ const Footer = () => {
               />
             </div>
             <p className="text-[#AFA28F] text-[14px] leading-[1.7] max-w-[280px]">
-              Your portal to the timeless heritage, sacred landscapes, and living traditions of Bihar.
+              {siteSettings?.footerAbout || "Your portal to the timeless heritage, sacred landscapes, and living traditions of Bihar."}
             </p>
           </div>
 

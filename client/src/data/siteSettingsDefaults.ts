@@ -1,8 +1,10 @@
 export interface SiteSettings {
+  heroEyebrow?: string;
   heroTitle: string;
   heroSubtitle: string;
   heroDescription: string;
-  heroImage: string;
+  heroImage?: string;
+  heroVideo?: string;
   statPlaces: string;
   statDistricts: string;
   statCulturalSites: string;
@@ -12,10 +14,12 @@ export interface SiteSettings {
 }
 
 export const defaultSiteSettings: SiteSettings = {
-  heroTitle: "Explore the Rich Heritage of",
+  heroEyebrow: "The Cradle of Enlightenment. The Soul of Heritage.",
+  heroTitle: "Unveil the Eternal Heritage of",
   heroSubtitle: "Bihar",
   heroDescription: "Step into a timeless realm of sacred landmarks, living traditions, authentic flavors, and enduring stories.",
   heroImage: "",
+  heroVideo: "",
   statPlaces: "500+",
   statDistricts: "38",
   statCulturalSites: "100+",

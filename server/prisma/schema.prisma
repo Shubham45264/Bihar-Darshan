@@ -437,10 +437,12 @@ model MarketplaceProduct {
 
 model SiteSettings {
   id                Int    @id @default(1)
-  heroTitle         String @default("Discover the Soul of")
+  heroEyebrow       String @default("The Cradle of Enlightenment. The Soul of Heritage.")
+  heroTitle         String @default("Unveil the Eternal Heritage of")
   heroSubtitle      String @default("Bihar")
-  heroDescription   String @default("Ancient ruins, sacred temples, breathtaking landscapes, living festivals, authentic cuisines and stories waiting to be explored through immersive storytelling.")
+  heroDescription   String @default("Step into a timeless realm of sacred landmarks, living traditions, authentic flavors, and enduring stories.")
   heroImage         String @default("")
+  heroVideo         String @default("")
   statPlaces        String @default("500+")
   statDistricts     String @default("38")
   statCulturalSites String @default("100+")

@@ -413,10 +413,12 @@ exports.Prisma.MarketplaceProductScalarFieldEnum = {
 
 exports.Prisma.SiteSettingsScalarFieldEnum = {
   id: 'id',
+  heroEyebrow: 'heroEyebrow',
   heroTitle: 'heroTitle',
   heroSubtitle: 'heroSubtitle',
   heroDescription: 'heroDescription',
   heroImage: 'heroImage',
+  heroVideo: 'heroVideo',
   statPlaces: 'statPlaces',
   statDistricts: 'statDistricts',
   statCulturalSites: 'statCulturalSites',

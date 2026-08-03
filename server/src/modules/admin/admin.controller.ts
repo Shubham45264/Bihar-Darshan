@@ -12,3 +12,13 @@ export const getPendingApprovals = catchAsync(async (req: Request, res: Response
   const approvals = await adminService.getPendingApprovals();
   sendSuccess(res, 200, 'Pending approvals fetched successfully', { approvals });
 });
+
+export const getSiteSettings = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const settings = await adminService.getSiteSettings();
+  sendSuccess(res, 200, 'Site settings fetched successfully', { settings });
+});
+
+export const updateSiteSettings = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const settings = await adminService.updateSiteSettings(req.body);
+  sendSuccess(res, 200, 'Site settings updated successfully', { settings });
+});
