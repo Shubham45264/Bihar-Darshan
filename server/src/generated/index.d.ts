@@ -29263,12 +29263,14 @@ export namespace Prisma {
     views: number | null
     likes: number | null
     dislikes: number | null
+    shares: number | null
   }
 
   export type CategoryStorySumAggregateOutputType = {
     views: number | null
     likes: number | null
     dislikes: number | null
+    shares: number | null
   }
 
   export type CategoryStoryMinAggregateOutputType = {
@@ -29283,6 +29285,7 @@ export namespace Prisma {
     views: number | null
     likes: number | null
     dislikes: number | null
+    shares: number | null
     status: $Enums.ApprovalStatus | null
     publicId: string | null
     authorId: string | null
@@ -29304,6 +29307,7 @@ export namespace Prisma {
     views: number | null
     likes: number | null
     dislikes: number | null
+    shares: number | null
     status: $Enums.ApprovalStatus | null
     publicId: string | null
     authorId: string | null
@@ -29329,6 +29333,8 @@ export namespace Prisma {
     dislikes: number
     likedBy: number
     dislikedBy: number
+    shares: number
+    sharedBy: number
     status: number
     publicId: number
     authorId: number
@@ -29344,12 +29350,14 @@ export namespace Prisma {
     views?: true
     likes?: true
     dislikes?: true
+    shares?: true
   }
 
   export type CategoryStorySumAggregateInputType = {
     views?: true
     likes?: true
     dislikes?: true
+    shares?: true
   }
 
   export type CategoryStoryMinAggregateInputType = {
@@ -29364,6 +29372,7 @@ export namespace Prisma {
     views?: true
     likes?: true
     dislikes?: true
+    shares?: true
     status?: true
     publicId?: true
     authorId?: true
@@ -29385,6 +29394,7 @@ export namespace Prisma {
     views?: true
     likes?: true
     dislikes?: true
+    shares?: true
     status?: true
     publicId?: true
     authorId?: true
@@ -29410,6 +29420,8 @@ export namespace Prisma {
     dislikes?: true
     likedBy?: true
     dislikedBy?: true
+    shares?: true
+    sharedBy?: true
     status?: true
     publicId?: true
     authorId?: true
@@ -29522,6 +29534,8 @@ export namespace Prisma {
     dislikes: number
     likedBy: string[]
     dislikedBy: string[]
+    shares: number
+    sharedBy: string[]
     status: $Enums.ApprovalStatus
     publicId: string | null
     authorId: string | null
@@ -29566,6 +29580,8 @@ export namespace Prisma {
     dislikes?: boolean
     likedBy?: boolean
     dislikedBy?: boolean
+    shares?: boolean
+    sharedBy?: boolean
     status?: boolean
     publicId?: boolean
     authorId?: boolean
@@ -29594,6 +29610,8 @@ export namespace Prisma {
     dislikes?: boolean
     likedBy?: boolean
     dislikedBy?: boolean
+    shares?: boolean
+    sharedBy?: boolean
     status?: boolean
     publicId?: boolean
     authorId?: boolean
@@ -29622,6 +29640,8 @@ export namespace Prisma {
     dislikes?: boolean
     likedBy?: boolean
     dislikedBy?: boolean
+    shares?: boolean
+    sharedBy?: boolean
     status?: boolean
     publicId?: boolean
     authorId?: boolean
@@ -29650,6 +29670,8 @@ export namespace Prisma {
     dislikes?: boolean
     likedBy?: boolean
     dislikedBy?: boolean
+    shares?: boolean
+    sharedBy?: boolean
     status?: boolean
     publicId?: boolean
     authorId?: boolean
@@ -29659,7 +29681,7 @@ export namespace Prisma {
     updatedAt?: boolean
   }
 
-  export type CategoryStoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "mediaUrl" | "mediaType" | "mediaFiles" | "authorName" | "authorAvatar" | "district" | "views" | "viewedBy" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "status" | "publicId" | "authorId" | "categoryId" | "subcategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["categoryStory"]>
+  export type CategoryStoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "content" | "mediaUrl" | "mediaType" | "mediaFiles" | "authorName" | "authorAvatar" | "district" | "views" | "viewedBy" | "likes" | "dislikes" | "likedBy" | "dislikedBy" | "shares" | "sharedBy" | "status" | "publicId" | "authorId" | "categoryId" | "subcategoryId" | "createdAt" | "updatedAt", ExtArgs["result"]["categoryStory"]>
   export type CategoryStoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | CategoryStory$authorArgs<ExtArgs>
     category?: boolean | CategoryDefaultArgs<ExtArgs>
@@ -29699,6 +29721,8 @@ export namespace Prisma {
       dislikes: number
       likedBy: string[]
       dislikedBy: string[]
+      shares: number
+      sharedBy: string[]
       status: $Enums.ApprovalStatus
       publicId: string | null
       authorId: string | null
@@ -30147,6 +30171,8 @@ export namespace Prisma {
     readonly dislikes: FieldRef<"CategoryStory", 'Int'>
     readonly likedBy: FieldRef<"CategoryStory", 'String[]'>
     readonly dislikedBy: FieldRef<"CategoryStory", 'String[]'>
+    readonly shares: FieldRef<"CategoryStory", 'Int'>
+    readonly sharedBy: FieldRef<"CategoryStory", 'String[]'>
     readonly status: FieldRef<"CategoryStory", 'ApprovalStatus'>
     readonly publicId: FieldRef<"CategoryStory", 'String'>
     readonly authorId: FieldRef<"CategoryStory", 'String'>
@@ -31049,6 +31075,8 @@ export namespace Prisma {
     dislikes: 'dislikes',
     likedBy: 'likedBy',
     dislikedBy: 'dislikedBy',
+    shares: 'shares',
+    sharedBy: 'sharedBy',
     status: 'status',
     publicId: 'publicId',
     authorId: 'authorId',
@@ -33472,6 +33500,8 @@ export namespace Prisma {
     dislikes?: IntFilter<"CategoryStory"> | number
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
+    shares?: IntFilter<"CategoryStory"> | number
+    sharedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusFilter<"CategoryStory"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"CategoryStory"> | string | null
     authorId?: StringNullableFilter<"CategoryStory"> | string | null
@@ -33500,6 +33530,8 @@ export namespace Prisma {
     dislikes?: SortOrder
     likedBy?: SortOrder
     dislikedBy?: SortOrder
+    shares?: SortOrder
+    sharedBy?: SortOrder
     status?: SortOrder
     publicId?: SortOrderInput | SortOrder
     authorId?: SortOrderInput | SortOrder
@@ -33531,6 +33563,8 @@ export namespace Prisma {
     dislikes?: IntFilter<"CategoryStory"> | number
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
+    shares?: IntFilter<"CategoryStory"> | number
+    sharedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusFilter<"CategoryStory"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"CategoryStory"> | string | null
     authorId?: StringNullableFilter<"CategoryStory"> | string | null
@@ -33559,6 +33593,8 @@ export namespace Prisma {
     dislikes?: SortOrder
     likedBy?: SortOrder
     dislikedBy?: SortOrder
+    shares?: SortOrder
+    sharedBy?: SortOrder
     status?: SortOrder
     publicId?: SortOrderInput | SortOrder
     authorId?: SortOrderInput | SortOrder
@@ -33592,6 +33628,8 @@ export namespace Prisma {
     dislikes?: IntWithAggregatesFilter<"CategoryStory"> | number
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
+    shares?: IntWithAggregatesFilter<"CategoryStory"> | number
+    sharedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusWithAggregatesFilter<"CategoryStory"> | $Enums.ApprovalStatus
     publicId?: StringNullableWithAggregatesFilter<"CategoryStory"> | string | null
     authorId?: StringNullableWithAggregatesFilter<"CategoryStory"> | string | null
@@ -36198,6 +36236,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     createdAt?: Date | string
@@ -36223,6 +36263,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     authorId?: string | null
@@ -36248,6 +36290,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36273,6 +36317,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -36298,6 +36344,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     authorId?: string | null
@@ -36323,6 +36371,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -36345,6 +36395,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -38027,6 +38079,8 @@ export namespace Prisma {
     dislikes?: SortOrder
     likedBy?: SortOrder
     dislikedBy?: SortOrder
+    shares?: SortOrder
+    sharedBy?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
     authorId?: SortOrder
@@ -38040,6 +38094,7 @@ export namespace Prisma {
     views?: SortOrder
     likes?: SortOrder
     dislikes?: SortOrder
+    shares?: SortOrder
   }
 
   export type CategoryStoryMaxOrderByAggregateInput = {
@@ -38054,6 +38109,7 @@ export namespace Prisma {
     views?: SortOrder
     likes?: SortOrder
     dislikes?: SortOrder
+    shares?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
     authorId?: SortOrder
@@ -38075,6 +38131,7 @@ export namespace Prisma {
     views?: SortOrder
     likes?: SortOrder
     dislikes?: SortOrder
+    shares?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
     authorId?: SortOrder
@@ -38088,6 +38145,7 @@ export namespace Prisma {
     views?: SortOrder
     likes?: SortOrder
     dislikes?: SortOrder
+    shares?: SortOrder
   }
 
   export type CommunityPostCreateNestedManyWithoutAuthorInput = {
@@ -39228,6 +39286,10 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type CategoryStoryCreatesharedByInput = {
+    set: string[]
+  }
+
   export type UserCreateNestedOneWithoutCategoryStoriesInput = {
     create?: XOR<UserCreateWithoutCategoryStoriesInput, UserUncheckedCreateWithoutCategoryStoriesInput>
     connectOrCreate?: UserCreateOrConnectWithoutCategoryStoriesInput
@@ -39257,6 +39319,11 @@ export namespace Prisma {
   }
 
   export type CategoryStoryUpdatedislikedByInput = {
+    set?: string[]
+    push?: string | string[]
+  }
+
+  export type CategoryStoryUpdatesharedByInput = {
     set?: string[]
     push?: string | string[]
   }
@@ -39963,6 +40030,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     createdAt?: Date | string
@@ -39987,6 +40056,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     categoryId: string
@@ -40304,6 +40375,8 @@ export namespace Prisma {
     dislikes?: IntFilter<"CategoryStory"> | number
     likedBy?: StringNullableListFilter<"CategoryStory">
     dislikedBy?: StringNullableListFilter<"CategoryStory">
+    shares?: IntFilter<"CategoryStory"> | number
+    sharedBy?: StringNullableListFilter<"CategoryStory">
     status?: EnumApprovalStatusFilter<"CategoryStory"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"CategoryStory"> | string | null
     authorId?: StringNullableFilter<"CategoryStory"> | string | null
@@ -41947,6 +42020,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     createdAt?: Date | string
@@ -41971,6 +42046,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     authorId?: string | null
@@ -42083,6 +42160,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     createdAt?: Date | string
@@ -42107,6 +42186,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     authorId?: string | null
@@ -42558,6 +42639,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     categoryId: string
@@ -42962,6 +43045,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -42986,6 +43071,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -43010,6 +43097,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     categoryId?: StringFieldUpdateOperationsInput | string
@@ -43291,6 +43380,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     authorId?: string | null
@@ -43350,6 +43441,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43374,6 +43467,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43398,6 +43493,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43422,6 +43519,8 @@ export namespace Prisma {
     dislikes?: number
     likedBy?: CategoryStoryCreatelikedByInput | string[]
     dislikedBy?: CategoryStoryCreatedislikedByInput | string[]
+    shares?: number
+    sharedBy?: CategoryStoryCreatesharedByInput | string[]
     status?: $Enums.ApprovalStatus
     publicId?: string | null
     authorId?: string | null
@@ -43446,6 +43545,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
@@ -43470,6 +43571,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null
@@ -43494,6 +43597,8 @@ export namespace Prisma {
     dislikes?: IntFieldUpdateOperationsInput | number
     likedBy?: CategoryStoryUpdatelikedByInput | string[]
     dislikedBy?: CategoryStoryUpdatedislikedByInput | string[]
+    shares?: IntFieldUpdateOperationsInput | number
+    sharedBy?: CategoryStoryUpdatesharedByInput | string[]
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
     authorId?: NullableStringFieldUpdateOperationsInput | string | null

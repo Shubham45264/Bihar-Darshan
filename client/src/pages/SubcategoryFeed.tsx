@@ -9,6 +9,8 @@ import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { auth } from '../lib/firebase';
 
+import ShareModal from '../components/common/ShareModal';
+
 interface MediaFileItem {
   url: string;
   type: string;
@@ -29,6 +31,8 @@ interface Story {
   dislikes: number;
   likedBy: string[];
   dislikedBy: string[];
+  shares?: number;
+  sharedBy?: string[];
   createdAt: string;
   category?: { title: string; slug: string };
   subcategory?: { title: string; slug: string };
@@ -128,6 +132,7 @@ const SubcategoryFeed = () => {
   const [subcategoryTitle, setSubcategoryTitle] = useState('');
   const [copiedId, setCopiedId] = useState<string | null>(null);
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({});
+  const [activeShareStory, setActiveShareStory] = useState<Story | null>(null);
 
   const currentUser = auth.currentUser;
   const currentUserId = currentUser ? currentUser.uid : 'guest';
@@ -184,12 +189,15 @@ const SubcategoryFeed = () => {
     }
   };
 
-  const handleShare = (e: React.MouseEvent, storyId: string) => {
+  const handleShare = (e: React.MouseEvent, story: Story) => {
     e.stopPropagation();
-    const url = `${window.location.origin}/story/${storyId}`;
-    navigator.clipboard.writeText(url);
-    setCopiedId(storyId);
-    setTimeout(() => setCopiedId(null), 2500);
+    setActiveShareStory(story);
+  };
+
+  const handleShareRecorded = (updatedStory?: any) => {
+    if (updatedStory) {
+      setStories((prev) => prev.map((s) => (s.id === updatedStory.id ? updatedStory : s)));
+    }
   };
 
   const toggleSave = (e: React.MouseEvent, storyId: string) => {
@@ -358,28 +366,14 @@ const SubcategoryFeed = () => {
 
                         {/* Share */}
                         <button
-                          onClick={(e) => handleShare(e, story.id)}
-                          className="hover:text-black transition-colors relative"
+                          onClick={(e) => handleShare(e, story)}
+                          className="hover:text-black transition-colors flex items-center gap-1 font-medium cursor-pointer"
                           title="Share"
                         >
                           <Send size={16} />
-                          {copiedId === story.id && (
-                            <span className="absolute -top-6 left-1/2 -translate-x-1/2 bg-[#D4A017] text-black font-bold text-[9px] px-1.5 py-0.5 rounded shadow">
-                              Copied!
-                            </span>
-                          )}
+                          <span className="font-semibold">{story.shares || 0}</span>
                         </button>
                       </div>
-
-                      {/* Bookmark */}
-                      <button
-                        onClick={(e) => toggleSave(e, story.id)}
-                        className={`transition-colors ${
-                          savedPosts[story.id] ? 'text-[#D4A017]' : 'text-gray-400 hover:text-gray-700'
-                        }`}
-                      >
-                        <Bookmark size={16} fill={savedPosts[story.id] ? 'currentColor' : 'none'} />
-                      </button>
                     </div>
                   </article>
                 );
@@ -388,6 +382,20 @@ const SubcategoryFeed = () => {
           )}
         </Container>
       </main>
+
+      {/* Share Modal */}
+      {activeShareStory && (
+        <ShareModal
+          isOpen={!!activeShareStory}
+          onClose={() => setActiveShareStory(null)}
+          title={activeShareStory.title}
+          description={activeShareStory.content ? activeShareStory.content.slice(0, 120) + '...' : undefined}
+          url={`${window.location.origin}/story/${activeShareStory.id}`}
+          imageUrl={activeShareStory.mediaUrl || (Array.isArray(activeShareStory.mediaFiles) && activeShareStory.mediaFiles[0]?.url)}
+          storyId={activeShareStory.id}
+          onShareRecorded={handleShareRecorded}
+        />
+      )}
 
       <Footer />
     </div>

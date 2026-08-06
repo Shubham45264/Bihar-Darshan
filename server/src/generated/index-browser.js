@@ -497,6 +497,8 @@ exports.Prisma.CategoryStoryScalarFieldEnum = {
   dislikes: 'dislikes',
   likedBy: 'likedBy',
   dislikedBy: 'dislikedBy',
+  shares: 'shares',
+  sharedBy: 'sharedBy',
   status: 'status',
   publicId: 'publicId',
   authorId: 'authorId',

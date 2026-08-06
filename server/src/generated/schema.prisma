@@ -539,6 +539,8 @@ model CategoryStory {
   dislikes     Int            @default(0)
   likedBy      String[]       @default([])
   dislikedBy   String[]       @default([])
+  shares       Int            @default(0)
+  sharedBy     String[]       @default([])
   status       ApprovalStatus @default(PENDING)
   publicId     String?
 
