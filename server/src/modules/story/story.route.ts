@@ -10,6 +10,7 @@ router.post('/', storyController.createStory); // Open to all users to submit st
 router.post('/:id/views', storyController.incrementViews);
 router.post('/:id/like', storyController.toggleLike);
 router.post('/:id/dislike', storyController.toggleDislike);
+router.post('/:id/share', storyController.incrementShares);
 
 // Admin Approval/Rejection routes (supports PUT & PATCH)
 router.put('/:id/approve', storyController.approveStory);

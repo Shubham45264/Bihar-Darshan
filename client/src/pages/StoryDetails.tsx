@@ -8,6 +8,8 @@ import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { auth } from '../lib/firebase';
 
+import ShareModal from '../components/common/ShareModal';
+
 interface MediaFileItem {
   url: string;
   type: string;
@@ -28,6 +30,8 @@ interface Story {
   dislikes: number;
   likedBy?: string[];
   dislikedBy?: string[];
+  shares?: number;
+  sharedBy?: string[];
   createdAt: string;
   category?: { title: string; slug: string };
   subcategory?: { title: string; slug: string };
@@ -134,6 +138,7 @@ const StoryDetails = () => {
   const [errorMsg, setErrorMsg] = useState('');
   const [copied, setCopied] = useState(false);
   const [isSaved, setIsSaved] = useState(false);
+  const [isShareModalOpen, setIsShareModalOpen] = useState(false);
 
   const currentUser = auth.currentUser;
   const currentUserId = currentUser ? currentUser.uid : 'guest';
@@ -211,9 +216,13 @@ const StoryDetails = () => {
   };
 
   const handleShare = () => {
-    navigator.clipboard.writeText(window.location.href);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2500);
+    setIsShareModalOpen(true);
+  };
+
+  const handleShareRecorded = (updatedStory?: any) => {
+    if (updatedStory) {
+      setStory(updatedStory);
+    }
   };
 
   if (loading) {
@@ -351,7 +360,7 @@ const StoryDetails = () => {
                     }`}
                   >
                     <Heart size={22} fill={hasLiked ? 'currentColor' : 'none'} />
-                    <span className="text-sm">{story.likes || 0} Likes</span>
+                    <span className="text-sm">{story.likes || 0}</span>
                   </button>
 
                   {/* Dislike Button */}
@@ -368,7 +377,7 @@ const StoryDetails = () => {
                   {/* Views Metric */}
                   <div className="flex items-center gap-2 text-gray-500 font-semibold" title="Views">
                     <Eye size={20} />
-                    <span className="text-sm">{story.views || 0} Views</span>
+                    <span className="text-sm">{story.views || 0}</span>
                   </div>
 
                   {/* Share Button */}
@@ -378,29 +387,28 @@ const StoryDetails = () => {
                     title="Share Post"
                   >
                     <Send size={20} />
-                    <span className="text-sm">Share</span>
-                    {copied && (
-                      <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-[#D4A017] text-black font-bold text-[11px] px-2.5 py-0.5 rounded shadow">
-                        Link Copied!
-                      </span>
-                    )}
+                    <span className="text-sm">{story.shares || 0}</span>
                   </button>
                 </div>
-
-                {/* Bookmark Button */}
-                <button
-                  onClick={() => setIsSaved(!isSaved)}
-                  className={`p-2 rounded-full transition-colors cursor-pointer ${
-                    isSaved ? 'text-[#D4A017] bg-[#D4A017]/10' : 'text-gray-500 hover:text-black hover:bg-gray-100'
-                  }`}
-                >
-                  <Bookmark size={22} fill={isSaved ? 'currentColor' : 'none'} />
-                </button>
               </div>
             </article>
           </div>
         </Container>
       </main>
+
+      {/* Share Modal */}
+      {story && (
+        <ShareModal
+          isOpen={isShareModalOpen}
+          onClose={() => setIsShareModalOpen(false)}
+          title={story.title}
+          description={story.content ? story.content.slice(0, 120) + '...' : undefined}
+          url={window.location.href}
+          imageUrl={story.mediaUrl || (Array.isArray(story.mediaFiles) && story.mediaFiles[0]?.url)}
+          storyId={story.id}
+          onShareRecorded={handleShareRecorded}
+        />
+      )}
 
       <Footer />
     </div>

@@ -92,6 +92,20 @@ export const toggleDislike = async (req: Request, res: Response, next: NextFunct
   }
 };
 
+export const incrementShares = async (req: Request, res: Response, next: NextFunction) => {
+  try {
+    const { id } = req.params;
+    const { userId } = req.body;
+    const story = await storyService.incrementShares(id as string, userId);
+    res.status(200).json({
+      success: true,
+      data: { story },
+    });
+  } catch (error) {
+    next(error);
+  }
+};
+
 export const approveStory = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const { id } = req.params;

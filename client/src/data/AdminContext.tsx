@@ -566,13 +566,29 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const res = await fetch('http://localhost:5000/api/v1/admin/settings');
       const result = await res.json();
       if (result.success && result.data?.settings) {
-        setSiteSettings(result.data.settings);
-        saveToStorage(KEYS.siteSettings, result.data.settings);
+        const serverSettings = result.data.settings;
+        setSiteSettings(prev => {
+          const merged = { ...prev, ...serverSettings };
+          // Preserve local custom heroVideo/heroImage if server returned empty strings
+          if (!serverSettings.heroVideo && prev.heroVideo) {
+            merged.heroVideo = prev.heroVideo;
+          }
+          if (!serverSettings.heroImage && prev.heroImage) {
+            merged.heroImage = prev.heroImage;
+          }
+          saveToStorage(KEYS.siteSettings, merged);
+          return merged;
+        });
       }
     } catch (e) {
       console.error('AdminContext: Failed to fetch site settings:', e);
     }
   }, []);
+
+  // Fetch public site settings immediately on mount
+  useEffect(() => {
+    fetchSiteSettings();
+  }, [fetchSiteSettings]);
 
   // Fetch communities, discover items, and personalities from backend database on mount matching auth status
   useEffect(() => {
@@ -644,11 +660,10 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       fetchTribalArticles();
       fetchProducts();
       fetchDistricts();
-      fetchSiteSettings();
     });
 
     return () => unsubscribe();
-  }, [fetchCulture, fetchPersonalities, fetchTribes, fetchTribalArticles, fetchProducts, fetchDistricts, fetchSiteSettings]);
+  }, [fetchCulture, fetchPersonalities, fetchTribes, fetchTribalArticles, fetchProducts, fetchDistricts]);
 
   // Auto-save on change
   const createUpdater = <T,>(key: string, setter: React.Dispatch<React.SetStateAction<T>>) =>
@@ -673,17 +688,16 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
     saveToStorage(KEYS.siteSettings, data);
     try {
       const user = auth.currentUser;
+      const headers: any = { 'Content-Type': 'application/json' };
       if (user) {
         const token = await user.getIdToken();
-        await fetch('http://localhost:5000/api/v1/admin/settings', {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
-          },
-          body: JSON.stringify(data)
-        });
+        headers['Authorization'] = `Bearer ${token}`;
       }
+      await fetch('http://localhost:5000/api/v1/admin/settings', {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify(data)
+      });
     } catch (err) {
       console.error('AdminContext: Failed to save site settings to server:', err);
     }

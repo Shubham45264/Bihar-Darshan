@@ -180,6 +180,34 @@ export const toggleDislike = async (id: string, userId: string) => {
   });
 };
 
+export const incrementShares = async (id: string, userId?: string) => {
+  const story = await db.categoryStory.findUnique({ where: { id } });
+  if (!story) throw new Error('Story not found');
+
+  if (!userId || userId === 'guest' || userId === 'anonymous') {
+    return story;
+  }
+
+  const currentSharedBy = story.sharedBy || [];
+  if (currentSharedBy.includes(userId)) {
+    return story;
+  }
+
+  const newSharedBy = [...currentSharedBy, userId];
+
+  return db.categoryStory.update({
+    where: { id },
+    data: {
+      sharedBy: newSharedBy,
+      shares: newSharedBy.length,
+    },
+    include: {
+      category: true,
+      subcategory: true,
+    },
+  });
+};
+
 // ── ADMIN STORY VERIFICATION ──
 
 export const approveStory = async (id: string) => {

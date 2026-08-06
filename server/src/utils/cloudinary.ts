@@ -38,10 +38,13 @@ export const uploadToCloudinary = (
       folder,
       resource_type: resourceType,
       public_id: publicId,
-      transformation: [
-        { quality: 'auto', fetch_format: 'auto' }
-      ]
     };
+
+    if (resourceType === 'image') {
+      uploadOptions.transformation = [
+        { quality: 'auto', fetch_format: 'auto' }
+      ];
+    }
 
     if (Buffer.isBuffer(fileData)) {
       const uploadStream = cloudinary.uploader.upload_stream(uploadOptions, (error, result) => {
