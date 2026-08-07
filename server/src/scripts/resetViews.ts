@@ -2,7 +2,7 @@ import 'dotenv/config';
 import { prisma as db } from '../db';
 
 async function main() {
-  console.log("Resetting views and viewedBy arrays in CategoryStory and CommunityPost...");
+  console.log("Resetting views and viewedBy arrays in CategoryStory...");
 
   const storyResult = await db.categoryStory.updateMany({
     data: {
@@ -11,14 +11,6 @@ async function main() {
     },
   });
   console.log(`Reset views for ${storyResult.count} CategoryStory records.`);
-
-  const postResult = await db.communityPost.updateMany({
-    data: {
-      views: 0,
-      viewedBy: [],
-    },
-  });
-  console.log(`Reset views for ${postResult.count} CommunityPost records.`);
 
   console.log("Reset views complete!");
 }

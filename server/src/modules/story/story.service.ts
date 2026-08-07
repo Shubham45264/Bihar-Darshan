@@ -41,6 +41,8 @@ export const getStories = async (filter: {
   categoryId?: string;
   subcategoryId?: string;
   status?: string;
+  page?: number;
+  limit?: number;
 }) => {
   const whereClause: any = {};
 
@@ -62,11 +64,31 @@ export const getStories = async (filter: {
     whereClause.subcategory = { slug: filter.subcategorySlug };
   }
 
+  const take = filter.limit && filter.limit > 0 ? filter.limit : undefined;
+  const skip = filter.page && filter.limit && filter.page > 0 ? (filter.page - 1) * filter.limit : undefined;
+
   return db.categoryStory.findMany({
     where: whereClause,
-    include: {
-      category: true,
-      subcategory: true,
+    take,
+    skip,
+    select: {
+      id: true,
+      title: true,
+      mediaUrl: true,
+      mediaType: true,
+      authorName: true,
+      authorAvatar: true,
+      district: true,
+      views: true,
+      likes: true,
+      dislikes: true,
+      status: true,
+      createdAt: true,
+      updatedAt: true,
+      categoryId: true,
+      subcategoryId: true,
+      category: { select: { id: true, title: true, slug: true } },
+      subcategory: { select: { id: true, title: true, slug: true } },
     },
     orderBy: { createdAt: 'desc' },
   });

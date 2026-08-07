@@ -3,10 +3,28 @@ import { CreateJourneyInput } from './journey.validation';
 import { AppError } from '../../errors/AppError';
 import { ApprovalStatus } from '../../db';
 
-export const getApprovedJourneys = async () => {
+export const getApprovedJourneys = async (page?: number, limit?: number) => {
+  const take = limit && limit > 0 ? limit : undefined;
+  const skip = page && limit && page > 0 ? (page - 1) * limit : undefined;
+
   return db.journey.findMany({
     where: { status: 'APPROVED' },
-    include: {
+    take,
+    skip,
+    select: {
+      id: true,
+      title: true,
+      shortDesc: true,
+      image: true,
+      duration: true,
+      budget: true,
+      price: true,
+      district: true,
+      category: true,
+      companyName: true,
+      rating: true,
+      status: true,
+      createdAt: true,
       author: { select: { id: true, name: true, avatar: true } }
     },
     orderBy: { createdAt: 'desc' }
@@ -43,9 +61,27 @@ export const updateJourneyStatus = async (id: string, status: ApprovalStatus) =>
   });
 };
 
-export const getAllJourneys = async () => {
+export const getAllJourneys = async (page?: number, limit?: number) => {
+  const take = limit && limit > 0 ? limit : undefined;
+  const skip = page && limit && page > 0 ? (page - 1) * limit : undefined;
+
   return db.journey.findMany({
-    include: {
+    take,
+    skip,
+    select: {
+      id: true,
+      title: true,
+      shortDesc: true,
+      image: true,
+      duration: true,
+      budget: true,
+      price: true,
+      district: true,
+      category: true,
+      companyName: true,
+      rating: true,
+      status: true,
+      createdAt: true,
       author: { select: { id: true, name: true, avatar: true } }
     },
     orderBy: { createdAt: 'desc' }

@@ -2,7 +2,7 @@ import { prisma as db } from '../../db';
 import { CreateProductInput } from './marketplace.validation';
 import { AppError } from '../../errors/AppError';
 
-export const getAllProducts = async (category?: string, status?: string) => {
+export const getAllProducts = async (category?: string, status?: string, page?: number, limit?: number) => {
   const whereClause: any = {};
   if (category) {
     whereClause.category = category;
@@ -16,8 +16,27 @@ export const getAllProducts = async (category?: string, status?: string) => {
     whereClause.status = 'APPROVED';
   }
 
+  const take = limit && limit > 0 ? limit : undefined;
+  const skip = page && limit && page > 0 ? (page - 1) * limit : undefined;
+
   return db.marketplaceProduct.findMany({
     where: whereClause,
+    take,
+    skip,
+    select: {
+      id: true,
+      businessName: true,
+      productName: true,
+      category: true,
+      image: true,
+      description: true,
+      contact: true,
+      email: true,
+      status: true,
+      publicId: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     orderBy: { createdAt: 'desc' }
   });
 };

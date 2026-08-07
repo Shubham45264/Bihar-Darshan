@@ -6,11 +6,6 @@ export const getUserById = async (id: string) => {
   const user = await db.user.findUnique({
     where: { id },
     include: {
-      communityPosts: {
-        include: {
-          community: true
-        }
-      },
       journeys: true,
       galleryItems: true,
       categoryStories: true,

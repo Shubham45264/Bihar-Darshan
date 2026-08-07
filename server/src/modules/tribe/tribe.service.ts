@@ -7,6 +7,22 @@ import { deleteFromCloudinary } from '../../utils/cloudinary';
 export const getAllTribes = async (includeInactive = false) => {
   return db.tribe.findMany({
     where: includeInactive ? {} : { isActive: true },
+    select: {
+      id: true,
+      hindiName: true,
+      englishName: true,
+      shortDesc: true,
+      image: true,
+      leftTitle: true,
+      leftDesc: true,
+      rightTitle: true,
+      rightDesc: true,
+      bottomDesc: true,
+      isActive: true,
+      isFeatured: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     orderBy: [{ isFeatured: 'desc' }, { englishName: 'asc' }],
   });
 };

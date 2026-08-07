@@ -272,62 +272,6 @@ exports.Prisma.TribalArticleScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.CommunityScalarFieldEnum = {
-  id: 'id',
-  slug: 'slug',
-  name: 'name',
-  shortDescription: 'shortDescription',
-  description: 'description',
-  bannerImageUrl: 'bannerImageUrl',
-  logoImageUrl: 'logoImageUrl',
-  category: 'category',
-  rules: 'rules',
-  postsCount: 'postsCount',
-  membersCount: 'membersCount',
-  isActive: 'isActive',
-  isFeatured: 'isFeatured',
-  status: 'status',
-  createdBy: 'createdBy',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.CommunityMemberScalarFieldEnum = {
-  id: 'id',
-  communityId: 'communityId',
-  userId: 'userId',
-  role: 'role',
-  joinedAt: 'joinedAt'
-};
-
-exports.Prisma.CommunityPostScalarFieldEnum = {
-  id: 'id',
-  title: 'title',
-  content: 'content',
-  likes: 'likes',
-  replies: 'replies',
-  views: 'views',
-  viewedBy: 'viewedBy',
-  mediaUrl: 'mediaUrl',
-  mediaType: 'mediaType',
-  pollData: 'pollData',
-  authorId: 'authorId',
-  communityId: 'communityId',
-  status: 'status',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
-exports.Prisma.PostCommentScalarFieldEnum = {
-  id: 'id',
-  content: 'content',
-  postId: 'postId',
-  authorId: 'authorId',
-  parentId: 'parentId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.JourneyScalarFieldEnum = {
   id: 'id',
   title: 'title',
@@ -560,12 +504,6 @@ exports.ApprovalStatus = exports.$Enums.ApprovalStatus = {
   REJECTED: 'REJECTED'
 };
 
-exports.CommunityRole = exports.$Enums.CommunityRole = {
-  OWNER: 'OWNER',
-  MODERATOR: 'MODERATOR',
-  MEMBER: 'MEMBER'
-};
-
 exports.MediaType = exports.$Enums.MediaType = {
   IMAGE: 'IMAGE',
   VIDEO: 'VIDEO'
@@ -582,10 +520,6 @@ exports.Prisma.ModelName = {
   TribeVideo: 'TribeVideo',
   Personality: 'Personality',
   TribalArticle: 'TribalArticle',
-  Community: 'Community',
-  CommunityMember: 'CommunityMember',
-  CommunityPost: 'CommunityPost',
-  PostComment: 'PostComment',
   Journey: 'Journey',
   GalleryItem: 'GalleryItem',
   MarketplaceProduct: 'MarketplaceProduct',

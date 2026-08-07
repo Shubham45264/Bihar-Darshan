@@ -6,7 +6,9 @@ import * as validation from './gallery.validation';
 
 export const getApprovedGalleryItems = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const category = req.query.category as string;
-  const items = await galleryService.getApprovedGalleryItems(category);
+  const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+  const items = await galleryService.getApprovedGalleryItems(category, page, limit);
   sendSuccess(res, 200, 'Gallery items fetched successfully', { items });
 });
 

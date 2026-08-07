@@ -14,6 +14,8 @@ server/.env
 
 # Logs
 *.log
+logs/
+server/logs/
 
 # OS files
 .DS_Store

@@ -186,7 +186,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
       // 6. Direct User Relations from DB Profile
       const journeys = dbUser?.journeys || [];
       const galleryItems = dbUser?.galleryItems || [];
-      const communityPosts = dbUser?.communityPosts || [];
       const userCategoryStories = dbUser?.categoryStories || [];
 
       const mappedJourneys: UserPostItem[] = journeys.map((j: any) => ({
@@ -213,17 +212,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         rejectionReason: g.rejectionReason
       }));
 
-      const mappedCommunityPosts: UserPostItem[] = communityPosts.map((cp: any) => ({
-        id: cp.id,
-        title: cp.title,
-        date: new Date(cp.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-        views: `${cp.views ?? 0} Views`,
-        category: cp.community?.name || "Community",
-        status: cp.status === "APPROVED" ? "published" : cp.status === "REJECTED" ? "rejected" : "pending",
-        image: cp.mediaUrl || "/images/culture/hero-artwork.png",
-        type: "journey",
-        rejectionReason: cp.rejectionReason
-      }));
+
 
       const mappedUserCategoryStories: UserPostItem[] = userCategoryStories.map((cs: any) => ({
         id: cs.id,
@@ -268,7 +257,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         ...mappedUserCategoryStories,
         ...mappedJourneys,
         ...mappedGallery,
-        ...mappedCommunityPosts,
         ...culturePosts,
         ...personalityPosts,
         ...videoPosts,
@@ -306,7 +294,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         totalPosts: publishedCount,
         pendingPosts: pendingCount,
         rejectedPosts: rejectedCount,
-        communitiesJoined: dbUser?.communityMemberships?.length || 0,
+        communitiesJoined: 0,
         badgesEarned: dbUser?.badges || 0,
       });
 
