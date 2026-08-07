@@ -3,6 +3,7 @@ import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
+import compression from 'compression';
 import rateLimit from 'express-rate-limit';
 import { env } from './config/env';
 import { globalErrorHandler } from './middlewares/error.middleware';
@@ -13,7 +14,6 @@ import { userRoutes } from './modules/user/user.route';
 import { districtRoutes } from './modules/district/district.route';
 import { discoverRoutes } from './modules/discover/discover.route';
 import { cultureRoutes } from './modules/culture/culture.route';
-import { communityRoutes } from './modules/community/community.route';
 import { journeyRoutes } from './modules/journey/journey.route';
 import { galleryRoutes } from './modules/gallery/gallery.route';
 import { marketplaceRoutes } from './modules/marketplace/marketplace.route';
@@ -60,6 +60,15 @@ app.use('/api', limiter);
 app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
+app.use(compression());
+
+// Cache-Control Header Middleware for GET API requests
+app.use('/api/v1', (req: Request, res: Response, next: NextFunction) => {
+  if (req.method === 'GET' && !req.path.includes('/admin') && !req.path.includes('/auth') && !req.path.includes('/users/profile')) {
+    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600, stale-while-revalidate=1200');
+  }
+  next();
+});
 
 // Logging
 if (env.NODE_ENV === 'development') {
@@ -80,7 +89,6 @@ app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/districts', districtRoutes);
 app.use('/api/v1/discover', discoverRoutes);
 app.use('/api/v1/culture', cultureRoutes);
-app.use('/api/v1/community', communityRoutes);
 app.use('/api/v1/journeys', journeyRoutes);
 app.use('/api/v1/gallery', galleryRoutes);
 app.use('/api/v1/marketplace', marketplaceRoutes);

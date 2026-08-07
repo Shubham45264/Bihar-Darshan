@@ -3,7 +3,7 @@ import { CreateDiscoverInput, UpdateDiscoverInput } from './discover.validation'
 import { AppError } from '../../errors/AppError';
 import { DiscoverCategory } from '../../db';
 
-export const getAllDiscoverItems = async (category?: string, status?: string) => {
+export const getAllDiscoverItems = async (category?: string, status?: string, page?: number, limit?: number) => {
   const whereClause: any = {};
   if (category) {
     whereClause.category = category;
@@ -17,8 +17,28 @@ export const getAllDiscoverItems = async (category?: string, status?: string) =>
     whereClause.status = 'APPROVED';
   }
 
+  const take = limit && limit > 0 ? limit : undefined;
+  const skip = page && limit && page > 0 ? (page - 1) * limit : undefined;
+
   return db.discoverItem.findMany({
     where: whereClause,
+    take,
+    skip,
+    select: {
+      id: true,
+      title: true,
+      category: true,
+      image: true,
+      description: true,
+      featured: true,
+      author: true,
+      district: true,
+      status: true,
+      videoUrl: true,
+      publicId: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     orderBy: { createdAt: 'desc' },
   });
 };

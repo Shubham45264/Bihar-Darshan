@@ -4,9 +4,23 @@ import { AppError } from '../../errors/AppError';
 
 export const getAllDistricts = async () => {
   return db.district.findMany({
-    include: {
-      seasonalVisits: true,
-      topAttractions: true,
+    select: {
+      id: true,
+      name: true,
+      image: true,
+      tagline: true,
+      introduction: true,
+      topTouristName: true,
+      topTouristDetails: true,
+      topAttractions: {
+        select: {
+          id: true,
+          name: true,
+          image: true,
+          shortDescription: true,
+          rating: true,
+        }
+      }
     },
     orderBy: { name: 'asc' },
   });

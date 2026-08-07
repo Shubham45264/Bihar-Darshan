@@ -9,8 +9,10 @@ import { DiscoverCategory } from '../../db';
 export const getAllDiscoverItems = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const category = req.query.category as string;
   const status = req.query.status as string;
+  const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
 
-  const items = await discoverService.getAllDiscoverItems(category, status);
+  const items = await discoverService.getAllDiscoverItems(category, status, page, limit);
   sendSuccess(res, 200, 'Discover items fetched successfully', { items });
 });
 

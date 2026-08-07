@@ -129,38 +129,15 @@ const Gallery = () => {
       link: `/tribe/${t.tribe.toLowerCase().replace(/\\s+/g, '-')}`
     }));
 
-    // Map Communities
-    const communityTabItems: ExtendedGalleryItem[] = communities.filter(c => c.image).map(c => {
-      const memberCount = parseInt((c.members || '').toString().replace(/[^0-9]/g, ''), 10) || 0;
-      const postCount = parseInt((c.posts || '').toString().replace(/[^0-9]/g, ''), 10) || 0;
-      return {
-        id: baseId++,
-        title: c.name,
-        image: c.image || "",
-        mediaType: "photo" as const,
-        category: "Community" as const,
-        photographer: "Official Bihar Darshan",
-        likes: memberCount,
-        views: memberCount * 2,
-        comments: postCount,
-        uploadDate: new Date().toISOString(),
-        location: "Bihar",
-        aspectRatio: "landscape" as const,
-        source: "official" as const,
-        link: `/community/${c.id}`
-      };
-    });
-
     return [
       ...community,
       ...officialGallery,
       ...districtItems,
       ...tourismItems,
       ...cultureItems,
-      ...tribeItems,
-      ...communityTabItems
+      ...tribeItems
     ];
-  }, [gallerySubmissions, galleryData, allDistricts, featuredTrips, cultureData, tribalArticles, communities]);
+  }, [gallerySubmissions, galleryData, allDistricts, featuredTrips, cultureData, tribalArticles]);
 
   // Filter + Sort logic
   const filteredItems = useMemo(() => {

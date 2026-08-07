@@ -5,7 +5,9 @@ import * as journeyService from './journey.service';
 import * as validation from './journey.validation';
 
 export const getApprovedJourneys = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const journeys = await journeyService.getApprovedJourneys();
+  const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+  const journeys = await journeyService.getApprovedJourneys(page, limit);
   sendSuccess(res, 200, 'Journeys fetched successfully', { journeys });
 });
 

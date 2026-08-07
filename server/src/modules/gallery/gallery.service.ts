@@ -3,13 +3,28 @@ import { CreateGalleryItemInput } from './gallery.validation';
 import { AppError } from '../../errors/AppError';
 import { ApprovalStatus } from '../../db';
 
-export const getApprovedGalleryItems = async (category?: string) => {
+export const getApprovedGalleryItems = async (category?: string, page?: number, limit?: number) => {
+  const take = limit && limit > 0 ? limit : undefined;
+  const skip = page && limit && page > 0 ? (page - 1) * limit : undefined;
+
   return db.galleryItem.findMany({
     where: {
       status: 'APPROVED',
       ...(category && { category })
     },
-    include: {
+    take,
+    skip,
+    select: {
+      id: true,
+      title: true,
+      description: true,
+      image: true,
+      category: true,
+      likes: true,
+      views: true,
+      status: true,
+      publicId: true,
+      createdAt: true,
       uploader: { select: { id: true, name: true, avatar: true } }
     },
     orderBy: { createdAt: 'desc' }

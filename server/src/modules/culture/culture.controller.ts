@@ -35,7 +35,9 @@ export const deleteTribe = catchAsync(async (req: Request, res: Response, next: 
 // Personalities
 export const getAllPersonalities = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const status = req.query.status as string;
-  const personalities = await cultureService.getAllPersonalities(status);
+  const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+  const personalities = await cultureService.getAllPersonalities(status, page, limit);
   sendSuccess(res, 200, 'Personalities fetched successfully', { personalities });
 });
 

@@ -7,7 +7,9 @@ import * as validation from './marketplace.validation';
 export const getAllProducts = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const category = req.query.category as string;
   const status = req.query.status as string;
-  const products = await marketplaceService.getAllProducts(category, status);
+  const page = req.query.page ? parseInt(req.query.page as string, 10) : undefined;
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : undefined;
+  const products = await marketplaceService.getAllProducts(category, status, page, limit);
   sendSuccess(res, 200, 'Products fetched successfully', { products });
 });
 

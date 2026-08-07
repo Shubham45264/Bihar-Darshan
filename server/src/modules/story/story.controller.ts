@@ -16,13 +16,15 @@ export const createStory = async (req: Request, res: Response, next: NextFunctio
 
 export const getStories = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    const { categorySlug, subcategorySlug, categoryId, subcategoryId, status } = req.query;
+    const { categorySlug, subcategorySlug, categoryId, subcategoryId, status, page, limit } = req.query;
     const stories = await storyService.getStories({
       categorySlug: categorySlug as string,
       subcategorySlug: subcategorySlug as string,
       categoryId: categoryId as string,
       subcategoryId: subcategoryId as string,
       status: status as string,
+      page: page ? parseInt(page as string, 10) : undefined,
+      limit: limit ? parseInt(limit as string, 10) : undefined,
     });
     res.status(200).json({
       success: true,

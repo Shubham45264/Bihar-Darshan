@@ -24,7 +24,7 @@ export const deleteTribe = async (id: string) => {
 };
 
 // --- Personalities ---
-export const getAllPersonalities = async (status?: string) => {
+export const getAllPersonalities = async (status?: string, page?: number, limit?: number) => {
   const whereClause: any = {};
   if (status) {
     const upperStatus = status.toUpperCase();
@@ -34,8 +34,27 @@ export const getAllPersonalities = async (status?: string) => {
   } else {
     whereClause.status = 'APPROVED';
   }
+
+  const take = limit && limit > 0 ? limit : undefined;
+  const skip = page && limit && page > 0 ? (page - 1) * limit : undefined;
+
   return db.personality.findMany({
     where: whereClause,
+    take,
+    skip,
+    select: {
+      id: true,
+      name: true,
+      category: true,
+      district: true,
+      description: true,
+      imageUrl: true,
+      author: true,
+      status: true,
+      publicId: true,
+      createdAt: true,
+      updatedAt: true,
+    },
     orderBy: { createdAt: 'desc' },
   });
 };
