@@ -391,7 +391,7 @@ const SubcategoryFeed = () => {
           title={activeShareStory.title}
           description={activeShareStory.content ? activeShareStory.content.slice(0, 120) + '...' : undefined}
           url={`${window.location.origin}/story/${activeShareStory.id}`}
-          imageUrl={activeShareStory.mediaUrl || (Array.isArray(activeShareStory.mediaFiles) && activeShareStory.mediaFiles[0]?.url)}
+          imageUrl={activeShareStory.mediaUrl || (Array.isArray(activeShareStory.mediaFiles) ? activeShareStory.mediaFiles[0]?.url : undefined)}
           storyId={activeShareStory.id}
           onShareRecorded={handleShareRecorded}
         />

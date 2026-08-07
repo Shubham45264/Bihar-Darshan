@@ -119,11 +119,11 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     >
       <div className="max-w-[1920px] mx-auto px-4 sm:px-8 flex items-center justify-between">
         <div className="flex items-center gap-3 shrink-0">
-          <Link to="/">
+          <Link to="/" className="flex items-center gap-2">
             <img
               src={logo}
               alt="Bihar Darshan"
-              className={`h-9 lg:h-11 w-auto object-contain transition-all duration-500 drop-shadow-md ${!showWhiteBg && (forceWhiteText || !forceDarkText) ? "brightness-0 invert drop-shadow-[0_2px_4px_rgba(0,0,0,0.5)]" : ""
+              className={`h-12 sm:h-14 lg:h-16 w-auto object-contain transition-all duration-500 drop-shadow-md ${!showWhiteBg && (forceWhiteText || !forceDarkText) ? "brightness-0 invert drop-shadow-[0_2px_6px_rgba(0,0,0,0.6)]" : ""
                 }`}
             />
           </Link>

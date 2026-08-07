@@ -6,6 +6,8 @@ import {
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 
+import logo from '../../assets/new-logo.png';
+
 const sidebarItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
   { label: 'Categories', path: '/admin/categories', icon: Layers },
@@ -57,11 +59,16 @@ const AdminLayout = () => {
       `}>
         {/* Header */}
         <div className="flex items-center justify-between px-4 h-16 border-b border-white/[0.06] shrink-0">
-          <div className="flex items-center gap-3">
-            <div className="w-9 h-9 rounded-lg bg-gradient-to-br from-[#EAB308] to-[#EAB308] flex items-center justify-center shrink-0">
-              <Shield size={18} className="text-black" />
-            </div>
-            {sidebarOpen && <span className="text-white font-bold text-sm tracking-tight">Bihar Darshan</span>}
+          <div className="flex items-center gap-3 overflow-hidden">
+            <img
+              src={logo}
+              alt="Bihar Darshan"
+              className="h-10 w-auto object-contain shrink-0"
+              style={{
+                filter: "brightness(0) saturate(100%) invert(84%) sepia(25%) saturate(700%) hue-rotate(350deg) brightness(96%) contrast(90%)"
+              }}
+            />
+            {sidebarOpen && <span className="text-white font-bold text-sm tracking-tight whitespace-nowrap">Bihar Darshan</span>}
           </div>
           <button
             onClick={() => setSidebarOpen(!sidebarOpen)}

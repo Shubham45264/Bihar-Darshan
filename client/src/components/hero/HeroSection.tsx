@@ -76,10 +76,11 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
           transition={{ duration: 1, ease: [0.25, 0.46, 0.45, 0.94] }}
           className="max-w-5xl text-left"
         >
-          {/* Eyebrow Header */}
-          <div className="flex items-center gap-2.5 text-[#D4A017] uppercase tracking-[0.2em] text-xs sm:text-sm font-bold font-sans mb-4 drop-shadow-[0_2px_4px_rgba(0,0,0,0.8)]">
-            <Landmark size={18} className="text-[#D4A017] shrink-0" />
-            <span>{settings?.heroEyebrow || "The Cradle of Enlightenment. The Soul of Heritage."}</span>
+          {/* Decorative Heritage Line & Motif Design (Above Main Title) */}
+          <div className="flex items-center gap-3 mb-6 max-w-sm">
+            <div className="h-[1px] w-24 sm:w-32 bg-gradient-to-r from-transparent to-[#D4A017]" />
+            <div className="text-[#D4A017] text-xs opacity-90">❖</div>
+            <div className="h-[1px] w-24 sm:w-32 bg-gradient-to-r from-[#D4A017] to-transparent" />
           </div>
 
           {/* Main Title (Strict 2-Line Arrangement with Crisp Shadow) */}
