@@ -1,16 +1,16 @@
 import { z } from 'zod';
 
 export const seasonRowSchema = z.object({
-  season: z.string().min(1),
-  months: z.string().min(1),
-  weather: z.string().min(1),
-  whyVisit: z.string().min(1),
+  season: z.string().optional().nullable().default(''),
+  months: z.string().optional().nullable().default(''),
+  weather: z.string().optional().nullable().default(''),
+  whyVisit: z.string().optional().nullable().default(''),
 });
 
 export const topAttractionSchema = z.object({
-  name: z.string().min(1),
-  image: z.string().min(1, 'Image path or URL is required'),
-  description: z.string().min(1),
+  name: z.string().optional().nullable().default(''),
+  image: z.string().optional().nullable().default(''),
+  description: z.string().optional().nullable().default(''),
   shortDescription: z.string().optional().nullable(),
   rating: z.number().min(0).max(5).optional().nullable(),
   bestTime: z.string().optional().nullable(),
@@ -18,7 +18,7 @@ export const topAttractionSchema = z.object({
 
 export const createDistrictSchema = z.object({
   name: z.string().min(1, 'Name is required'),
-  image: z.string().min(1, 'Image path or URL is required'),
+  image: z.string().optional().default('/images/culture/hero-artwork.png'),
   tagline: z.string().optional().nullable(),
   introduction: z.string().optional().nullable(),
   richHistory: z.string().optional().nullable(),

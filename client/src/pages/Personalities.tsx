@@ -259,7 +259,7 @@ export default function Personalities() {
                 />
 
                 {/* Gradient Overlay */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/45 to-transparent transition-opacity duration-300 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 group-hover:via-black/70 transition-all duration-300 pointer-events-none" />
 
                 {/* Category Tag */}
                 <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-sm px-3 py-1.5 rounded-xl text-[10px] font-black uppercase text-slate-900 shadow-lg z-25 flex items-center gap-1.5">
@@ -267,32 +267,30 @@ export default function Personalities() {
                   {person.category}
                 </div>
 
-                {/* Slide Up Content */}
-                <div className="absolute inset-0 flex flex-col justify-end p-6 z-20">
-                  <div className="transform translate-y-[85px] group-hover:translate-y-0 transition-transform duration-300 ease-out">
-                    {/* District */}
-                    <div className="flex items-center gap-1.5 text-orange-400 text-xs font-black uppercase mb-1.5">
-                      <MapPin size={12} fill="currentColor" />
-                      <span>{person.district}, Bihar</span>
-                    </div>
+                {/* Content Overlay — always visible title & metadata */}
+                <div className="absolute inset-x-0 bottom-0 p-6 z-20 flex flex-col justify-end">
+                  {/* District */}
+                  <div className="flex items-center gap-1.5 text-orange-400 text-xs font-black uppercase mb-1 drop-shadow">
+                    <MapPin size={12} fill="currentColor" />
+                    <span>{person.district}, Bihar</span>
+                  </div>
 
-                    {/* Name */}
-                    <h3 className="text-xl font-serif font-black text-white leading-tight mb-2">
-                      {person.name}
-                    </h3>
+                  {/* Name */}
+                  <h3 className="text-xl font-serif font-black text-white leading-tight drop-shadow-md">
+                    {person.name}
+                  </h3>
 
-                    {/* Description (Visible on Hover - 3-4 lines) */}
-                    <p className="text-[12px] text-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-75 line-clamp-4 leading-relaxed mb-4">
-                      {person.description}
-                    </p>
+                  {/* Description (Expands on Hover) */}
+                  <p className="text-[12px] text-white/90 leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-28 group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 ease-out line-clamp-4">
+                    {person.description}
+                  </p>
 
-                    {/* Action link indicator */}
-                    <div className="flex items-center justify-between pointer-events-none mt-2">
-                      <span className="inline-block text-[11px] font-black tracking-wider uppercase text-orange-400 group-hover:underline">
-                        Read Bio →
-                      </span>
-                      <Quote size={18} className="text-white/20 group-hover:text-orange-500/30 transition-colors" />
-                    </div>
+                  {/* Action link indicator */}
+                  <div className="flex items-center justify-between pointer-events-none mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+                    <span className="inline-block text-[11px] font-black tracking-wider uppercase text-orange-400 group-hover:underline">
+                      Read Bio →
+                    </span>
+                    <Quote size={18} className="text-white/20 group-hover:text-orange-500/30 transition-colors" />
                   </div>
                 </div>
               </Link>

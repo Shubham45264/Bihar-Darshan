@@ -4,23 +4,9 @@ import { AppError } from '../../errors/AppError';
 
 export const getAllDistricts = async () => {
   return db.district.findMany({
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      tagline: true,
-      introduction: true,
-      topTouristName: true,
-      topTouristDetails: true,
-      topAttractions: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          shortDescription: true,
-          rating: true,
-        }
-      }
+    include: {
+      seasonalVisits: true,
+      topAttractions: true,
     },
     orderBy: { name: 'asc' },
   });
@@ -45,15 +31,35 @@ export const getDistrictById = async (id: string) => {
 export const createDistrict = async (data: CreateDistrictInput) => {
   const { seasonalVisits, topAttractions, ...districtData } = data;
 
+  const validSeasons = seasonalVisits
+    ?.filter((sv) => sv.season || sv.months || sv.weather || sv.whyVisit)
+    .map((sv) => ({
+      season: sv.season || 'Season',
+      months: sv.months || '',
+      weather: sv.weather || '',
+      whyVisit: sv.whyVisit || '',
+    }));
+
+  const validAttractions = topAttractions
+    ?.filter((ta) => ta.name || ta.image || ta.description)
+    .map((ta) => {
+      const desc = ta.description || ta.shortDescription || '';
+      return {
+        name: ta.name || 'Attraction',
+        image: ta.image || '/images/culture/hero-artwork.png',
+        description: desc,
+        shortDescription: ta.shortDescription || (desc ? desc.slice(0, 100) : null),
+        rating: ta.rating || 4.5,
+        bestTime: ta.bestTime || 'Throughout the year',
+      };
+    });
+
   return db.district.create({
     data: {
       ...districtData,
-      seasonalVisits: {
-        create: seasonalVisits,
-      },
-      topAttractions: {
-        create: topAttractions,
-      },
+      image: districtData.image || '/images/culture/hero-artwork.png',
+      seasonalVisits: validSeasons && validSeasons.length > 0 ? { create: validSeasons } : undefined,
+      topAttractions: validAttractions && validAttractions.length > 0 ? { create: validAttractions } : undefined,
     },
     include: {
       seasonalVisits: true,
@@ -68,11 +74,16 @@ export const updateDistrict = async (id: string, data: UpdateDistrictInput) => {
   // Verify existence
   await getDistrictById(id);
 
+  const updateFields: any = { ...districtData };
+  if (!updateFields.image) {
+    delete updateFields.image;
+  }
+
   return db.$transaction(async (tx) => {
     // 1. Update main district columns
     await tx.district.update({
       where: { id },
-      data: districtData,
+      data: updateFields,
     });
 
     // 2. Re-create seasonalVisits if provided
@@ -80,15 +91,18 @@ export const updateDistrict = async (id: string, data: UpdateDistrictInput) => {
       await tx.seasonRow.deleteMany({
         where: { districtId: id },
       });
-      if (seasonalVisits.length > 0) {
+      const validSeasons = seasonalVisits
+        .filter((sv) => sv.season || sv.months || sv.weather || sv.whyVisit)
+        .map((sv) => ({
+          season: sv.season || 'Season',
+          months: sv.months || '',
+          weather: sv.weather || '',
+          whyVisit: sv.whyVisit || '',
+          districtId: id,
+        }));
+      if (validSeasons.length > 0) {
         await tx.seasonRow.createMany({
-          data: seasonalVisits.map((sv) => ({
-            season: sv.season,
-            months: sv.months,
-            weather: sv.weather,
-            whyVisit: sv.whyVisit,
-            districtId: id,
-          })),
+          data: validSeasons,
         });
       }
     }
@@ -98,17 +112,23 @@ export const updateDistrict = async (id: string, data: UpdateDistrictInput) => {
       await tx.topAttraction.deleteMany({
         where: { districtId: id },
       });
-      if (topAttractions.length > 0) {
-        await tx.topAttraction.createMany({
-          data: topAttractions.map((ta) => ({
-            name: ta.name,
-            image: ta.image,
-            description: ta.description,
-            shortDescription: ta.shortDescription || ta.description.slice(0, 100),
+      const validAttractions = topAttractions
+        .filter((ta) => ta.name || ta.image || ta.description)
+        .map((ta) => {
+          const desc = ta.description || ta.shortDescription || '';
+          return {
+            name: ta.name || 'Attraction',
+            image: ta.image || '/images/culture/hero-artwork.png',
+            description: desc,
+            shortDescription: ta.shortDescription || (desc ? desc.slice(0, 100) : null),
             rating: ta.rating || 4.5,
             bestTime: ta.bestTime || 'Throughout the year',
             districtId: id,
-          })),
+          };
+        });
+      if (validAttractions.length > 0) {
+        await tx.topAttraction.createMany({
+          data: validAttractions,
         });
       }
     }

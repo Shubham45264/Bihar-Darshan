@@ -217,6 +217,9 @@ const ArticleAdminRow = ({ article, isUserArticle, onDelete, onPreview, onApprov
 const AdminTribes = () => {
   const { tribes, updateTribes, refreshTribes, tribalArticles: allArticles, deleteTribalArticle: deleteArticle, addTribalArticle: addArticle, updateArticleStatus } = useAdminData();
   const [searchTerm, setSearchTerm] = useState('');
+  const [mainTab, setMainTab] = useState<'tribes' | 'articles' | 'videos'>('tribes');
+  const [articleFilter, setArticleFilter] = useState<'pending' | 'user' | 'admin' | 'all'>('pending');
+  const [articleSearch, setArticleSearch] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<TribeItem | null>(null);
@@ -395,14 +398,55 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
 
   const getSectionCardCount = (tabKey: string) => getCurrentSection(tabKey).cards.length;
 
-  // ── Articles helpers ─────────────────────────────────────────────
-  const tribeArticles = allArticles.filter(
-    a => a.tribe.toLowerCase() === (editingItem?.englishName || '').toLowerCase()
-  );
+  // ── Global Article Moderation Helpers ─────────────────────────────────────
+  const globalPendingArticles = allArticles.filter(a => a.status === 'PENDING');
+  const globalUserArticles = allArticles.filter(a => a.status === 'APPROVED' && a.author !== 'Bihar Darshan Editorial' && a.author !== 'Admin');
+  const globalAdminArticles = allArticles.filter(a => a.status === 'APPROVED' && (a.author === 'Bihar Darshan Editorial' || a.author === 'Admin'));
+
+  const filteredGlobalArticles = allArticles.filter(a => {
+    if (articleFilter === 'pending' && a.status !== 'PENDING') return false;
+    if (articleFilter === 'user' && (a.status !== 'APPROVED' || a.author === 'Bihar Darshan Editorial' || a.author === 'Admin')) return false;
+    if (articleFilter === 'admin' && (a.status !== 'APPROVED' || (a.author !== 'Bihar Darshan Editorial' && a.author !== 'Admin'))) return false;
+    if (articleSearch.trim()) {
+      const q = articleSearch.toLowerCase();
+      return a.headline.toLowerCase().includes(q) || a.tribe.toLowerCase().includes(q) || a.author.toLowerCase().includes(q);
+    }
+    return true;
+  });
+
+  // ── Single Tribe Modal Article Helpers ────────────────────────────────────
+  const tribeArticles = allArticles.filter(a => {
+    if (!editingItem?.englishName) return true;
+    const curTribe = editingItem.englishName.toLowerCase().replace(/\s+tribe$/i, '').trim();
+    const artTribe = (a.tribe || '').toLowerCase().replace(/\s+tribe$/i, '').trim();
+    return artTribe === curTribe || artTribe.includes(curTribe) || curTribe.includes(artTribe);
+  });
   const pendingArticles = tribeArticles.filter(a => a.status === 'PENDING');
   const publishedArticles = tribeArticles.filter(a => a.status === 'APPROVED');
   const userArticles = tribeArticles.filter(a => a.status === 'APPROVED' && a.author !== 'Bihar Darshan Editorial' && a.author !== 'Admin');
   const adminArticles = tribeArticles.filter(a => a.status === 'APPROVED' && (a.author === 'Bihar Darshan Editorial' || a.author === 'Admin'));
+
+  const handleApproveArticle = async (id: string) => {
+    try {
+      await updateArticleStatus(id, 'APPROVED');
+      if (previewArticle?.id === id) {
+        setPreviewArticle(null);
+      }
+    } catch (err) {
+      console.error('Failed to approve article:', err);
+    }
+  };
+
+  const handleRejectArticle = async (id: string) => {
+    try {
+      await updateArticleStatus(id, 'REJECTED');
+      if (previewArticle?.id === id) {
+        setPreviewArticle(null);
+      }
+    } catch (err) {
+      console.error('Failed to reject article:', err);
+    }
+  };
 
   const handleDeleteArticleClick = (article: TribalArticle) => {
     setArticleToDelete(article);
@@ -443,40 +487,167 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
 
   return (
     <div className="space-y-6">
-      <AdminTable
-        title="Tribal Groups"
-        description="Manage information about indigenous tribes — hero section, all 5 cultural sections, and more."
-        data={filteredData}
-        searchTerm={searchTerm}
-        onSearchChange={setSearchTerm}
-        onAdd={handleAdd}
-        onEdit={handleEdit}
-        onDelete={handleDeleteClick}
-        columns={[
-          {
-            header: 'Image',
-            accessor: (item) => (
-              <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 shrink-0 p-1">
-                <img src={item.image} alt={item.englishName} className="w-full h-full object-contain filter invert" />
-              </div>
-            )
-          },
-          { header: 'English Name', accessor: 'englishName', className: 'font-semibold text-white' },
-          { header: 'Hindi Name', accessor: 'hindiName' },
-          {
-            header: 'Sections',
-            accessor: (item) => {
-              const n = item.cultureSections?.length || 0;
-              return (
-                <span className={`text-xs px-2 py-1 rounded-full font-medium ${n >= 5 ? 'bg-green-500/20 text-green-400' : n > 0 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-white/10 text-white/40'}`}>
-                  {n >= 5 ? '✓ All sections' : n > 0 ? `${n}/5 sections` : 'Mock data'}
-                </span>
-              );
-            }
-          },
-          { header: 'Description', accessor: (item) => <span className="truncate max-w-xs block">{item.shortDesc}</span> },
-        ]}
-      />
+      {/* ── Main View Navigation Bar ── */}
+      <div className="flex flex-wrap items-center gap-2 p-1.5 bg-white/5 border border-white/10 rounded-2xl w-fit">
+        <button
+          type="button"
+          onClick={() => setMainTab('tribes')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            mainTab === 'tribes' ? 'bg-[#EAB308] text-black shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <User size={15} /> Tribal Groups ({tribes.length})
+        </button>
+        <button
+          type="button"
+          onClick={() => setMainTab('articles')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            mainTab === 'articles' ? 'bg-[#EAB308] text-black shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Newspaper size={15} /> Article Moderation
+          {globalPendingArticles.length > 0 && (
+            <span className="px-2.5 py-0.5 rounded-full bg-yellow-400 text-black text-[10px] font-black animate-pulse">
+              {globalPendingArticles.length} PENDING
+            </span>
+          )}
+        </button>
+      </div>
+
+      {/* ── TRIBES TABLE VIEW ── */}
+      {mainTab === 'tribes' && (
+        <AdminTable
+          title="Tribal Groups"
+          description="Manage information about indigenous tribes — hero section, all 5 cultural sections, and more."
+          data={filteredData}
+          searchTerm={searchTerm}
+          onSearchChange={setSearchTerm}
+          onAdd={handleAdd}
+          onEdit={handleEdit}
+          onDelete={handleDeleteClick}
+          columns={[
+            {
+              header: 'Image',
+              accessor: (item) => (
+                <div className="w-12 h-12 rounded-lg overflow-hidden bg-white/5 shrink-0 p-1">
+                  <img src={item.image} alt={item.englishName} className="w-full h-full object-contain filter invert" />
+                </div>
+              )
+            },
+            { header: 'English Name', accessor: 'englishName', className: 'font-semibold text-white' },
+            { header: 'Hindi Name', accessor: 'hindiName' },
+            {
+              header: 'Sections',
+              accessor: (item) => {
+                const n = item.cultureSections?.length || 0;
+                return (
+                  <span className={`text-xs px-2 py-1 rounded-full font-medium ${n >= 5 ? 'bg-green-500/20 text-green-400' : n > 0 ? 'bg-yellow-500/20 text-yellow-400' : 'bg-white/10 text-white/40'}`}>
+                    {n >= 5 ? '✓ All sections' : n > 0 ? `${n}/5 sections` : 'Mock data'}
+                  </span>
+                );
+              }
+            },
+            { header: 'Description', accessor: (item) => <span className="truncate max-w-xs block">{item.shortDesc}</span> },
+          ]}
+        />
+      )}
+
+      {/* ── ARTICLE MODERATION VIEW ── */}
+      {mainTab === 'articles' && (
+        <div className="p-6 bg-white/[0.02] border border-white/10 rounded-2xl space-y-6">
+          <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-white/10 pb-4">
+            <div>
+              <h3 className="text-lg font-bold text-white flex items-center gap-2">
+                <Newspaper className="text-[#EAB308]" size={20} />
+                Tribal Article Moderation & Approvals
+              </h3>
+              <p className="text-xs text-white/50 mt-1">
+                Review user-submitted stories and articles. Approved articles become live on the website immediately.
+              </p>
+            </div>
+            <div className="flex items-center gap-2">
+              <span className="text-xs text-white/60 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
+                Pending: <strong className="text-yellow-400 font-bold">{globalPendingArticles.length}</strong>
+              </span>
+              <span className="text-xs text-white/60 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
+                Approved User: <strong className="text-orange-400 font-bold">{globalUserArticles.length}</strong>
+              </span>
+              <span className="text-xs text-white/60 bg-white/5 px-3 py-1.5 rounded-xl border border-white/10">
+                Admin: <strong className="text-blue-400 font-bold">{globalAdminArticles.length}</strong>
+              </span>
+            </div>
+          </div>
+
+          {/* Filter Bar */}
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
+            <div className="flex items-center gap-2">
+              <button
+                type="button"
+                onClick={() => setArticleFilter('pending')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  articleFilter === 'pending'
+                    ? 'bg-yellow-500 text-black shadow-md'
+                    : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Pending Approvals ({globalPendingArticles.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setArticleFilter('user')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  articleFilter === 'user'
+                    ? 'bg-orange-500 text-black shadow-md'
+                    : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                Approved User Submissions ({globalUserArticles.length})
+              </button>
+              <button
+                type="button"
+                onClick={() => setArticleFilter('all')}
+                className={`px-3 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                  articleFilter === 'all'
+                    ? 'bg-white/20 text-white shadow-md'
+                    : 'bg-white/5 text-white/60 hover:text-white hover:bg-white/10'
+                }`}
+              >
+                All Articles ({allArticles.length})
+              </button>
+            </div>
+
+            <input
+              type="text"
+              placeholder="Search headline, tribe, author..."
+              value={articleSearch}
+              onChange={(e) => setArticleSearch(e.target.value)}
+              className="bg-white/5 border border-white/10 rounded-xl px-3 py-1.5 text-xs text-white placeholder-white/40 focus:outline-none focus:border-[#EAB308] w-full sm:w-64"
+            />
+          </div>
+
+          {/* Articles List */}
+          {filteredGlobalArticles.length === 0 ? (
+            <div className="py-16 text-center border border-dashed border-white/10 rounded-2xl bg-white/[0.01]">
+              <Newspaper size={36} className="mx-auto mb-3 text-white/20" />
+              <p className="text-white/40 text-sm">No articles match the current filter.</p>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              {filteredGlobalArticles.map((article) => (
+                <ArticleAdminRow
+                  key={article.id}
+                  article={article}
+                  onDelete={() => handleDeleteArticleClick(article)}
+                  onPreview={() => setPreviewArticle(article)}
+                  onApprove={() => updateArticleStatus(article.id, 'APPROVED')}
+                  onReject={() => updateArticleStatus(article.id, 'REJECTED')}
+                  isUserArticle={article.author !== 'Bihar Darshan Editorial' && article.author !== 'Admin'}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
 
       {/* ── Edit / Add Modal ── */}
       <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
@@ -923,21 +1094,26 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         itemName={articleToDelete?.headline ? `"${articleToDelete.headline.substring(0, 60)}${articleToDelete.headline.length > 60 ? '...' : ''}"` : 'this article'}
       />
 
-      {/* Article preview modal (read-only) */}
+      {/* Article preview modal (read-only with approve actions) */}
       {previewArticle && (
         <div className="fixed inset-0 z-[200] flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm" onClick={() => setPreviewArticle(null)}>
-          <div className="relative w-full max-w-2xl max-h-[80vh] overflow-y-auto bg-[#0f0f18] rounded-2xl border border-white/10 shadow-2xl p-6" onClick={e => e.stopPropagation()}>
+          <div className="relative w-full max-w-2xl max-h-[85vh] overflow-y-auto bg-[#0f0f18] rounded-2xl border border-white/10 shadow-2xl p-6" onClick={e => e.stopPropagation()}>
             <button onClick={() => setPreviewArticle(null)} className="absolute top-4 right-4 text-white/40 hover:text-white">✕</button>
             <div className="flex items-center gap-2 mb-3">
-              {previewArticle.source === 'user'
-                ? <span className="text-[10px] px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 font-bold uppercase tracking-wider">User Submission</span>
-                : <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold uppercase tracking-wider">Admin Article</span>
-              }
+              {previewArticle.status === 'PENDING' ? (
+                <span className="text-[10px] px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 font-bold uppercase tracking-wider border border-yellow-500/30">
+                  Pending Approval
+                </span>
+              ) : previewArticle.author !== 'Bihar Darshan Editorial' && previewArticle.author !== 'Admin' ? (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-orange-500/20 text-orange-400 font-bold uppercase tracking-wider">User Submission</span>
+              ) : (
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/20 text-blue-400 font-bold uppercase tracking-wider">Admin Article</span>
+              )}
               <span className="text-[10px] text-white/40">{previewArticle.tribe}</span>
             </div>
             <h2 className="text-lg font-bold text-white mb-3 leading-snug">{previewArticle.headline}</h2>
             {previewArticle.image && (
-              <img src={previewArticle.image} alt={previewArticle.headline} className="w-full h-40 object-cover rounded-xl mb-4" onError={e => { e.currentTarget.style.display = 'none'; }} />
+              <img src={previewArticle.image} alt={previewArticle.headline} className="w-full h-44 object-cover rounded-xl mb-4" onError={e => { e.currentTarget.style.display = 'none'; }} />
             )}
             <p className="text-white/70 text-sm leading-relaxed mb-4">{previewArticle.description}</p>
             <div className="flex flex-wrap gap-3 text-xs text-white/40">
@@ -949,6 +1125,26 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
             {previewArticle.tags?.length > 0 && (
               <div className="flex flex-wrap gap-1.5 mt-3">
                 {previewArticle.tags.map(tag => <span key={tag} className="text-[10px] px-2 py-0.5 rounded-full bg-white/10 text-white/50">{tag}</span>)}
+              </div>
+            )}
+
+            {/* Approval / Rejection Actions for Pending Articles */}
+            {previewArticle.status === 'PENDING' && (
+              <div className="flex items-center justify-end gap-3 pt-4 border-t border-white/10 mt-5">
+                <button
+                  type="button"
+                  onClick={() => handleRejectArticle(previewArticle.id)}
+                  className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 font-bold text-xs transition-all border border-red-500/30 flex items-center gap-1.5 cursor-pointer"
+                >
+                  <X size={14} /> Reject
+                </button>
+                <button
+                  type="button"
+                  onClick={() => handleApproveArticle(previewArticle.id)}
+                  className="px-5 py-2 rounded-xl bg-green-500 hover:bg-green-600 text-black font-extrabold text-xs transition-all shadow-lg flex items-center gap-1.5 cursor-pointer"
+                >
+                  <Check size={14} /> Approve & Publish Live
+                </button>
               </div>
             )}
           </div>

@@ -73,10 +73,19 @@ export const deleteTribe = async (id: string) => {
 };
 
 // --- Tribal Articles ---
-export const getApprovedArticles = async (tribeName?: string) => {
-  const whereClause: any = { status: 'APPROVED' };
-  if (tribeName) {
-    whereClause.tribe = { equals: tribeName, mode: 'insensitive' };
+export const getApprovedArticles = async (tribeName?: string, status?: string) => {
+  const whereClause: any = {};
+  if (status && status !== 'all') {
+    whereClause.status = status;
+  } else if (!status) {
+    whereClause.status = 'APPROVED';
+  }
+  if (tribeName && tribeName.trim().length > 0) {
+    const sanitizedTribe = tribeName.replace(/\s+tribe$/i, '').trim();
+    whereClause.OR = [
+      { tribe: { equals: tribeName, mode: 'insensitive' } },
+      { tribe: { contains: sanitizedTribe, mode: 'insensitive' } },
+    ];
   }
   return db.tribalArticle.findMany({
     where: whereClause,
@@ -117,10 +126,34 @@ export const approveArticle = async (id: string) => {
   const article = await db.tribalArticle.findUnique({ where: { id } });
   if (!article) throw new AppError('Article not found', 404);
   
-  return db.tribalArticle.update({
+  const updatedArticle = await db.tribalArticle.update({
     where: { id },
     data: { status: 'APPROVED' },
   });
+
+  if (article.author) {
+    try {
+      const user = await db.user.findFirst({
+        where: {
+          OR: [
+            { email: { equals: article.author, mode: 'insensitive' } },
+            { name: { equals: article.author, mode: 'insensitive' } },
+          ]
+        }
+      });
+
+      if (user) {
+        await db.user.update({
+          where: { id: user.id },
+          data: { rewardPoints: { increment: 15 } }
+        });
+      }
+    } catch (err) {
+      console.error('Failed to increment user reward points:', err);
+    }
+  }
+
+  return updatedArticle;
 };
 
 export const rejectArticle = async (id: string) => {

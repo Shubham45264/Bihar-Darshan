@@ -147,6 +147,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
 const AdminCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [pendingStories, setPendingStories] = useState<Story[]>([]);
+  const [pendingArticles, setPendingArticles] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTab, setActiveTab] = useState<'categories' | 'pendingStories'>('categories');
@@ -206,9 +207,68 @@ const AdminCategories = () => {
     }
   };
 
+  const fetchPendingArticles = async () => {
+    try {
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/tribes/admin/articles/pending`, {
+        headers: { ...authHeaders }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPendingArticles(data.data.articles || []);
+      }
+    } catch (err) {
+      console.error('Error fetching pending articles:', err);
+    }
+  };
+
+  const handleApproveArticle = async (articleId: string) => {
+    try {
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/tribes/articles/${articleId}/approve`, {
+        method: 'PUT',
+        headers: { ...authHeaders }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPendingArticles((prev) => prev.filter((a) => a.id !== articleId));
+        fetchPendingArticles();
+        alert('✅ Article approved! Author awarded +15 points.');
+      } else {
+        alert(data.message || 'Failed to approve article');
+      }
+    } catch (err) {
+      console.error('Error approving article:', err);
+      alert('An error occurred while approving the article.');
+    }
+  };
+
+  const handleRejectArticle = async (articleId: string) => {
+    if (!window.confirm('Are you sure you want to reject this article?')) return;
+    try {
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/tribes/articles/${articleId}/reject`, {
+        method: 'PUT',
+        headers: { ...authHeaders }
+      });
+      const data = await res.json();
+      if (data.success) {
+        setPendingArticles((prev) => prev.filter((a) => a.id !== articleId));
+        fetchPendingArticles();
+        alert('Article rejected.');
+      } else {
+        alert(data.message || 'Failed to reject article');
+      }
+    } catch (err) {
+      console.error('Error rejecting article:', err);
+      alert('An error occurred while rejecting the article.');
+    }
+  };
+
   useEffect(() => {
     fetchCategories();
     fetchPendingStories();
+    fetchPendingArticles();
   }, []);
 
   // Category Handlers
@@ -458,9 +518,9 @@ const AdminCategories = () => {
         >
           <FileText size={16} />
           <span>Pending Verifications</span>
-          {pendingStories.length > 0 && (
+          {(pendingStories.length + pendingArticles.length) > 0 && (
             <span className="bg-amber-500 text-black font-extrabold text-[10px] px-2 py-0.5 rounded-full ml-1 animate-pulse">
-              {pendingStories.length}
+              {pendingStories.length + pendingArticles.length}
             </span>
           )}
         </button>
@@ -594,71 +654,133 @@ const AdminCategories = () => {
       )}
 
       {activeTab === 'pendingStories' && (
-        <div className="space-y-4">
-          {pendingStories.length === 0 ? (
+        <div className="space-y-6">
+          {pendingStories.length === 0 && pendingArticles.length === 0 ? (
             <div className="text-center py-16 bg-white/5 border border-white/10 rounded-2xl">
               <Check className="mx-auto text-emerald-400 mb-2" size={32} />
               <p className="text-white font-medium">All caught up!</p>
-              <p className="text-white/50 text-xs mt-1">No user stories waiting for verification.</p>
+              <p className="text-white/50 text-xs mt-1">No user stories or articles waiting for verification.</p>
             </div>
           ) : (
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {pendingStories.map((story) => (
-                <div key={story.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden p-5 space-y-4">
-                  {Array.isArray((story as any).mediaFiles) && (story as any).mediaFiles.length > 0 ? (
-                    <div className="grid grid-cols-3 gap-2">
-                      {(story as any).mediaFiles.map((m: any, idx: number) => (
-                        <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-black">
-                          {m.type === 'VIDEO' || m.type === 'video' ? (
-                            <video src={m.url} className="w-full h-full object-cover" />
-                          ) : (
-                            <img src={m.url} alt={`Media ${idx + 1}`} className="w-full h-full object-cover" />
-                          )}
-                          <span className="absolute bottom-1 left-1 bg-black/80 text-white text-[9px] font-bold px-1 rounded uppercase">
-                            {m.type || 'Media'}
-                          </span>
+            <div className="space-y-6">
+              {/* Pending Tribal Articles Section */}
+              {pendingArticles.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-xs font-bold text-yellow-400 uppercase tracking-widest flex items-center gap-2">
+                    <FileText size={14} /> Pending Tribal Articles ({pendingArticles.length}) — (+15 Points to Author on Approval)
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {pendingArticles.map((article) => (
+                      <div key={article.id} className="bg-white/5 border border-yellow-500/30 rounded-2xl overflow-hidden p-5 space-y-4">
+                        {article.image && (
+                          <img
+                            src={article.image}
+                            alt={article.headline}
+                            className="w-full h-44 object-cover rounded-xl border border-white/10"
+                          />
+                        )}
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="bg-yellow-500/20 text-yellow-300 text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border border-yellow-500/30">
+                              Tribal Article → {article.tribe}
+                            </span>
+                            {article.location && <span className="text-white/40 text-xs ml-auto">{article.location}</span>}
+                          </div>
+                          <h3 className="text-lg font-bold text-white leading-snug">{article.headline}</h3>
+                          <p className="text-white/70 text-xs mt-2 line-clamp-3 leading-relaxed">{article.description}</p>
+                          <div className="mt-3 flex items-center justify-between text-xs text-white/40 border-t border-white/10 pt-3">
+                            <span>Submitted by: <strong className="text-white">{article.author}</strong></span>
+                            <span>{article.publishedDate || 'Recently'}</span>
+                          </div>
                         </div>
-                      ))}
-                    </div>
-                  ) : story.mediaUrl ? (
-                    <img
-                      src={story.mediaUrl}
-                      alt={story.title}
-                      className="w-full h-48 object-cover rounded-xl border border-white/10"
-                    />
-                  ) : null}
-                  <div>
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="bg-[#EAB308]/20 text-[#EAB308] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border border-[#EAB308]/30">
-                        {story.category?.title || 'Category'} → {story.subcategory?.title || 'Subcategory'}
-                      </span>
-                      <span className="text-white/40 text-xs ml-auto">{story.district}</span>
-                    </div>
-                    <h3 className="text-lg font-bold text-white">{story.title}</h3>
-                    <p className="text-white/70 text-xs mt-2 line-clamp-3 leading-relaxed">{story.content}</p>
-                    <div className="mt-3 flex items-center justify-between text-xs text-white/40 border-t border-white/10 pt-3">
-                      <span>Submitted by: <strong className="text-white">{story.authorName}</strong></span>
-                      <span>{new Date(story.createdAt).toLocaleDateString()}</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3 pt-2">
-                    <button
-                      onClick={() => handleApproveStory(story.id)}
-                      className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
-                    >
-                      <Check size={16} />
-                      <span>Approve & Publish</span>
-                    </button>
-                    <button
-                      onClick={() => handleRejectStory(story.id)}
-                      className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-semibold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all border border-red-500/30 cursor-pointer"
-                    >
-                      <X size={16} />
-                      <span>Reject</span>
-                    </button>
+                        <div className="flex items-center gap-3 pt-2">
+                          <button
+                            onClick={() => handleApproveArticle(article.id)}
+                            className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer shadow-lg"
+                          >
+                            <Check size={16} />
+                            <span>Approve & Award +15 Points</span>
+                          </button>
+                          <button
+                            onClick={() => handleRejectArticle(article.id)}
+                            className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-semibold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all border border-red-500/30 cursor-pointer"
+                          >
+                            <X size={16} />
+                            <span>Reject</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
                 </div>
-              ))}
+              )}
+
+              {/* Pending Category Stories Section */}
+              {pendingStories.length > 0 && (
+                <div className="space-y-3 pt-4">
+                  <h3 className="text-xs font-bold text-emerald-400 uppercase tracking-widest flex items-center gap-2">
+                    <Layers size={14} /> Pending Category Stories ({pendingStories.length})
+                  </h3>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    {pendingStories.map((story) => (
+                      <div key={story.id} className="bg-white/5 border border-white/10 rounded-2xl overflow-hidden p-5 space-y-4">
+                        {Array.isArray((story as any).mediaFiles) && (story as any).mediaFiles.length > 0 ? (
+                          <div className="grid grid-cols-3 gap-2">
+                            {(story as any).mediaFiles.map((m: any, idx: number) => (
+                              <div key={idx} className="relative aspect-square rounded-xl overflow-hidden border border-white/10 bg-black">
+                                {m.type === 'VIDEO' || m.type === 'video' ? (
+                                  <video src={m.url} className="w-full h-full object-cover" />
+                                ) : (
+                                  <img src={m.url} alt={`Media ${idx + 1}`} className="w-full h-full object-cover" />
+                                )}
+                                <span className="absolute bottom-1 left-1 bg-black/80 text-white text-[9px] font-bold px-1 rounded uppercase">
+                                  {m.type || 'Media'}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : story.mediaUrl ? (
+                          <img
+                            src={story.mediaUrl}
+                            alt={story.title}
+                            className="w-full h-48 object-cover rounded-xl border border-white/10"
+                          />
+                        ) : null}
+                        <div>
+                          <div className="flex items-center gap-2 mb-1">
+                            <span className="bg-[#EAB308]/20 text-[#EAB308] text-[10px] font-bold px-2 py-0.5 rounded-md uppercase border border-[#EAB308]/30">
+                              {story.category?.title || 'Category'} → {story.subcategory?.title || 'Subcategory'}
+                            </span>
+                            <span className="text-white/40 text-xs ml-auto">{story.district}</span>
+                          </div>
+                          <h3 className="text-lg font-bold text-white">{story.title}</h3>
+                          <p className="text-white/70 text-xs mt-2 line-clamp-3 leading-relaxed">{story.content}</p>
+                          <div className="mt-3 flex items-center justify-between text-xs text-white/40 border-t border-white/10 pt-3">
+                            <span>Submitted by: <strong className="text-white">{story.authorName}</strong></span>
+                            <span>{new Date(story.createdAt).toLocaleDateString()}</span>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-3 pt-2">
+                          <button
+                            onClick={() => handleApproveStory(story.id)}
+                            className="flex-1 bg-emerald-500 hover:bg-emerald-600 text-white font-semibold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all cursor-pointer"
+                          >
+                            <Check size={16} />
+                            <span>Approve & Publish</span>
+                          </button>
+                          <button
+                            onClick={() => handleRejectStory(story.id)}
+                            className="flex-1 bg-red-500/20 hover:bg-red-500/30 text-red-400 font-semibold py-2 rounded-xl text-xs flex items-center justify-center gap-1.5 transition-all border border-red-500/30 cursor-pointer"
+                          >
+                            <X size={16} />
+                            <span>Reject</span>
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
         </div>

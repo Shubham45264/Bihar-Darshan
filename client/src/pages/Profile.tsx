@@ -77,7 +77,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         fetch(`${API_BASE_URL}/discover?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/culture/personalities?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/tribes/videos/all`).then(r => r.json()).catch(() => null),
-        fetch(`${API_BASE_URL}/tribes/articles`).then(r => r.json()).catch(() => null)
+        fetch(`${API_BASE_URL}/tribes/articles?status=all`).then(r => r.json()).catch(() => null)
       ]);
 
       const dbUser = profileRes?.success && profileRes.data?.user ? profileRes.data.user : null;
@@ -280,8 +280,10 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
       const pendingCount = deduplicatedPosts.filter(p => p.status === 'pending').length;
       const rejectedCount = deduplicatedPosts.filter(p => p.status === 'rejected').length;
 
-      // Award 10 points for every accepted/approved contribution (images, videos, posts)
-      const acceptedPoints = publishedCount * 10;
+      // Award 15 points for every accepted tribal article, and 10 points for other approved contributions
+      const publishedArticlesCount = deduplicatedPosts.filter(p => p.status === 'published' && p.type === 'article').length;
+      const publishedOtherCount = deduplicatedPosts.filter(p => p.status === 'published' && p.type !== 'article').length;
+      const acceptedPoints = (publishedArticlesCount * 15) + (publishedOtherCount * 10);
       const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints);
 
       setProfile({
