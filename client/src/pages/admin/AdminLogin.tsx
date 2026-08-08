@@ -4,6 +4,8 @@ import { Lock, Eye, EyeOff, Shield, Mail } from 'lucide-react';
 import { signInWithEmailAndPassword } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
 
+import logo from '../../assets/new-logo.png';
+
 const AdminLogin = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -42,12 +44,17 @@ const AdminLogin = () => {
       </div>
 
       <div className={`relative w-full max-w-md transition-all duration-700 ${isUnlocking ? 'scale-95 opacity-0 translate-y-8' : ''}`}>
-        {/* Logo / Shield */}
+        {/* Logo Header */}
         <div className="flex flex-col items-center mb-8">
-          <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br from-[#EAB308] to-[#EAB308] flex items-center justify-center shadow-2xl shadow-[#EAB308]/20 transition-all duration-500 ${isUnlocking ? 'rotate-[360deg] scale-0' : ''}`}>
-            <Shield size={36} className="text-black" />
-          </div>
-          <h1 className="font-display font-bold text-white text-2xl font-bold mt-6 tracking-tight">Admin Panel</h1>
+          <img
+            src={logo}
+            alt="Bihar Darshan"
+            className={`h-24 w-auto object-contain mb-4 drop-shadow-[0_4px_12px_rgba(234,179,8,0.2)] transition-all duration-500 ${isUnlocking ? 'scale-0' : ''}`}
+            style={{
+              filter: "brightness(0) saturate(100%) invert(84%) sepia(25%) saturate(700%) hue-rotate(350deg) brightness(96%) contrast(90%)"
+            }}
+          />
+          <h1 className="font-display font-bold text-white text-2xl tracking-tight">Admin Panel</h1>
           <p className="text-white/40 text-sm mt-1">Bihar Darshan Content Management</p>
         </div>
 

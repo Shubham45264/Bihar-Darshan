@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import * as storyController from './story.controller';
+import { authenticate, restrictTo } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
@@ -13,12 +14,12 @@ router.post('/:id/dislike', storyController.toggleDislike);
 router.post('/:id/share', storyController.incrementShares);
 
 // Admin Approval/Rejection routes (supports PUT & PATCH)
-router.put('/:id/approve', storyController.approveStory);
-router.patch('/:id/approve', storyController.approveStory);
+router.put('/:id/approve', authenticate, restrictTo('ADMIN'), storyController.approveStory);
+router.patch('/:id/approve', authenticate, restrictTo('ADMIN'), storyController.approveStory);
 
-router.put('/:id/reject', storyController.rejectStory);
-router.patch('/:id/reject', storyController.rejectStory);
+router.put('/:id/reject', authenticate, restrictTo('ADMIN'), storyController.rejectStory);
+router.patch('/:id/reject', authenticate, restrictTo('ADMIN'), storyController.rejectStory);
 
-router.delete('/:id', storyController.deleteStory);
+router.delete('/:id', authenticate, restrictTo('ADMIN'), storyController.deleteStory);
 
 export const storyRoutes = router;

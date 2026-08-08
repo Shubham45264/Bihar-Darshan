@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useLocation } from "react-router-dom";
-import { Camera, MapPin, Sparkles, User, Tag, FileText, Upload, CheckCircle2, Heart, Send, X, Plus } from "lucide-react";
+import { Camera, MapPin, Sparkles, User, Tag, FileText, Upload, CheckCircle2, Heart, Send, X, Plus, ArrowLeft } from "lucide-react";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "../lib/firebase";
 import Navbar from "../components/layout/Navbar";
@@ -77,10 +77,12 @@ const ShareStory = () => {
   }, []);
 
   // Fetch Categories from Backend API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/categories?status=APPROVED');
+        const res = await fetch(`${API_BASE_URL}/categories?status=APPROVED&_t=${Date.now()}`, { cache: 'no-store' });
         const data = await res.json();
         if (data.success && data.data?.categories) {
           const cats = data.data.categories as Category[];
@@ -297,7 +299,22 @@ const ShareStory = () => {
       <Navbar forceWhiteText={true} />
 
       <main className="share-story-content-container">
-        <div className="share-story-card-panel">
+        <div className="share-story-card-panel relative">
+          {/* Back Navigation Button */}
+          <button
+            type="button"
+            onClick={() => {
+              if (window.history.length > 1) {
+                navigate(-1);
+              } else {
+                navigate("/");
+              }
+            }}
+            className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 hover:bg-white/10 border border-white/10 text-white/80 hover:text-[#D4A017] hover:border-[#D4A017]/30 text-xs font-bold uppercase tracking-wider transition-all duration-200 cursor-pointer mb-6 sm:absolute sm:top-8 sm:left-8 sm:mb-0 group shadow-md"
+          >
+            <ArrowLeft size={16} className="transition-transform group-hover:-translate-x-1" />
+            <span>Back</span>
+          </button>
 
           <div className="share-story-form-section animate-slide-down">
             <div className="form-header-center">

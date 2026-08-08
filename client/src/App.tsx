@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import Home from './pages/Home';
 import Districts from './pages/Districts';
 import Discover from './pages/Discover';
@@ -117,7 +117,7 @@ function App() {
               <Route index element={<AdminDashboard />} />
               <Route path="categories" element={<AdminCategories />} />
               <Route path="districts" element={<AdminDistricts />} />
-              <Route path="culture" element={<AdminCulture />} />
+              <Route path="culture" element={<Navigate to="/admin/categories" replace />} />
               <Route path="tourism" element={<AdminTourism />} />
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="marketplace" element={<AdminMarketplace />} />

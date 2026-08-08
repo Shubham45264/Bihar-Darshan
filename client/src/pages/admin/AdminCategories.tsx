@@ -142,6 +142,8 @@ const AdminImageUploader = ({
   );
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 const AdminCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
   const [pendingStories, setPendingStories] = useState<Story[]>([]);
@@ -164,10 +166,20 @@ const AdminCategories = () => {
   const [subDesc, setSubDesc] = useState('');
   const [subImage, setSubImage] = useState('');
 
+  const getAuthHeaders = async () => {
+    const user = auth.currentUser;
+    const token = user ? await user.getIdToken() : '';
+    return token ? { 'Authorization': `Bearer ${token}` } : {};
+  };
+
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/v1/categories?status=ALL');
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/categories?status=ALL&_t=${Date.now()}`, {
+        cache: 'no-store',
+        headers: { ...authHeaders }
+      });
       const data = await res.json();
       if (data.success) {
         setCategories(data.data.categories || []);
@@ -181,7 +193,10 @@ const AdminCategories = () => {
 
   const fetchPendingStories = async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/stories?status=PENDING');
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/stories?status=PENDING`, {
+        headers: { ...authHeaders }
+      });
       const data = await res.json();
       if (data.success) {
         setPendingStories(data.data.stories || []);
@@ -220,14 +235,15 @@ const AdminCategories = () => {
     }
 
     try {
+      const authHeaders = await getAuthHeaders();
       const url = editingCategory
-        ? `http://localhost:5000/api/v1/categories/${editingCategory.id}`
-        : 'http://localhost:5000/api/v1/categories';
+        ? `${API_BASE_URL}/categories/${editingCategory.id}`
+        : `${API_BASE_URL}/categories`;
       const method = editingCategory ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({
           title: catTitle.trim(),
           description: catDesc.trim(),
@@ -252,7 +268,11 @@ const AdminCategories = () => {
   const handleDeleteCategory = async (id: string) => {
     if (!window.confirm('Are you sure you want to delete this category and all its subcategories?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/categories/${id}`, { method: 'DELETE' });
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
+        method: 'DELETE',
+        headers: { ...authHeaders }
+      });
       const data = await res.json();
       if (data.success) {
         setCategories((prev) => prev.filter((cat) => cat.id !== id));
@@ -291,14 +311,15 @@ const AdminCategories = () => {
     }
 
     try {
+      const authHeaders = await getAuthHeaders();
       const url = editingSub
-        ? `http://localhost:5000/api/v1/categories/subcategories/${editingSub.id}`
-        : `http://localhost:5000/api/v1/categories/${selectedCatIdForSub}/subcategories`;
+        ? `${API_BASE_URL}/categories/subcategories/${editingSub.id}`
+        : `${API_BASE_URL}/categories/${selectedCatIdForSub}/subcategories`;
       const method = editingSub ? 'PUT' : 'POST';
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json' },
+        headers: { 'Content-Type': 'application/json', ...authHeaders },
         body: JSON.stringify({
           title: subTitle.trim(),
           description: subDesc.trim(),
@@ -322,8 +343,10 @@ const AdminCategories = () => {
   const handleDeleteSubcategory = async (subId: string) => {
     if (!window.confirm('Are you sure you want to delete this subcategory?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/categories/subcategories/${subId}`, {
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/categories/subcategories/${subId}`, {
         method: 'DELETE',
+        headers: { ...authHeaders }
       });
       const data = await res.json();
       if (data.success) {
@@ -346,8 +369,10 @@ const AdminCategories = () => {
   // Story Handlers
   const handleApproveStory = async (storyId: string) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${storyId}/approve`, {
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/stories/${storyId}/approve`, {
         method: 'PUT',
+        headers: { ...authHeaders }
       });
       const data = await res.json();
       if (data.success) {
@@ -367,8 +392,10 @@ const AdminCategories = () => {
   const handleRejectStory = async (storyId: string) => {
     if (!window.confirm('Are you sure you want to reject this story?')) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${storyId}/reject`, {
+      const authHeaders = await getAuthHeaders();
+      const res = await fetch(`${API_BASE_URL}/stories/${storyId}/reject`, {
         method: 'PUT',
+        headers: { ...authHeaders }
       });
       const data = await res.json();
       if (data.success) {

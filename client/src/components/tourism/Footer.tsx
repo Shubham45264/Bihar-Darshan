@@ -17,7 +17,7 @@ const Footer = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-16 mb-24">
           {/* Logo & Vision */}
           <div className="lg:col-span-1">
-            <img src={logo} alt="Bihar Darshan" className="h-16 mb-8 brightness-0" />
+            <img src={logo} alt="Bihar Darshan" className="h-20 lg:h-24 w-auto object-contain mb-6 drop-shadow-sm" />
             <p className="text-brand-dark/60 text-sm leading-relaxed mb-8 max-w-xs font-medium">
               Defining the future of luxury heritage tourism in Bihar. Our mission is to preserve tradition while delivering excellence.
             </p>

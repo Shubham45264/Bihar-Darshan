@@ -5,6 +5,8 @@ import { Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 
+import bgImage from '../assets/background.jpg';
+
 const BACKEND_URL = 'http://localhost:5000';
 
 /** Attempt to sync user with the backend. Does NOT throw — returns success flag. */
@@ -127,66 +129,66 @@ const LoginPage: React.FC = () => {
   };
 
   return (
-    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden font-sans">
+    <div className="relative min-h-screen w-full bg-[#0a0a0f] flex flex-col items-center justify-center pt-28 pb-12 sm:pt-32 sm:pb-16 lg:pt-36 lg:pb-20 font-sans overflow-x-hidden">
       <Navbar forceWhiteText={true} />
 
       {/* BACKGROUND IMAGE */}
       <div
-        className="absolute inset-0 z-0 transition-all duration-700"
+        className="fixed inset-0 pointer-events-none transition-all duration-700"
         style={{
-          backgroundImage: `url('src/assets/background.jpg')`,
+          backgroundImage: `url(${bgImage})`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
-          filter: 'blur(10px)',
-          transform: 'scale(1.1)'
+          filter: 'blur(12px)',
+          transform: 'scale(1.15)'
         }}
       />
 
-      <div className="absolute inset-0 bg-black/40 z-1" />
+      <div className="fixed inset-0 bg-black/50 pointer-events-none" />
 
       {/* MAIN INTERFACE CARD */}
-      <div className="relative z-10 w-full max-w-md p-6 mx-4">
-        <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2.5rem] shadow-2xl px-6 py-10 md:px-8 md:py-12 text-white transition-all duration-500">
+      <div className="relative z-10 w-full max-w-lg md:max-w-[520px] p-4 sm:p-6 mx-auto my-auto">
+        <div className="bg-white/10 backdrop-blur-2xl border border-white/20 rounded-[2.25rem] shadow-2xl px-6 py-7 sm:px-10 sm:py-9 text-white transition-all duration-500">
 
-          <div className="text-center mb-8">
-            <h2 className="text-3xl font-bold tracking-tight">
+          <div className="text-center mb-6">
+            <h2 className="text-2xl sm:text-3xl font-bold tracking-tight">
               {isLogin ? 'Welcome Back' : 'Join the Journey'}
             </h2>
-            <p className="text-gray-300 mt-2 text-sm md:text-base">
+            <p className="text-gray-300 mt-1.5 text-xs sm:text-sm">
               {isLogin ? 'Sign in to your account' : 'Create an account to explore Bihar'}
             </p>
           </div>
 
           {/* Inline Error Banner */}
           {error && (
-            <div className="flex items-start gap-3 bg-red-500/15 border border-red-500/30 text-red-300 text-sm rounded-xl px-4 py-3 mb-4 animate-in fade-in slide-in-from-top-1 duration-200">
+            <div className="flex items-start gap-3 bg-red-500/15 border border-red-500/30 text-red-300 text-sm rounded-xl px-4 py-2.5 mb-4 animate-in fade-in slide-in-from-top-1 duration-200">
               <AlertCircle size={16} className="mt-0.5 shrink-0 text-red-400" />
               <span>{error}</span>
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-3.5">
 
             {!isLogin && (
-              <div className="grid grid-cols-2 gap-4 animate-in fade-in slide-in-from-top-2 duration-300">
+              <div className="grid grid-cols-2 gap-3.5 animate-in fade-in slide-in-from-top-2 duration-300">
                 <div>
-                  <label className="block text-[10px] uppercase tracking-widest font-bold mb-1.5 ml-1 text-brand-gold">First Name</label>
+                  <label className="block text-[10px] uppercase tracking-widest font-bold mb-1 ml-1 text-brand-gold">First Name</label>
                   <input
                     type="text"
                     name="firstName"
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white text-sm"
                     placeholder="Rahul"
                     required
                   />
                 </div>
                 <div>
-                  <label className="block text-[10px] uppercase tracking-widest font-bold mb-1.5 ml-1 text-brand-gold">Last Name</label>
+                  <label className="block text-[10px] uppercase tracking-widest font-bold mb-1 ml-1 text-brand-gold">Last Name</label>
                   <input
                     type="text"
                     name="lastName"
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white"
+                    className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white text-sm"
                     placeholder="Kumar"
                     required
                   />
@@ -195,21 +197,21 @@ const LoginPage: React.FC = () => {
             )}
 
             <div>
-              <label className="block text-[10px] uppercase tracking-widest font-bold mb-1.5 ml-1 text-brand-gold">Email Address</label>
+              <label className="block text-[10px] uppercase tracking-widest font-bold mb-1 ml-1 text-brand-gold">Email Address</label>
               <input
                 type="email"
                 name="email"
                 onChange={handleInputChange}
-                className="w-full px-4 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white"
+                className="w-full px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white text-sm"
                 placeholder="name@example.com"
                 required
               />
             </div>
 
             {/* NEW PASSWORD FIELDS */}
-            <div className={`${!isLogin ? 'grid grid-cols-1 md:grid-cols-2 gap-4' : 'space-y-4'}`}>
+            <div className={`${!isLogin ? 'grid grid-cols-1 md:grid-cols-2 gap-3.5' : 'space-y-3.5'}`}>
               <div className="w-full relative">
-                <label className="block text-[10px] uppercase tracking-widest font-bold mb-1.5 ml-1 text-brand-gold">
+                <label className="block text-[10px] uppercase tracking-widest font-bold mb-1 ml-1 text-brand-gold">
                   {isLogin ? 'Password' : 'New Password'}
                 </label>
                 <div className="relative">
@@ -217,38 +219,38 @@ const LoginPage: React.FC = () => {
                     type={showPassword ? "text" : "password"}
                     name="newPassword"
                     onChange={handleInputChange}
-                    className="w-full px-4 pr-12 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white"
+                    className="w-full px-4 pr-11 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white text-sm"
                     placeholder="••••••••"
                     required
                   />
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-black transition-all focus:outline-none cursor-pointer shadow-sm"
+                    className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-black transition-all focus:outline-none cursor-pointer shadow-sm"
                   >
-                    {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                   </button>
                 </div>
               </div>
 
               {!isLogin && (
                 <div className="w-full relative animate-in fade-in slide-in-from-right-2 duration-300">
-                  <label className="block text-[10px] uppercase tracking-widest font-bold mb-1.5 ml-1 text-brand-gold">Confirm Password</label>
+                  <label className="block text-[10px] uppercase tracking-widest font-bold mb-1 ml-1 text-brand-gold">Confirm Password</label>
                   <div className="relative">
                     <input
                       type={showConfirmPassword ? "text" : "password"}
                       name="confirmPassword"
                       onChange={handleInputChange}
-                      className="w-full px-4 pr-12 py-3 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white"
+                      className="w-full px-4 pr-11 py-2.5 rounded-xl bg-white/5 border border-white/10 focus:border-brand-gold focus:ring-4 focus:ring-brand-gold/20 outline-none transition-all placeholder:text-gray-500 text-white text-sm"
                       placeholder="••••••••"
                       required
                     />
                     <button
                       type="button"
                       onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                      className="absolute right-3 top-1/2 -translate-y-1/2 w-8 h-8 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-black transition-all focus:outline-none cursor-pointer shadow-sm"
+                      className="absolute right-2.5 top-1/2 -translate-y-1/2 w-7 h-7 flex items-center justify-center rounded-full bg-white/90 hover:bg-white text-black transition-all focus:outline-none cursor-pointer shadow-sm"
                     >
-                      {showConfirmPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                      {showConfirmPassword ? <EyeOff size={15} /> : <Eye size={15} />}
                     </button>
                   </div>
                 </div>
@@ -256,7 +258,7 @@ const LoginPage: React.FC = () => {
             </div>
 
             {isLogin && (
-              <div className="flex items-center justify-end text-xs">
+              <div className="flex items-center justify-end text-xs pt-0.5">
                 <Link to="/forgot-password" className="text-brand-gold hover:text-amber-300 transition-colors font-medium">Forgot password?</Link>
               </div>
             )}
@@ -264,7 +266,7 @@ const LoginPage: React.FC = () => {
             <button
               type="submit"
               disabled={isLoading}
-              className="w-full py-4 px-4 bg-gold-dark hover:bg-accent-brown text-white font-bold rounded-2xl shadow-xl shadow-amber-950/40 transition-all active:scale-[0.97] mt-4 uppercase tracking-widest text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full py-3.5 px-4 bg-gold-dark hover:bg-accent-brown text-white font-bold rounded-2xl shadow-xl shadow-amber-950/40 transition-all active:scale-[0.97] mt-3 uppercase tracking-widest text-xs sm:text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <><Loader2 size={18} className="animate-spin" /> {isLogin ? 'Signing In...' : 'Creating Account...'}</>
@@ -273,9 +275,9 @@ const LoginPage: React.FC = () => {
               )}
             </button>
 
-            <div className="relative flex items-center py-5">
+            <div className="relative flex items-center py-3.5">
               <div className="flex-grow border-t border-white/10"></div>
-              <span className="flex-shrink-0 mx-4 text-white/40 text-xs font-semibold uppercase tracking-wider">Or continue with</span>
+              <span className="flex-shrink-0 mx-3 text-white/40 text-[11px] font-semibold uppercase tracking-wider">Or continue with</span>
               <div className="flex-grow border-t border-white/10"></div>
             </div>
 
@@ -283,7 +285,7 @@ const LoginPage: React.FC = () => {
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading}
-              className="w-full py-3.5 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-2xl transition-all active:scale-[0.97] flex items-center justify-center gap-3 cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-2xl transition-all active:scale-[0.97] flex items-center justify-center gap-2.5 text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />

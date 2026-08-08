@@ -55,6 +55,8 @@ const AdminGallery = () => {
   const confirmDelete = () => {
     if (itemToDelete) {
       updateGallery(gallery.filter(g => g.id !== itemToDelete.id));
+      setIsDeleteOpen(false);
+      setItemToDelete(null);
     }
   };
 

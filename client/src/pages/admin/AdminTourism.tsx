@@ -112,11 +112,13 @@ const AdminTourism = () => {
   const [journeysSearch, setJourneysSearch] = useState('');
   const [journeysTab, setJourneysTab] = useState<JourneyTab>('PENDING');
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
   const fetchJourneys = async () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch('http://localhost:5000/api/v1/journeys/admin/all', {
+      const res = await fetch(`${API_BASE_URL}/journeys/admin/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       const data = await res.json();
@@ -130,7 +132,7 @@ const AdminTourism = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/journeys/${id}/approve`, {
+      const res = await fetch(`${API_BASE_URL}/journeys/${id}/approve`, {
         method: 'PATCH', headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) setJourneys(prev => prev.map(j => j.id === id ? { ...j, status: 'APPROVED' } : j));
@@ -141,7 +143,7 @@ const AdminTourism = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/journeys/${id}/reject`, {
+      const res = await fetch(`${API_BASE_URL}/journeys/${id}/reject`, {
         method: 'PATCH', headers: { Authorization: `Bearer ${token}` }
       });
       if (res.ok) setJourneys(prev => prev.map(j => j.id === id ? { ...j, status: 'REJECTED' } : j));
@@ -305,11 +307,24 @@ const AdminTourism = () => {
   const handleDeleteClick = (item: TourTrip) => { setItemToDelete(item); setIsDeleteOpen(true); };
   const confirmDelete = async () => {
     if (!itemToDelete) return;
-    if ((itemToDelete as any)._isApprovedJourney) {
-      // Reject the community journey via API (removes from approved list)
-      await handleRejectJourney(itemToDelete.id);
-    } else {
-      updateTourism(tourism.filter(t => t.id !== itemToDelete.id));
+    try {
+      if ((itemToDelete as any)._isApprovedJourney) {
+        const user = auth.currentUser;
+        const token = user ? await user.getIdToken() : '';
+        await fetch(`${API_BASE_URL}/journeys/${itemToDelete.id}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${token}` }
+        });
+        setJourneys(prev => prev.filter(j => j.id !== itemToDelete.id));
+        await fetchJourneys();
+      } else {
+        updateTourism(tourism.filter(t => t.id !== itemToDelete.id));
+      }
+    } catch (err) {
+      console.error('Failed to delete journey:', err);
+    } finally {
+      setIsDeleteOpen(false);
+      setItemToDelete(null);
     }
   };
 
@@ -331,7 +346,7 @@ const AdminTourism = () => {
       try {
         const user = auth.currentUser;
         const token = user ? await user.getIdToken() : '';
-        await fetch(`http://localhost:5000/api/v1/journeys/${editingItem.id}`, {
+        await fetch(`${API_BASE_URL}/journeys/${editingItem.id}`, {
           method: 'PATCH',
           headers: { Authorization: `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify(merged),

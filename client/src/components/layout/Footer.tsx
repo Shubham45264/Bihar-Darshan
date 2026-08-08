@@ -50,9 +50,9 @@ const Footer = () => {
               <img
                 src={logo}
                 alt="Bihar Darshan"
-                className="h-[60px] w-auto object-contain"
+                className="h-20 lg:h-24 w-auto object-contain drop-shadow-[0_2px_8px_rgba(212,160,23,0.25)]"
                 style={{
-                  filter: "brightness(0) saturate(100%) invert(81%) sepia(19%) saturate(452%) hue-rotate(352deg) brightness(91%) contrast(87%)"
+                  filter: "brightness(0) saturate(100%) invert(84%) sepia(25%) saturate(700%) hue-rotate(350deg) brightness(96%) contrast(90%)"
                 }}
               />
             </div>

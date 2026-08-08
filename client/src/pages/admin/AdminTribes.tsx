@@ -242,11 +242,13 @@ const AdminTribes = () => {
   const [rejectingVideo, setRejectingVideo] = useState<any | null>(null);
   const [rejectionReasonText, setRejectionReasonText] = useState('');
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
   const loadPendingVideos = async () => {
     try {
       setIsFetchingPendingVideos(true);
       const token = await auth.currentUser?.getIdToken();
-      const res = await fetch('http://localhost:5000/api/v1/tribes/admin/videos/pending', {
+      const res = await fetch(`${API_BASE_URL}/tribes/admin/videos/pending`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -269,7 +271,7 @@ const AdminTribes = () => {
   const handleApproveAdminVideo = async (videoId: string) => {
     try {
       const token = await auth.currentUser?.getIdToken();
-      const res = await fetch(`http://localhost:5000/api/v1/tribes/admin/videos/${videoId}/approve`, {
+      const res = await fetch(`${API_BASE_URL}/tribes/admin/videos/${videoId}/approve`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -286,7 +288,7 @@ const AdminTribes = () => {
     if (!rejectingVideo) return;
     try {
       const token = await auth.currentUser?.getIdToken();
-      const res = await fetch(`http://localhost:5000/api/v1/tribes/admin/videos/${rejectingVideo.id}/reject`, {
+      const res = await fetch(`${API_BASE_URL}/tribes/admin/videos/${rejectingVideo.id}/reject`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -298,7 +300,7 @@ const AdminTribes = () => {
         setAdminPendingVideos(prev => prev.filter(v => v.id !== rejectingVideo.id));
         setRejectingVideo(null);
         setRejectionReasonText('');
-        alert('Video rejected. The rejection status and reason have been sent to the user profile.');
+        alert('Video submission rejected.');
       }
     } catch (err) {
       console.error('Failed to reject video:', err);
@@ -317,21 +319,13 @@ const AdminTribes = () => {
     return [...sections, ...missing];
   };
 
-  const handleAdd = () => {
-    setEditingItem(null);
-    setActiveTab('hero');
-    const defaultSections = Object.values(TAB_HEADING_MAP).map(heading => ({ heading, cards: [] }));
-    setFormData({ ...emptyForm, cultureSections: defaultSections });
-    setIsModalOpen(true);
-  };
+  const handleAdd = () => { setEditingItem(null); setFormData(emptyForm); setIsModalOpen(true); };
 
   const handleEdit = (item: TribeItem) => {
     setEditingItem(item);
-    setActiveTab('hero');
     let sections = item.cultureSections;
-    // Auto-populate from mock data if tribe has no custom sections saved
-    if (!sections || sections.length === 0) {
-      sections = getTribeCulturalSections(item.id, item.englishName);
+    if (typeof sections === 'string') {
+      try { sections = JSON.parse(sections); } catch (e) { sections = []; }
     }
     setFormData({ ...item, cultureSections: ensureAllSections(sections) });
     setIsModalOpen(true);
@@ -343,7 +337,7 @@ const AdminTribes = () => {
     if (itemToDelete) {
       try {
         const token = await auth.currentUser?.getIdToken();
-        const res = await fetch(`http://localhost:5000/api/v1/tribes/${itemToDelete.id}`, {
+        const res = await fetch(`${API_BASE_URL}/tribes/${itemToDelete.id}`, {
           method: 'DELETE',
           headers: { 'Authorization': `Bearer ${token}` }
         });
@@ -363,14 +357,14 @@ const AdminTribes = () => {
     try {
       const token = await auth.currentUser?.getIdToken();
       if (editingItem) {
-        await fetch(`http://localhost:5000/api/v1/tribes/${editingItem.id}`, {
+        await fetch(`${API_BASE_URL}/tribes/${editingItem.id}`, {
           method: 'PUT',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify(formData)
         });
       } else {
         const newId = formData.englishName?.toLowerCase().replace(/\s+/g, '') || `tribe-${Date.now()}`;
-        await fetch(`http://localhost:5000/api/v1/tribes`, {
+        await fetch(`${API_BASE_URL}/tribes`, {
           method: 'POST',
           headers: { 'Authorization': `Bearer ${token}`, 'Content-Type': 'application/json' },
           body: JSON.stringify({ ...formData, id: newId })

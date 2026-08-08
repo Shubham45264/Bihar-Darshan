@@ -44,10 +44,12 @@ const Discover = () => {
   const [selectedSubFilter, setSelectedSubFilter] = useState<string>('All');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
   const fetchCategories = async () => {
     try {
       setLoading(true);
-      const res = await fetch('http://localhost:5000/api/v1/categories?status=APPROVED');
+      const res = await fetch(`${API_BASE_URL}/categories?status=APPROVED&_t=${Date.now()}`, { cache: 'no-store' });
       const data = await res.json();
       if (data.success && data.data.categories) {
         setCategories(data.data.categories);

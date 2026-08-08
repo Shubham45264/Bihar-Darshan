@@ -17,8 +17,11 @@ const emptyForm: Partial<PersonalityItem> = {
   fullBio: '',
 };
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 const AdminPersonalities = () => {
-  const { personalities, refreshPersonalities, districts } = useAdminData();
+  const { personalities, refreshPersonalities } = useAdminData();
+  const { personalitySubmissions } = useContributions();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -30,10 +33,10 @@ const AdminPersonalities = () => {
   const [subView, setSubView] = useState<'approved' | 'pending'>('approved');
 
   // Filter items by status
-  const approvedPersonalities = personalities.filter(p => (p as any).status === 'APPROVED' || !(p as any).status);
-  const pendingPersonalities = personalities.filter(p => (p as any).status === 'PENDING');
+  const approvedItems = personalities.filter((p: any) => p.status === 'APPROVED' || !p.status);
+  const pendingItems = [...personalities.filter((p: any) => p.status === 'PENDING'), ...personalitySubmissions];
 
-  const activeDataList = subView === 'approved' ? approvedPersonalities : pendingPersonalities;
+  const activeDataList = subView === 'approved' ? approvedItems : pendingItems;
 
   const filteredData = activeDataList.filter(item =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||

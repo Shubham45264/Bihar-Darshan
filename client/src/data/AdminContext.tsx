@@ -22,6 +22,8 @@ import { type SiteSettings, defaultSiteSettings } from './siteSettingsDefaults';
 import { type PopularPlaceItem, defaultPopularPlaces } from './popularPlacesDefaults';
 import { mockTribes } from './mockTribes';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 // ── Tribe type (extracted from Tribals.tsx inline data) ──
 export interface TribeItem {
   id: string;
@@ -183,18 +185,18 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const fetchProducts = useCallback(async () => {
     const user = auth.currentUser;
-    let productsUrl = 'http://localhost:5000/api/v1/marketplace';
+    let productsUrl = `${API_BASE_URL}/marketplace`;
     const headers: any = {};
 
     if (user) {
       try {
         const token = await user.getIdToken();
-        const profileRes = await fetch('http://localhost:5000/api/v1/users/profile', {
+        const profileRes = await fetch(`${API_BASE_URL}/users/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const profileResult = await profileRes.json();
         if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-          productsUrl = 'http://localhost:5000/api/v1/marketplace?status=all';
+          productsUrl = `${API_BASE_URL}/marketplace?status=all`;
           headers['Authorization'] = `Bearer ${token}`;
         }
       } catch (err) {
@@ -215,7 +217,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const fetchCulture = useCallback(async () => {
     const user = auth.currentUser;
-    let discoverUrl = 'http://localhost:5000/api/v1/discover?status=all';
+    let discoverUrl = `${API_BASE_URL}/discover?status=all`;
     const headers: any = {};
 
     if (user) {
@@ -232,7 +234,10 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const result = await res.json();
       if (result.success && result.data && result.data.items) {
         const dbCulture: CultureItem[] = result.data.items.map((item: any) => {
-          let itemType = item.category === 'FOOD' ? 'Food' : 'Festival';
+          let itemType = 'Festival';
+          if (item.category) {
+            itemType = item.category.charAt(0).toUpperCase() + item.category.slice(1).toLowerCase();
+          }
           if (item.extendedDetails && Array.isArray(item.extendedDetails)) {
             const customCatDetail = item.extendedDetails.find((d: string) => typeof d === 'string' && d.startsWith('Category: '));
             if (customCatDetail) {
@@ -264,18 +269,18 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const fetchPersonalities = useCallback(async () => {
     const user = auth.currentUser;
-    let personalitiesUrl = 'http://localhost:5000/api/v1/culture/personalities';
+    let personalitiesUrl = `${API_BASE_URL}/culture/personalities`;
     const headers: any = {};
 
     if (user) {
       try {
         const token = await user.getIdToken();
-        const profileRes = await fetch('http://localhost:5000/api/v1/users/profile', {
+        const profileRes = await fetch(`${API_BASE_URL}/users/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const profileResult = await profileRes.json();
         if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-          personalitiesUrl = 'http://localhost:5000/api/v1/culture/personalities?status=all';
+          personalitiesUrl = `${API_BASE_URL}/culture/personalities?status=all`;
           headers['Authorization'] = `Bearer ${token}`;
         }
       } catch (err) {
@@ -309,17 +314,17 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
     try {
       const user = auth.currentUser;
       const headers: any = {};
-      let url = 'http://localhost:5000/api/v1/tribes';
+      let url = `${API_BASE_URL}/tribes`;
       if (user) {
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
 
-        const profileRes = await fetch('http://localhost:5000/api/v1/users/profile', {
+        const profileRes = await fetch(`${API_BASE_URL}/users/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const profileResult = await profileRes.json();
         if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-          url = 'http://localhost:5000/api/v1/tribes/admin/all';
+          url = `${API_BASE_URL}/tribes/admin/all`;
         }
       }
       const res = await fetch(url, { headers });
@@ -343,17 +348,17 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
     try {
       const user = auth.currentUser;
       const headers: any = {};
-      let url = 'http://localhost:5000/api/v1/tribes/articles';
+      let url = `${API_BASE_URL}/tribes/articles`;
       if (user) {
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
 
-        const profileRes = await fetch('http://localhost:5000/api/v1/users/profile', {
+        const profileRes = await fetch(`${API_BASE_URL}/users/profile`, {
           headers: { 'Authorization': `Bearer ${token}` }
         });
         const profileResult = await profileRes.json();
         if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-          url = 'http://localhost:5000/api/v1/tribes/admin/articles/all';
+          url = `${API_BASE_URL}/tribes/admin/articles/all`;
         }
       }
       const res = await fetch(url, { headers });
@@ -372,7 +377,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       if (!user) throw new Error("Not authenticated");
       const token = await user.getIdToken();
       const action = status === 'APPROVED' ? 'approve' : 'reject';
-      const res = await fetch(`http://localhost:5000/api/v1/tribes/articles/${id}/${action}`, {
+      const res = await fetch(`${API_BASE_URL}/tribes/articles/${id}/${action}`, {
         method: 'PUT',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -393,7 +398,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
       }
-      const res = await fetch('http://localhost:5000/api/v1/tribes/articles', {
+      const res = await fetch(`${API_BASE_URL}/tribes/articles`, {
         method: 'POST',
         headers,
         body: JSON.stringify(article)
@@ -415,12 +420,17 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
       }
-      const res = await fetch(`http://localhost:5000/api/v1/tribes/admin/articles/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/tribes/admin/articles/${id}`, {
         method: 'DELETE',
         headers
       });
       const data = await res.json();
       if (data.success) {
+        setTribalArticlesState((prev) => {
+          const updated = prev.filter((a) => a.id !== id);
+          saveToStorage(KEYS.tribalArticles, updated);
+          return updated;
+        });
         await fetchTribalArticles();
       }
     } catch (e) {
@@ -430,7 +440,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const fetchDistricts = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/districts');
+      const res = await fetch(`${API_BASE_URL}/districts`);
       const result = await res.json();
       if (result.success && result.data && result.data.districts && result.data.districts.length > 0) {
         const dbDistricts = result.data.districts.map((dist: any) => ({
@@ -488,7 +498,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         topAttractions: district.topAttractions || [],
       };
 
-      const res = await fetch(`http://localhost:5000/api/v1/districts`, {
+      const res = await fetch(`${API_BASE_URL}/districts`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -527,7 +537,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         topAttractions: district.topAttractions || [],
       };
 
-      const res = await fetch(`http://localhost:5000/api/v1/districts/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/districts/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -549,12 +559,18 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const user = auth.currentUser;
       if (!user) throw new Error("Not authenticated");
       const token = await user.getIdToken();
-      const res = await fetch(`http://localhost:5000/api/v1/districts/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/districts/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || 'Failed to delete district');
+      setDistricts((prev) => {
+        const updated = prev.filter((d) => d.id !== id);
+        saveToStorage(KEYS.districts, updated);
+        return updated;
+      });
+      await fetchDistricts();
     } catch (error) {
       console.error('Error deleting district:', error);
       throw error;
@@ -563,7 +579,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const fetchSiteSettings = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/admin/settings');
+      const res = await fetch(`${API_BASE_URL}/admin/settings`);
       const result = await res.json();
       if (result.success && result.data?.settings) {
         const serverSettings = result.data.settings;
@@ -593,18 +609,18 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
   // Fetch communities, discover items, and personalities from backend database on mount matching auth status
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, async (user) => {
-      let communityUrl = 'http://localhost:5000/api/v1/community';
+      let communityUrl = `${API_BASE_URL}/community`;
       const headers: any = {};
 
       if (user) {
         try {
           const token = await user.getIdToken();
-          const profileRes = await fetch('http://localhost:5000/api/v1/users/profile', {
+          const profileRes = await fetch(`${API_BASE_URL}/users/profile`, {
             headers: { 'Authorization': `Bearer ${token}` }
           });
           const profileResult = await profileRes.json();
           if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-            communityUrl = 'http://localhost:5000/api/v1/community/admin/all';
+            communityUrl = `${API_BASE_URL}/community/admin/all`;
             headers['Authorization'] = `Bearer ${token}`;
           }
         } catch (err) {
@@ -693,7 +709,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
       }
-      await fetch('http://localhost:5000/api/v1/admin/settings', {
+      await fetch(`${API_BASE_URL}/admin/settings`, {
         method: 'PUT',
         headers,
         body: JSON.stringify(data)
@@ -709,7 +725,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const user = auth.currentUser;
       if (!user) throw new Error("Not authenticated");
       const token = await user.getIdToken();
-      const res = await fetch(`http://localhost:5000/api/v1/marketplace/${id}/approve`, {
+      const res = await fetch(`${API_BASE_URL}/marketplace/${id}/approve`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -727,7 +743,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const user = auth.currentUser;
       if (!user) throw new Error("Not authenticated");
       const token = await user.getIdToken();
-      const res = await fetch(`http://localhost:5000/api/v1/marketplace/${id}/reject`, {
+      const res = await fetch(`${API_BASE_URL}/marketplace/${id}/reject`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -745,12 +761,13 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const user = auth.currentUser;
       if (!user) throw new Error("Not authenticated");
       const token = await user.getIdToken();
-      const res = await fetch(`http://localhost:5000/api/v1/marketplace/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/marketplace/${id}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
       if (!data.success) throw new Error(data.message || 'Failed to delete product');
+      setProducts((prev) => prev.filter((p) => String(p.id) !== String(id)));
       await fetchProducts();
     } catch (error) {
       console.error('Error deleting product:', error);
@@ -773,7 +790,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         contact: product.contact?.trim() || null,
       };
 
-      const res = await fetch(`http://localhost:5000/api/v1/marketplace/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/marketplace/${id}`, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
@@ -804,7 +821,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         contact: product.contact?.trim() || null,
       };
 
-      const res = await fetch(`http://localhost:5000/api/v1/marketplace`, {
+      const res = await fetch(`${API_BASE_URL}/marketplace`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -10,6 +10,8 @@ import { auth } from '../../lib/firebase';
 
 import { useContributions } from '../../data/ContributionContext';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 const emptyForm: Partial<CultureItem> = {
   title: '',
   type: 'Festival',
@@ -41,7 +43,7 @@ const AdminCulture = () => {
 
   const fetchDiscoverItems = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/discover?status=all');
+      const res = await fetch(`${API_BASE_URL}/discover?status=all`);
       const data = await res.json();
       if (data.success && data.data?.items) {
         setDbDiscoverItems(data.data.items);
@@ -55,7 +57,7 @@ const AdminCulture = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch('http://localhost:5000/api/v1/categories?status=all', {
+      const res = await fetch(`${API_BASE_URL}/categories?status=all`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
       const data = await res.json();
@@ -76,7 +78,7 @@ const AdminCulture = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/categories/${catId}`, {
+      const res = await fetch(`${API_BASE_URL}/categories/${catId}`, {
         method: 'DELETE',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -94,7 +96,7 @@ const AdminCulture = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/categories/${catId}/approve`, {
+      const res = await fetch(`${API_BASE_URL}/categories/${catId}/approve`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -110,7 +112,7 @@ const AdminCulture = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/categories/${catId}/reject`, {
+      const res = await fetch(`${API_BASE_URL}/categories/${catId}/reject`, {
         method: 'PATCH',
         headers: { 'Authorization': `Bearer ${token}` }
       });
@@ -178,7 +180,7 @@ const AdminCulture = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/discover/${id}/approve`, {
+      const res = await fetch(`${API_BASE_URL}/discover/${id}/approve`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -197,7 +199,7 @@ const AdminCulture = () => {
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const res = await fetch(`http://localhost:5000/api/v1/discover/${id}/reject`, {
+      const res = await fetch(`${API_BASE_URL}/discover/${id}/reject`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`
@@ -234,13 +236,14 @@ const AdminCulture = () => {
       try {
         const user = auth.currentUser;
         const token = user ? await user.getIdToken() : '';
-        const res = await fetch(`http://localhost:5000/api/v1/discover/${itemToDelete.id}`, {
+        const res = await fetch(`${API_BASE_URL}/discover/${itemToDelete.id}`, {
           method: 'DELETE',
           headers: {
             'Authorization': `Bearer ${token}`
           }
         });
         if (res.ok) {
+          fetchDiscoverItems();
           refreshCulture();
           setIsDeleteOpen(false);
         }
@@ -256,9 +259,15 @@ const AdminCulture = () => {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
 
+      const typeUpper = (formData.type || 'FESTIVAL').toUpperCase();
+      let categoryMapped = 'FESTIVAL';
+      if (['FOOD', 'FESTIVAL', 'CRAFT', 'HERITAGE', 'WILDLIFE'].includes(typeUpper)) {
+        categoryMapped = typeUpper;
+      }
+
       const payload = {
         title: formData.title,
-        category: formData.type === 'Food' ? 'FOOD' : 'FESTIVAL',
+        category: categoryMapped,
         image: formData.image,
         description: formData.description,
         longDescription: formData.longDescription || '',
@@ -272,7 +281,7 @@ const AdminCulture = () => {
 
       let response;
       if (editingItem) {
-        response = await fetch(`http://localhost:5000/api/v1/discover/${editingItem.id}`, {
+        response = await fetch(`${API_BASE_URL}/discover/${editingItem.id}`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -281,7 +290,7 @@ const AdminCulture = () => {
           body: JSON.stringify(payload)
         });
       } else {
-        response = await fetch('http://localhost:5000/api/v1/discover', {
+        response = await fetch(`${API_BASE_URL}/discover`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -292,6 +301,7 @@ const AdminCulture = () => {
       }
 
       if (response.ok) {
+        fetchDiscoverItems();
         refreshCulture();
         setIsModalOpen(false);
       } else {
@@ -502,6 +512,9 @@ const AdminCulture = () => {
             >
               <option value="Festival">Festival</option>
               <option value="Food">Food</option>
+              <option value="Craft">Craft</option>
+              <option value="Heritage">Heritage</option>
+              <option value="Wildlife">Wildlife</option>
             </AdminSelect>
           </div>
 
