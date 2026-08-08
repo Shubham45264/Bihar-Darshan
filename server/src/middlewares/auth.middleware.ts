@@ -25,6 +25,9 @@ export const authenticate = catchAsync(async (req: Request, res: Response, next:
     const decodedToken = await firebaseAdmin.auth().verifyIdToken(token);
     const firebaseUid = decodedToken.uid;
 
+    const userEmail = (decodedToken.email || '').toLowerCase();
+    const isAdminEmail = userEmail === 'bihardarshanofficial@gmail.com' || userEmail.startsWith('admin@');
+
     // Fetch user from DB
     let currentUser = await db.user.findUnique({
       where: { firebaseUid },
@@ -32,20 +35,19 @@ export const authenticate = catchAsync(async (req: Request, res: Response, next:
 
     if (!currentUser) {
       const email = decodedToken.email || `${firebaseUid}@user.com`;
-      const isAdmin = email.toLowerCase() === 'bihardarshanofficial@gmail.com';
       currentUser = await db.user.create({
         data: {
           firebaseUid,
           email,
           name: decodedToken.name || email.split('@')[0] || 'User',
-          role: isAdmin ? 'ADMIN' : 'USER',
+          role: isAdminEmail ? 'ADMIN' : 'USER',
         },
       });
-    } else if (currentUser.email?.toLowerCase() === 'bihardarshanofficial@gmail.com' && currentUser.role !== 'ADMIN') {
+    } else if (isAdminEmail && currentUser.role !== 'ADMIN') {
       currentUser = await db.user.update({
         where: { id: currentUser.id },
         data: { role: 'ADMIN' },
-        });
+      });
     }
 
     req.user = currentUser;

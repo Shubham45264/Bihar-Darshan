@@ -12,7 +12,6 @@ const sidebarItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
   { label: 'Categories', path: '/admin/categories', icon: Layers },
   { label: 'Districts', path: '/admin/districts', icon: MapPin },
-  { label: 'Culture', path: '/admin/culture', icon: Palette },
   { label: 'Tourism', path: '/admin/tourism', icon: Plane },
   { label: 'Popular Places', path: '/admin/places', icon: Sparkles },
   { label: 'Gallery', path: '/admin/gallery', icon: Image },

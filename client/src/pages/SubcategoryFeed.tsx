@@ -137,11 +137,13 @@ const SubcategoryFeed = () => {
   const currentUser = auth.currentUser;
   const currentUserId = currentUser ? currentUser.uid : 'guest';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
   const fetchCategoryAndStories = async () => {
     try {
       setLoading(true);
       // Fetch category & subcategory info
-      const catRes = await fetch(`http://localhost:5000/api/v1/categories/${categorySlug}`);
+      const catRes = await fetch(`${API_BASE_URL}/categories/${categorySlug}`);
       const catData = await catRes.json();
       if (catData.success && catData.data.category) {
         setCategoryTitle(catData.data.category.title);
@@ -155,7 +157,7 @@ const SubcategoryFeed = () => {
 
       // Fetch stories for this subcategory
       const storyRes = await fetch(
-        `http://localhost:5000/api/v1/stories?categorySlug=${categorySlug}&subcategorySlug=${subcategorySlug}&status=APPROVED`
+        `${API_BASE_URL}/stories?categorySlug=${categorySlug}&subcategorySlug=${subcategorySlug}&status=APPROVED`
       );
       const storyData = await storyRes.json();
       if (storyData.success) {
@@ -175,7 +177,7 @@ const SubcategoryFeed = () => {
   const handleLike = async (e: React.MouseEvent, storyId: string) => {
     e.stopPropagation();
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${storyId}/like`, {
+      const res = await fetch(`${API_BASE_URL}/stories/${storyId}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: currentUserId }),

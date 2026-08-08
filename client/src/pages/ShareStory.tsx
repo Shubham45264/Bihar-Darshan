@@ -77,10 +77,12 @@ const ShareStory = () => {
   }, []);
 
   // Fetch Categories from Backend API
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
   useEffect(() => {
     const fetchCategories = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/categories?status=APPROVED');
+        const res = await fetch(`${API_BASE_URL}/categories?status=APPROVED&_t=${Date.now()}`, { cache: 'no-store' });
         const data = await res.json();
         if (data.success && data.data?.categories) {
           const cats = data.data.categories as Category[];

@@ -62,11 +62,11 @@ app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 app.use(compression());
 
-// Cache-Control Header Middleware for GET API requests
+// Disable browser caching for API requests to ensure dynamic DB updates
 app.use('/api/v1', (req: Request, res: Response, next: NextFunction) => {
-  if (req.method === 'GET' && !req.path.includes('/admin') && !req.path.includes('/auth') && !req.path.includes('/users/profile')) {
-    res.setHeader('Cache-Control', 'public, max-age=300, s-maxage=600, stale-while-revalidate=1200');
-  }
+  res.setHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
   next();
 });
 
