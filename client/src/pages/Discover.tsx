@@ -44,7 +44,7 @@ const Discover = () => {
   const [selectedSubFilter, setSelectedSubFilter] = useState<string>('All');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
   const fetchCategories = async () => {
     try {
@@ -115,9 +115,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
             <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight">
               Explore the <span className="text-[#EAB308]">Treasures</span> of Bihar
             </h1>
-            <p className="text-white/80 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto font-medium">
-              Immerse yourself in authentic culinary art, majestic festivals, and legendary landmarks that define Bihar's golden legacy.
-            </p>
+
           </div>
         </Container>
       </div>
