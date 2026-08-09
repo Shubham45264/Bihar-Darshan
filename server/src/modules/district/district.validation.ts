@@ -10,7 +10,7 @@ export const seasonRowSchema = z.object({
 export const topAttractionSchema = z.object({
   name: z.string().min(1),
   image: z.string().min(1, 'Image path or URL is required'),
-  description: z.string().min(1),
+  description: z.string().optional().nullable().default(''),
   shortDescription: z.string().optional().nullable(),
   rating: z.number().min(0).max(5).optional().nullable(),
   bestTime: z.string().optional().nullable(),

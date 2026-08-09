@@ -4,23 +4,9 @@ import { AppError } from '../../errors/AppError';
 
 export const getAllDistricts = async () => {
   return db.district.findMany({
-    select: {
-      id: true,
-      name: true,
-      image: true,
-      tagline: true,
-      introduction: true,
-      topTouristName: true,
-      topTouristDetails: true,
-      topAttractions: {
-        select: {
-          id: true,
-          name: true,
-          image: true,
-          shortDescription: true,
-          rating: true,
-        }
-      }
+    include: {
+      seasonalVisits: true,
+      topAttractions: true,
     },
     orderBy: { name: 'asc' },
   });
@@ -48,12 +34,19 @@ export const createDistrict = async (data: CreateDistrictInput) => {
   return db.district.create({
     data: {
       ...districtData,
-      seasonalVisits: {
+      seasonalVisits: seasonalVisits ? {
         create: seasonalVisits,
-      },
-      topAttractions: {
-        create: topAttractions,
-      },
+      } : undefined,
+      topAttractions: topAttractions ? {
+        create: topAttractions.map((ta) => ({
+          name: ta.name,
+          image: ta.image,
+          description: ta.description || ta.shortDescription || ta.name || '',
+          shortDescription: ta.shortDescription || (ta.description ? ta.description.slice(0, 100) : null),
+          rating: ta.rating ?? 4.5,
+          bestTime: ta.bestTime || 'Throughout the year',
+        })),
+      } : undefined,
     },
     include: {
       seasonalVisits: true,
@@ -103,9 +96,9 @@ export const updateDistrict = async (id: string, data: UpdateDistrictInput) => {
           data: topAttractions.map((ta) => ({
             name: ta.name,
             image: ta.image,
-            description: ta.description,
-            shortDescription: ta.shortDescription || ta.description.slice(0, 100),
-            rating: ta.rating || 4.5,
+            description: ta.description || ta.shortDescription || ta.name || '',
+            shortDescription: ta.shortDescription || (ta.description ? ta.description.slice(0, 100) : null),
+            rating: ta.rating ?? 4.5,
             bestTime: ta.bestTime || 'Throughout the year',
             districtId: id,
           })),

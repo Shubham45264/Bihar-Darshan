@@ -19,8 +19,6 @@ import ScrollToTop from "./components/ScrollToTop";
 import ProductDetails from './pages/ProductDetails';
 import CultureDetails from './pages/CultureDetails';
 import ShareStory from './pages/ShareStory';
-import Personalities from './pages/Personalities';
-import PersonalityDetails from './pages/PersonalityDetails';
 import AboutUs from './pages/AboutUs';
 import ContactUs from './pages/ContactUs';
 import PrivacyPolicy from './pages/PrivacyPolicy';
@@ -34,7 +32,6 @@ import AdminTourism from './pages/admin/AdminTourism';
 import AdminGallery from './pages/admin/AdminGallery';
 import AdminMarketplace from './pages/admin/AdminMarketplace';
 import AdminTribes from './pages/admin/AdminTribes';
-import AdminPersonalities from './pages/admin/AdminPersonalities';
 import AdminPopularPlaces from './pages/admin/AdminPopularPlaces';
 import AdminSettings from './pages/admin/AdminSettings';
 import SubcategoryFeed from './pages/SubcategoryFeed';
@@ -96,8 +93,6 @@ function App() {
           <Route path="/tribals" element={<PageTransition><Tribals /></PageTransition>} />
           <Route path="/tribals/:id" element={<PageTransition><TribeDetail /></PageTransition>} />
           <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
-          <Route path="/personalities" element={<PageTransition><Personalities /></PageTransition>} />
-          <Route path="/personalities/:id" element={<PageTransition><PersonalityDetails /></PageTransition>} />
           <Route path="/districts/:name" element={<PageTransition><DistrictsDetails /></PageTransition>} />
           <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
           <Route path="/forgot-password" element={<PageTransition><ForgotPasswordPage /></PageTransition>} />
@@ -122,7 +117,6 @@ function App() {
               <Route path="gallery" element={<AdminGallery />} />
               <Route path="marketplace" element={<AdminMarketplace />} />
               <Route path="tribes" element={<AdminTribes />} />
-              <Route path="personalities" element={<AdminPersonalities />} />
               <Route path="places" element={<AdminPopularPlaces />} />
               <Route path="settings" element={<AdminSettings />} />
             </Route>

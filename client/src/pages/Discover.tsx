@@ -7,6 +7,7 @@ import {
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
+import TopCategoryStoriesSlider from '../components/discover/TopCategoryStoriesSlider';
 
 interface SubCategory {
   id: string;
@@ -94,9 +95,9 @@ const Discover = () => {
       {/* Top Navbar with White Text on Hero Artwork Banner */}
       <Navbar forceWhiteText={true} />
 
-      {/* Top Hero Artwork Banner (Matching Marketplace Banner Height) */}
+      {/* Top Hero Artwork Banner */}
       <div
-        className="relative min-h-[90vh] md:min-h-[85vh] w-full flex flex-col pt-32 pb-24 md:pb-0 justify-center bg-[#1A1A1A] overflow-hidden border-b border-white/10 shadow-lg"
+        className="relative min-h-[45vh] sm:min-h-[60vh] md:min-h-[85vh] w-full flex flex-col pt-24 sm:pt-32 pb-12 sm:pb-20 justify-center bg-[#1A1A1A] overflow-hidden border-b border-white/10 shadow-lg"
         style={{
           backgroundImage: "url('/images/culture/hero-artwork.png')",
           backgroundSize: 'cover',
@@ -108,28 +109,27 @@ const Discover = () => {
         <div className="absolute inset-x-0 bottom-0 h-1 bg-[#EAB308]/40" />
 
         <Container>
-          <div className="relative z-10 max-w-3xl mx-auto text-center space-y-4">
-            <span className="text-[#EAB308] uppercase tracking-[0.3em] text-xs font-bold block font-sans">
+          <div className="relative z-10 max-w-3xl mx-auto text-center space-y-2 sm:space-y-4 px-2">
+            <span className="text-[#EAB308] uppercase tracking-[0.25em] text-[10px] sm:text-xs font-bold block font-sans">
               HERITAGE & CULTURE
             </span>
-            <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight">
+            <h1 className="font-display font-extrabold text-3xl sm:text-5xl md:text-7xl text-white tracking-tight leading-tight">
               Explore the <span className="text-[#EAB308]">Treasures</span> of Bihar
             </h1>
-
           </div>
         </Container>
       </div>
 
-      <main className="flex-1 py-10">
+      <main className="flex-1 py-6 sm:py-10">
         <Container>
           {/* VIEW 1: CATEGORY SELECTION (Explore Bihar Grid) */}
           {!categorySlug && !selectedCategory && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {/* Header Bar below Hero Banner */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 pb-6 border-b border-gray-300/70">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 sm:gap-6 pb-4 sm:pb-6 border-b border-gray-300/70">
                 <div>
-                  <h2 className="text-3xl font-extrabold text-gray-900 tracking-tight font-display">Explore Bihar</h2>
-                  <p className="text-gray-600 text-sm sm:text-base mt-1">Find places, experiences and stories across Bihar</p>
+                  <h2 className="text-2xl sm:text-3xl font-extrabold text-gray-900 tracking-tight font-display">Explore Bihar</h2>
+                  <p className="text-gray-600 text-xs sm:text-base mt-0.5 sm:mt-1">Find places, experiences and stories across Bihar</p>
                 </div>
 
                 {/* Search categories input */}
@@ -145,15 +145,15 @@ const Discover = () => {
                 </div>
               </div>
 
-              {/* Categories Grid (18 Cards) */}
+              {/* Categories Grid (2 columns on mobile, 6 on xl) */}
               {loading ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5 py-8">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-5 py-6">
                   {[...Array(12)].map((_, i) => (
-                    <div key={i} className="h-48 rounded-2xl bg-gray-200 animate-pulse" />
+                    <div key={i} className="h-40 sm:h-48 rounded-xl sm:rounded-2xl bg-gray-200 animate-pulse" />
                   ))}
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6 gap-5">
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-3 sm:gap-5">
                   {filteredCategories.map((cat, idx) => (
                     <motion.div
                       key={cat.id}
@@ -164,7 +164,7 @@ const Discover = () => {
                         setSelectedCategory(cat);
                         navigate(`/discover/${cat.slug}`);
                       }}
-                      className="group relative h-48 rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl border border-gray-200 hover:border-[#EAB308] transition-all duration-300 transform hover:-translate-y-1 bg-white"
+                      className="group relative h-40 sm:h-48 rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer shadow-md hover:shadow-xl border border-gray-200 hover:border-[#EAB308] transition-all duration-300 transform hover:-translate-y-1 bg-white"
                     >
                       {/* Background Image */}
                       <img
@@ -177,8 +177,8 @@ const Discover = () => {
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-transparent group-hover:from-black/90 transition-all" />
 
                       {/* Category Label at bottom left */}
-                      <div className="absolute inset-x-0 bottom-0 p-4 flex flex-col justify-end">
-                        <h3 className="text-white font-bold text-base leading-tight tracking-snug group-hover:text-[#EAB308] transition-colors drop-shadow">
+                      <div className="absolute inset-x-0 bottom-0 p-3 sm:p-4 flex flex-col justify-end">
+                        <h3 className="text-white font-bold text-sm sm:text-base leading-tight tracking-snug group-hover:text-[#EAB308] transition-colors drop-shadow">
                           {cat.title}
                         </h3>
                       </div>
@@ -191,9 +191,9 @@ const Discover = () => {
 
           {/* VIEW 2: CATEGORY DETAIL & SUBCATEGORIES GRID */}
           {(categorySlug || selectedCategory) && selectedCategory && (
-            <div className="space-y-8">
+            <div className="space-y-6 sm:space-y-8">
               {/* Category Detail Header Banner (Full Image Cover with Text Overlay) */}
-              <div className="relative rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-gray-900 p-8 sm:p-12">
+              <div className="relative rounded-2xl sm:rounded-3xl overflow-hidden shadow-xl border border-gray-200 bg-gray-900 p-5 sm:p-8 lg:p-12 min-h-[200px] sm:min-h-[260px] flex flex-col justify-end">
                 {/* Background Image Cover */}
                 <img
                   src={selectedCategory.image}
@@ -206,29 +206,36 @@ const Discover = () => {
                 <div className="absolute inset-x-0 bottom-0 h-1 bg-[#EAB308]/60" />
 
                 {/* Content Overlay */}
-                <div className="relative z-10 max-w-2xl text-white space-y-4">
+                <div className="relative z-10 max-w-2xl text-white space-y-2 sm:space-y-4">
                   <Link
                     to="/discover"
                     onClick={() => setSelectedCategory(null)}
-                    className="inline-flex items-center gap-2 bg-[#EAB308] hover:bg-[#B8860B] text-black text-xs font-extrabold px-4 py-2 rounded-full transition-all shadow-md uppercase tracking-wider cursor-pointer"
+                    className="inline-flex items-center gap-1.5 bg-[#EAB308] hover:bg-[#B8860B] text-black text-[11px] sm:text-xs font-extrabold px-3.5 py-1.5 sm:px-4 sm:py-2 rounded-full transition-all shadow-md uppercase tracking-wider cursor-pointer"
                   >
-                    <ArrowLeft size={16} />
+                    <ArrowLeft size={14} />
                     <span>Back to Categories</span>
                   </Link>
 
-                  <h1 className="text-3xl sm:text-5xl font-extrabold text-white tracking-tight font-display drop-shadow-md">
+                  <h1 className="text-2xl sm:text-4xl lg:text-5xl font-extrabold text-white tracking-tight font-display drop-shadow-md">
                     {selectedCategory.title}
                   </h1>
 
-                  <p className="text-gray-200 text-sm sm:text-base leading-relaxed font-normal">
+                  <p className="text-gray-200 text-xs sm:text-base leading-relaxed font-normal line-clamp-3">
                     {selectedCategory.description ||
                       `Explore Bihar's rich ${selectedCategory.title.toLowerCase()}, ancient sites, stories and cultural treasures.`}
                   </p>
                 </div>
               </div>
 
+              {/* TOP 5 TRENDING STORIES SLIDER (Above Subcategories) */}
+              <TopCategoryStoriesSlider
+                categoryId={selectedCategory.id}
+                categorySlug={selectedCategory.slug}
+                categoryTitle={selectedCategory.title}
+              />
+
               {/* Filter & Toolbar */}
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 sm:gap-4">
                 {/* Search Bar */}
                 <div className="relative w-full sm:w-80">
                   <Search size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" />
@@ -288,13 +295,13 @@ const Discover = () => {
                 </div>
               </div>
 
-              {/* Subcategories Grid (ONLY name & image on card) */}
+              {/* Subcategories Grid (2 columns on mobile, 4 on lg) */}
               {filteredSubcategories.length === 0 ? (
-                <div className="text-center py-16 bg-white border border-gray-200 rounded-2xl shadow-sm">
+                <div className="text-center py-12 sm:py-16 bg-white border border-gray-200 rounded-2xl shadow-sm">
                   <p className="text-gray-500 text-sm">No subcategories found matching your criteria.</p>
                 </div>
               ) : (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6">
                   {filteredSubcategories.map((sub, idx) => (
                     <motion.div
                       key={sub.id}
@@ -302,7 +309,7 @@ const Discover = () => {
                       animate={{ opacity: 1, scale: 1 }}
                       transition={{ delay: idx * 0.04 }}
                       onClick={() => navigate(`/discover/${selectedCategory.slug}/${sub.slug}`)}
-                      className="group relative h-56 rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#EAB308] transition-all duration-300 shadow-md hover:shadow-xl bg-white"
+                      className="group relative h-44 sm:h-56 rounded-xl sm:rounded-2xl overflow-hidden cursor-pointer border border-gray-200 hover:border-[#EAB308] transition-all duration-300 shadow-md hover:shadow-xl bg-white"
                     >
                       {/* Image Thumbnail */}
                       <img
@@ -314,9 +321,9 @@ const Discover = () => {
                       {/* Overlay */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent group-hover:from-black/90 transition-all" />
 
-                      {/* Subcategory Title ONLY */}
-                      <div className="absolute inset-x-0 bottom-0 p-5 flex items-center justify-between">
-                        <h3 className="text-white font-bold text-lg leading-tight tracking-snug group-hover:text-[#EAB308] transition-colors drop-shadow">
+                      {/* Subcategory Title */}
+                      <div className="absolute inset-x-0 bottom-0 p-3 sm:p-5 flex items-center justify-between">
+                        <h3 className="text-white font-bold text-sm sm:text-lg leading-tight tracking-snug group-hover:text-[#EAB308] transition-colors drop-shadow">
                           {sub.title}
                         </h3>
                       </div>

@@ -7,14 +7,12 @@ export const getDashboardStats = async () => {
     pendingJourneys,
     pendingGalleryItems,
     pendingDiscoverItems,
-    pendingPersonalities
   ] = await Promise.all([
     db.user.count(),
     db.district.count(),
     db.journey.count({ where: { status: 'PENDING' } }),
     db.galleryItem.count({ where: { status: 'PENDING' } }),
     db.discoverItem.count({ where: { status: 'PENDING' } }),
-    db.personality.count({ where: { status: 'PENDING' } }),
   ]);
 
   return {
@@ -26,24 +24,21 @@ export const getDashboardStats = async () => {
       journeys: pendingJourneys,
       galleryItems: pendingGalleryItems,
       discoverItems: pendingDiscoverItems,
-      personalities: pendingPersonalities,
     }
   };
 };
 
 export const getPendingApprovals = async () => {
-  const [journeys, galleryItems, discoverItems, personalities] = await Promise.all([
+  const [journeys, galleryItems, discoverItems] = await Promise.all([
     db.journey.findMany({ where: { status: 'PENDING' }, include: { author: { select: { name: true, email: true } } } }),
     db.galleryItem.findMany({ where: { status: 'PENDING' }, include: { uploader: { select: { name: true, email: true } } } }),
     db.discoverItem.findMany({ where: { status: 'PENDING' } }),
-    db.personality.findMany({ where: { status: 'PENDING' } }),
   ]);
 
   return {
     journeys,
     galleryItems,
     discoverItems,
-    personalities,
   };
 };
 

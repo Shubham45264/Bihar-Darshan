@@ -35,20 +35,7 @@ export interface TribeItem {
   leftDesc?: string;
   rightTitle?: string;
   rightDesc?: string;
-  bottomDesc?: string;
   cultureSections?: CultureSection[];
-}
-
-// ── Personality type ──
-export interface PersonalityItem {
-  id: number | string;
-  name: string;
-  category: 'Politician' | 'Arts & Cinema' | 'Historical' | 'Literature' | 'Sports';
-  district: string;
-  description: string;
-  imageUrl: string;
-  fullBio?: string;
-  status?: string;
 }
 
 // ── Product type ──
@@ -120,7 +107,6 @@ interface AdminContextValue {
   products: ProductItem[];
   tribes: TribeItem[];
   tribalArticles: TribalArticle[];
-  personalities: PersonalityItem[];
   siteSettings: SiteSettings;
   popularPlaces: PopularPlaceItem[];
 
@@ -135,7 +121,6 @@ interface AdminContextValue {
   updateProducts: (data: ProductItem[]) => void;
   updateTribes: (data: TribeItem[]) => void;
   updateTribalArticles: (data: TribalArticle[]) => void;
-  updatePersonalities: (data: PersonalityItem[]) => void;
   updateSiteSettings: (data: SiteSettings) => void;
   updatePopularPlaces: (data: PopularPlaceItem[]) => void;
 
@@ -144,7 +129,6 @@ interface AdminContextValue {
 
   // Refresh methods
   refreshCulture: () => Promise<void>;
-  refreshPersonalities: () => Promise<void>;
   refreshTribes: () => Promise<void>;
   refreshTribalArticles: () => Promise<void>;
   updateArticleStatus: (id: string, status: string) => Promise<void>;
@@ -179,7 +163,6 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
   const [products, setProducts] = useState<ProductItem[]>([]);
   const [tribes, setTribes] = useState<TribeItem[]>(() => loadFromStorage(KEYS.tribes, mockTribes as any[]));
   const [tribalArticlesState, setTribalArticlesState] = useState<TribalArticle[]>(() => loadFromStorage(KEYS.tribalArticles, tribalArticles));
-  const [personalities, setPersonalities] = useState<PersonalityItem[]>([]);
   const [siteSettings, setSiteSettings] = useState<SiteSettings>(() => loadFromStorage(KEYS.siteSettings, defaultSiteSettings));
   const [popularPlaces, setPopularPlaces] = useState<PopularPlaceItem[]>(() => loadFromStorage(KEYS.popularPlaces, defaultPopularPlaces));
 
@@ -267,49 +250,6 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
     }
   }, []);
 
-  const fetchPersonalities = useCallback(async () => {
-    const user = auth.currentUser;
-    let personalitiesUrl = `${API_BASE_URL}/culture/personalities`;
-    const headers: any = {};
-
-    if (user) {
-      try {
-        const token = await user.getIdToken();
-        const profileRes = await fetch(`${API_BASE_URL}/users/profile`, {
-          headers: { 'Authorization': `Bearer ${token}` }
-        });
-        const profileResult = await profileRes.json();
-        if (profileResult.success && profileResult.data?.user?.role === 'ADMIN') {
-          personalitiesUrl = `${API_BASE_URL}/culture/personalities?status=all`;
-          headers['Authorization'] = `Bearer ${token}`;
-        }
-      } catch (err) {
-        console.error('AdminContext: Failed to check user role:', err);
-      }
-    }
-
-    try {
-      const res = await fetch(personalitiesUrl, { headers });
-      const result = await res.json();
-      if (result.success && result.data && result.data.personalities) {
-        const dbPersonalities: PersonalityItem[] = result.data.personalities.map((p: any) => ({
-          id: p.id,
-          name: p.name,
-          category: p.category,
-          district: p.district,
-          description: p.description,
-          imageUrl: p.imageUrl,
-          fullBio: p.fullBio || '',
-          submittedBy: p.author || 'Admin',
-          status: p.status
-        }));
-        setPersonalities(dbPersonalities);
-      }
-    } catch (e) {
-      console.error('AdminContext: Failed to fetch personalities:', e);
-    }
-  }, []);
-
   const fetchTribes = useCallback(async () => {
     try {
       const user = auth.currentUser;
@@ -330,14 +270,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const res = await fetch(url, { headers });
       const result = await res.json();
       if (result.success && result.data?.tribes) {
-        const dbTribes = result.data.tribes;
-        const merged = [...mockTribes];
-        dbTribes.forEach((dbT: any) => {
-          const idx = merged.findIndex(t => t.id === dbT.id);
-          if (idx >= 0) merged[idx] = { ...merged[idx], ...dbT };
-          else merged.push(dbT);
-        });
-        setTribes(merged as any[]);
+        setTribes(result.data.tribes);
       }
     } catch (e) {
       console.error('Failed to fetch tribes:', e);
@@ -495,7 +428,14 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         howToReachRoad: district.howToReach?.road || null,
         whyInTouristList: district.whyInTouristList || [],
         seasonalVisits: district.seasonalVisit || [],
-        topAttractions: district.topAttractions || [],
+        topAttractions: (district.topAttractions || []).map((ta: any) => ({
+          name: ta.name || '',
+          image: ta.image || '',
+          description: ta.description || ta.shortDescription || '',
+          shortDescription: ta.shortDescription || null,
+          rating: ta.rating || 4.5,
+          bestTime: ta.bestTime || 'Throughout the year',
+        })),
       };
 
       const res = await fetch(`${API_BASE_URL}/districts`, {
@@ -534,7 +474,14 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         howToReachRoad: district.howToReach?.road || null,
         whyInTouristList: district.whyInTouristList || [],
         seasonalVisits: district.seasonalVisit || [],
-        topAttractions: district.topAttractions || [],
+        topAttractions: (district.topAttractions || []).map((ta: any) => ({
+          name: ta.name || '',
+          image: ta.image || '',
+          description: ta.description || ta.shortDescription || '',
+          shortDescription: ta.shortDescription || null,
+          rating: ta.rating || 4.5,
+          bestTime: ta.bestTime || 'Throughout the year',
+        })),
       };
 
       const res = await fetch(`${API_BASE_URL}/districts/${id}`, {
@@ -671,7 +618,6 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         .catch(err => console.error('AdminContext: Failed to fetch communities:', err));
 
       fetchCulture();
-      fetchPersonalities();
       fetchTribes();
       fetchTribalArticles();
       fetchProducts();
@@ -679,7 +625,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
     });
 
     return () => unsubscribe();
-  }, [fetchCulture, fetchPersonalities, fetchTribes, fetchTribalArticles, fetchProducts, fetchDistricts]);
+  }, [fetchCulture, fetchTribes, fetchTribalArticles, fetchProducts, fetchDistricts]);
 
   // Auto-save on change
   const createUpdater = <T,>(key: string, setter: React.Dispatch<React.SetStateAction<T>>) =>
@@ -698,7 +644,6 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
   const updateProducts = createUpdater(KEYS.products, setProducts);
   const updateTribes = createUpdater(KEYS.tribes, setTribes);
   const updateTribalArticles = createUpdater(KEYS.tribalArticles, setTribalArticlesState);
-  const updatePersonalities = createUpdater(KEYS.personalities, setPersonalities);
   const updateSiteSettings = useCallback(async (data: SiteSettings) => {
     setSiteSettings(data);
     saveToStorage(KEYS.siteSettings, data);
@@ -851,7 +796,6 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       products: () => setProducts(defaultProducts as ProductItem[]),
       tribes: () => setTribes(mockTribes as any[]),
       tribalArticles: () => setTribalArticlesState(tribalArticles),
-      personalities: () => setPersonalities([]),
       siteSettings: () => setSiteSettings(defaultSiteSettings),
       popularPlaces: () => setPopularPlaces(defaultPopularPlaces),
     };
@@ -871,7 +815,6 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         products,
         tribes,
         tribalArticles: tribalArticlesState,
-        personalities,
         siteSettings,
         popularPlaces,
         updateDistricts,
@@ -884,12 +827,10 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         updateProducts,
         updateTribes,
         updateTribalArticles,
-        updatePersonalities,
         updateSiteSettings,
         updatePopularPlaces,
         resetSection,
         refreshCulture: fetchCulture,
-        refreshPersonalities: fetchPersonalities,
         refreshTribes: fetchTribes,
         refreshTribalArticles: fetchTribalArticles,
         updateArticleStatus,

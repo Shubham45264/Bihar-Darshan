@@ -20,33 +20,6 @@ interface TribeVideoSliderProps {
   tribeName: string;
 }
 
-// Initial curated videos per tribe
-const DEFAULT_TRIBE_VIDEOS: Record<string, TribeVideoItem[]> = {
-  default: [
-    {
-      id: 'demo-1',
-      caption: 'Traditional Folk Dance & Rhythmic Drums Celebration',
-      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerBlazes.mp4',
-      thumbnail: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=800&q=80',
-      duration: '1:45',
-    },
-    {
-      id: 'demo-2',
-      caption: 'Ancient Bamboo Crafting & Handloom Artistry',
-      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerEscapes.mp4',
-      thumbnail: 'https://images.unsplash.com/photo-1606293926075-69a00dbfde81?auto=format&fit=crop&w=800&q=80',
-      duration: '2:10',
-    },
-    {
-      id: 'demo-3',
-      caption: 'Sacred Grove (Sarna) Sarhul Festival Rituals',
-      videoUrl: 'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ForBiggerFun.mp4',
-      thumbnail: 'https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=800&q=80',
-      duration: '3:05',
-    },
-  ],
-};
-
 // ── Single Video Card with Hover Autoplay ────────────────────────────
 interface TribeVideoCardProps {
   item: TribeVideoItem;
@@ -86,7 +59,7 @@ const TribeVideoCard = ({ item, idx, onClick }: TribeVideoCardProps) => {
       onClick={onClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
-      className="w-[280px] sm:w-[320px] flex-shrink-0 group cursor-pointer"
+      className="w-[240px] sm:w-[320px] flex-shrink-0 group cursor-pointer"
     >
       {/* Simple Normal Video Card */}
       <div className="relative aspect-[16/9] bg-black rounded-xl overflow-hidden shadow-sm hover:shadow-md border border-[#D4A017]/30 hover:border-[#D4A017] transition-all duration-300">
@@ -151,7 +124,7 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
-  // Fetch videos from server & combine with default curated videos
+  // Fetch videos from server (only approved videos present in database)
   useEffect(() => {
     const fetchVideos = async () => {
       setIsLoading(true);
@@ -168,15 +141,10 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
             }))
           : [];
 
-        const curatedFallback = DEFAULT_TRIBE_VIDEOS.default.map(v => ({
-          ...v,
-          caption: v.caption,
-        }));
-
-        setVideos([...serverVideos, ...curatedFallback]);
+        setVideos(serverVideos);
       } catch (err) {
         console.error('Error fetching tribe videos:', err);
-        setVideos(DEFAULT_TRIBE_VIDEOS.default);
+        setVideos([]);
       } finally {
         setIsLoading(false);
       }

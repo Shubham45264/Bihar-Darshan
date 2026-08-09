@@ -240,21 +240,6 @@ exports.Prisma.TribeVideoScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
-exports.Prisma.PersonalityScalarFieldEnum = {
-  id: 'id',
-  name: 'name',
-  category: 'category',
-  district: 'district',
-  description: 'description',
-  imageUrl: 'imageUrl',
-  fullBio: 'fullBio',
-  author: 'author',
-  status: 'status',
-  publicId: 'publicId',
-  createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
-};
-
 exports.Prisma.TribalArticleScalarFieldEnum = {
   id: 'id',
   headline: 'headline',
@@ -518,7 +503,6 @@ exports.Prisma.ModelName = {
   DiscoverItem: 'DiscoverItem',
   Tribe: 'Tribe',
   TribeVideo: 'TribeVideo',
-  Personality: 'Personality',
   TribalArticle: 'TribalArticle',
   Journey: 'Journey',
   GalleryItem: 'GalleryItem',

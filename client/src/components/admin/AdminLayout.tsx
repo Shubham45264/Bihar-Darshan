@@ -17,7 +17,6 @@ const sidebarItems = [
   { label: 'Gallery', path: '/admin/gallery', icon: Image },
   { label: 'Marketplace', path: '/admin/marketplace', icon: Store },
   { label: 'Tribes', path: '/admin/tribes', icon: Mountain },
-  { label: 'Personalities', path: '/admin/personalities', icon: UserCircle },
   { label: 'Site Settings', path: '/admin/settings', icon: Settings },
 ];
 

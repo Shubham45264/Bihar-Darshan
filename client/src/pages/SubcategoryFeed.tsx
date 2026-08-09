@@ -53,7 +53,7 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
   const currentItem = items[currentIndex];
 
   return (
-    <div className="relative w-full h-52 sm:h-60 bg-neutral-900 flex items-center justify-center overflow-hidden shrink-0 group">
+    <div className="relative w-full h-48 sm:h-60 bg-neutral-900 flex items-center justify-center overflow-hidden shrink-0 group">
       {currentItem.type === 'VIDEO' || currentItem.type === 'video' ? (
         <video src={currentItem.url} controls className="w-full h-full object-cover" />
       ) : (
@@ -315,10 +315,10 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
                       </Link>
 
                       {/* 3. Post Content */}
-                      <div className="p-4 space-y-2">
+                      <div className="p-3.5 sm:p-4 space-y-2">
                         {/* Title */}
                         <Link to={`/story/${story.id}`}>
-                          <h2 className="text-lg font-bold text-gray-900 group-hover:text-[#D4A017] transition-colors line-clamp-1 cursor-pointer">
+                          <h2 className="text-base sm:text-lg font-bold text-gray-900 group-hover:text-[#D4A017] transition-colors line-clamp-1 cursor-pointer">
                             {story.title}
                           </h2>
                         </Link>
@@ -329,7 +329,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
                         </p>
 
                         {/* Subcategory Tag Pill & Read Full Story Button */}
-                        <div className="pt-2 flex items-center justify-between">
+                        <div className="pt-2 flex flex-wrap items-center justify-between gap-2">
                           <span className="text-[10px] bg-amber-50 text-[#D4A017] font-bold px-2.5 py-1 rounded-full border border-amber-200/60 uppercase tracking-wider">
                             {subcategoryTitle}
                           </span>
