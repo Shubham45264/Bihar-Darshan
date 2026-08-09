@@ -180,7 +180,7 @@ const DistrictsDetails = () => {
                 {d.topAttractions.map((attraction, idx) => (
                   <div
                     key={idx}
-                    className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-100 group shadow-md"
+                    className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-900 group shadow-md hover:shadow-xl border border-gray-200/50 hover:border-[#D4A017]/50 transition-all duration-300"
                   >
                     {/* Image */}
                     <img
@@ -189,27 +189,25 @@ const DistrictsDetails = () => {
                       className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
                     />
 
-                    {/* Gradient Overlay */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent transition-opacity duration-300" />
+                    {/* Rich Gradient Overlay for high text contrast */}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 group-hover:via-black/70 transition-all duration-300" />
 
-                    {/* Content Container */}
-                    <div className="absolute inset-0 flex flex-col justify-end p-5">
-                      <div className="transform translate-y-[80px] group-hover:translate-y-0 transition-transform duration-300 ease-out">
-                        {/* Tag/Metadata */}
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-[#D4A017] block mb-1">
-                          {attraction.district}
-                        </span>
+                    {/* Content Container — positioned properly without bottom clipping */}
+                    <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
+                      {/* Tag/Metadata */}
+                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017] block mb-1 drop-shadow">
+                        {attraction.district}
+                      </span>
 
-                        {/* Title */}
-                        <h3 className="text-lg font-serif font-bold text-white leading-tight mb-2">
-                          {attraction.name}
-                        </h3>
+                      {/* Title — always fully visible */}
+                      <h3 className="text-lg font-serif font-bold text-white leading-snug drop-shadow-md">
+                        {attraction.name}
+                      </h3>
 
-                        {/* Description (3-4 lines) */}
-                        <p className="text-xs text-white/80 opacity-0 group-hover:opacity-100 transition-opacity duration-200 delay-75 line-clamp-4 leading-relaxed">
-                          {attraction.description || attraction.shortDescription}
-                        </p>
-                      </div>
+                      {/* Description — expands smoothly on hover */}
+                      <p className="text-xs text-white/90 leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-28 group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 ease-out line-clamp-4">
+                        {attraction.description || attraction.shortDescription}
+                      </p>
                     </div>
                   </div>
                 ))}

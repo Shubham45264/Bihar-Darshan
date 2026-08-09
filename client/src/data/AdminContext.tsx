@@ -353,7 +353,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
       }
-      const res = await fetch(`${API_BASE_URL}/tribes/admin/articles/${id}`, {
+      const res = await fetch(`${API_BASE_URL}/tribes/articles/${id}`, {
         method: 'DELETE',
         headers
       });
@@ -417,7 +417,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
       const payload = {
         name: district.name,
-        image: district.image,
+        image: district.image || '/images/culture/hero-artwork.png',
         tagline: district.tagline || null,
         introduction: district.introduction || null,
         richHistory: district.richHistory || null,
@@ -426,16 +426,9 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         howToReachAir: district.howToReach?.air || null,
         howToReachRail: district.howToReach?.rail || null,
         howToReachRoad: district.howToReach?.road || null,
-        whyInTouristList: district.whyInTouristList || [],
-        seasonalVisits: district.seasonalVisit || [],
-        topAttractions: (district.topAttractions || []).map((ta: any) => ({
-          name: ta.name || '',
-          image: ta.image || '',
-          description: ta.description || ta.shortDescription || '',
-          shortDescription: ta.shortDescription || null,
-          rating: ta.rating || 4.5,
-          bestTime: ta.bestTime || 'Throughout the year',
-        })),
+        whyInTouristList: (district.whyInTouristList || []).filter((s: string) => typeof s === 'string' && s.trim().length > 0),
+        seasonalVisits: (district.seasonalVisit || []).filter((sv: any) => sv && (sv.season || sv.months || sv.weather || sv.whyVisit)),
+        topAttractions: (district.topAttractions || []).filter((ta: any) => ta && (ta.name || ta.image || ta.description)),
       };
 
       const res = await fetch(`${API_BASE_URL}/districts`, {
@@ -463,7 +456,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
       const payload = {
         name: district.name,
-        image: district.image,
+        image: district.image || '/images/culture/hero-artwork.png',
         tagline: district.tagline || null,
         introduction: district.introduction || null,
         richHistory: district.richHistory || null,
@@ -472,16 +465,9 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
         howToReachAir: district.howToReach?.air || null,
         howToReachRail: district.howToReach?.rail || null,
         howToReachRoad: district.howToReach?.road || null,
-        whyInTouristList: district.whyInTouristList || [],
-        seasonalVisits: district.seasonalVisit || [],
-        topAttractions: (district.topAttractions || []).map((ta: any) => ({
-          name: ta.name || '',
-          image: ta.image || '',
-          description: ta.description || ta.shortDescription || '',
-          shortDescription: ta.shortDescription || null,
-          rating: ta.rating || 4.5,
-          bestTime: ta.bestTime || 'Throughout the year',
-        })),
+        whyInTouristList: (district.whyInTouristList || []).filter((s: string) => typeof s === 'string' && s.trim().length > 0),
+        seasonalVisits: (district.seasonalVisit || []).filter((sv: any) => sv && (sv.season || sv.months || sv.weather || sv.whyVisit)),
+        topAttractions: (district.topAttractions || []).filter((ta: any) => ta && (ta.name || ta.image || ta.description)),
       };
 
       const res = await fetch(`${API_BASE_URL}/districts/${id}`, {

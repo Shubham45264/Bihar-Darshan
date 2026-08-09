@@ -2,10 +2,13 @@ import { createContext, useContext, useState, useCallback, useEffect } from 'rea
 import type { TribalArticle } from './tribalArticlesData';
 import { auth } from '../lib/firebase';
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 interface ArticlesContextValue {
   articles: TribalArticle[];
   addArticle: (article: TribalArticle) => void;
   deleteArticle: (id: string) => void;
+  updateArticleStatus: (id: string, status: string) => Promise<void>;
   refreshArticles: () => Promise<void>;
 }
 
@@ -13,6 +16,7 @@ const ArticlesContext = createContext<ArticlesContextValue>({
   articles: [],
   addArticle: () => {},
   deleteArticle: () => {},
+  updateArticleStatus: async () => {},
   refreshArticles: async () => {},
 });
 
@@ -21,7 +25,7 @@ export const ArticlesProvider = ({ children }: { children: React.ReactNode }) =>
 
   const fetchArticles = useCallback(async () => {
     try {
-      const res = await fetch('http://localhost:5000/api/v1/tribes/articles');
+      const res = await fetch(`${API_BASE_URL}/tribes/articles`);
       const result = await res.json();
       if (result.success && result.data?.articles) {
         setArticles(result.data.articles);
@@ -44,7 +48,7 @@ export const ArticlesProvider = ({ children }: { children: React.ReactNode }) =>
         headers['Authorization'] = `Bearer ${token}`;
       }
 
-      await fetch('http://localhost:5000/api/v1/tribes/articles', {
+      await fetch(`${API_BASE_URL}/tribes/articles`, {
         method: 'POST',
         headers,
         body: JSON.stringify(article)
@@ -63,8 +67,8 @@ export const ArticlesProvider = ({ children }: { children: React.ReactNode }) =>
         const token = await user.getIdToken();
         headers['Authorization'] = `Bearer ${token}`;
       }
-      
-      await fetch(`http://localhost:5000/api/v1/tribes/articles/${id}`, {
+
+      await fetch(`${API_BASE_URL}/tribes/articles/${id}`, {
         method: 'DELETE',
         headers
       });
@@ -74,10 +78,26 @@ export const ArticlesProvider = ({ children }: { children: React.ReactNode }) =>
     }
   }, [fetchArticles]);
 
+  const updateArticleStatus = useCallback(async (id: string, status: string) => {
+    try {
+      const user = auth.currentUser;
+      if (!user) throw new Error("Not authenticated");
+      const token = await user.getIdToken();
+      const action = status === 'APPROVED' ? 'approve' : 'reject';
+      await fetch(`${API_BASE_URL}/tribes/articles/${id}/${action}`, {
+        method: 'PUT',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      await fetchArticles();
+    } catch (e) {
+      console.error('Failed to update article status:', e);
+    }
+  }, [fetchArticles]);
+
   const refreshArticles = fetchArticles;
 
   return (
-    <ArticlesContext.Provider value={{ articles, addArticle, deleteArticle, refreshArticles }}>
+    <ArticlesContext.Provider value={{ articles, addArticle, deleteArticle, updateArticleStatus, refreshArticles }}>
       {children}
     </ArticlesContext.Provider>
   );

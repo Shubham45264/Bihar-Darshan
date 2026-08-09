@@ -63,7 +63,8 @@ export const deleteTribe = async (req: Request, res: Response, next: NextFunctio
 export const getApprovedArticles = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const tribeName = req.query.tribe as string | undefined;
-    const articles = await tribeService.getApprovedArticles(tribeName);
+    const status = req.query.status as string | undefined;
+    const articles = await tribeService.getApprovedArticles(tribeName, status);
     res.status(200).json({ success: true, data: { articles } });
   } catch (error) {
     next(error);

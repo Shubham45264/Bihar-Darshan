@@ -45,7 +45,7 @@ export const createTribalArticleSchema = z.object({
     publishedDate: z.string().optional().nullable(),
     readTime: z.number().int().positive().optional().nullable(),
     tags: z.array(z.string()).optional(),
-    location: z.string().min(1, 'Location is required'),
+    location: z.string().optional().nullable().default(''),
   }),
 });
 
