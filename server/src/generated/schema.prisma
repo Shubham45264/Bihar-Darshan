@@ -197,22 +197,6 @@ model TribeVideo {
   updatedAt DateTime @updatedAt
 }
 
-model Personality {
-  id          String         @id @default(uuid())
-  name        String
-  category    String
-  district    String
-  description String
-  imageUrl    String
-  fullBio     String?
-  author      String?        @default("Admin")
-  status      ApprovalStatus @default(PENDING)
-  publicId    String?
-
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-
 model TribalArticle {
   id            String   @id @default(uuid())
   headline      String

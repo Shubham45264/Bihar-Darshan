@@ -18,7 +18,7 @@ interface UserPostItem {
   status: 'published' | 'pending' | 'rejected';
   image: string;
   videoUrl?: string;
-  type: 'story' | 'journey' | 'gallery' | 'culture' | 'personality' | 'tribe_video' | 'article' | 'community_post';
+  type: 'story' | 'journey' | 'gallery' | 'culture' | 'tribe_video' | 'article' | 'community_post';
   rejectionReason?: string;
 }
 
@@ -71,11 +71,10 @@ const Profile = () => {
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
       // Fetch user profile and all post collections concurrently
-      const [profileRes, storiesData, discoverData, personalityData, videoData, articlesData] = await Promise.all([
+      const [profileRes, storiesData, discoverData, videoData, articlesData] = await Promise.all([
         fetch(`${API_BASE_URL}/users/profile`, { headers }).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/stories?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/discover?status=all`).then(r => r.json()).catch(() => null),
-        fetch(`${API_BASE_URL}/culture/personalities?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/tribes/videos/all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/tribes/articles?status=all`).then(r => r.json()).catch(() => null)
       ]);
@@ -131,24 +130,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         }));
       }
 
-      // 3. Personalities
-      let personalityPosts: UserPostItem[] = [];
-      if (personalityData?.success && personalityData.data?.personalities) {
-        const matchedPersonalities = personalityData.data.personalities.filter((p: any) => matchUser(p.author));
-        personalityPosts = matchedPersonalities.map((p: any) => ({
-          id: p.id,
-          title: p.name,
-          date: new Date(p.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-          views: `${p.views ?? 0} Views`,
-          category: p.category || "Personality",
-          status: p.status === "APPROVED" ? "published" : p.status === "REJECTED" ? "rejected" : "pending",
-          image: p.imageUrl || "/images/culture/hero-artwork.png",
-          type: "personality",
-          rejectionReason: p.rejectionReason || ""
-        }));
-      }
-
-      // 4. Tribe Videos
+      // 3. Tribe Videos
       let videoPosts: UserPostItem[] = [];
       if (videoData?.success && videoData.data?.videos) {
         const matchedVideos = videoData.data.videos.filter((v: any) => matchUser(v.uploaderName, v.userId));
@@ -258,7 +240,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         ...mappedJourneys,
         ...mappedGallery,
         ...culturePosts,
-        ...personalityPosts,
         ...videoPosts,
         ...tribalArticles,
         ...localPosts
@@ -488,8 +469,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         await fetch(`http://localhost:5000/api/v1/stories/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'culture') {
         await fetch(`http://localhost:5000/api/v1/discover/${stringId}`, { method: 'DELETE', headers });
-      } else if (type === 'personality') {
-        await fetch(`http://localhost:5000/api/v1/culture/personalities/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'tribe_video') {
         await fetch(`http://localhost:5000/api/v1/tribes/videos/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'journey') {
@@ -682,8 +661,6 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
                                 navigate('/gallery');
                               } else if (post.type === 'culture') {
                                 navigate('/discover');
-                              } else if (post.type === 'personality') {
-                                navigate('/culture');
                               } else if (post.type === 'tribe_video') {
                                 navigate('/tribals');
                               } else {

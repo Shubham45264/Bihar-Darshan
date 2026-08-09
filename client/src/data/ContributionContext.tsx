@@ -3,26 +3,15 @@ import type { CultureItem } from './cultureData';
 import type { GalleryItem } from './galleryData';
 import type { TourTrip } from './tourismData';
 
-export interface PersonalityItem {
-  id: number | string;
-  name: string;
-  category: 'Politician' | 'Arts & Cinema' | 'Historical' | 'Literature' | 'Sports';
-  district: string;
-  description: string;
-  imageUrl: string;
-  author: string;
-  status?: string;
-}
+import type { Community } from './communityData';
+import { auth } from '../lib/firebase';
+
+const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 export interface JourneySubmissionItem extends TourTrip {
   desc: string;
   authorId?: string;
 }
-
-import type { Community } from './communityData';
-import { auth } from '../lib/firebase';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
 export interface ProductItem {
   id: string | number;
@@ -43,13 +32,11 @@ export interface ProductItem {
 interface ContributionContextValue {
   cultureSubmissions: CultureItem[];
   gallerySubmissions: GalleryItem[];
-  personalitySubmissions: PersonalityItem[];
   journeySubmissions: JourneySubmissionItem[];
   communitySubmissions: Community[];
   productSubmissions: ProductItem[];
   addCultureSubmission: (submission: Omit<CultureItem, 'id' | 'featured'>) => void;
   addGallerySubmission: (submission: Omit<GalleryItem, 'id' | 'likes' | 'views' | 'comments' | 'uploadDate'>) => void;
-  addPersonalitySubmission: (submission: Omit<PersonalityItem, 'id'>) => void;
   addJourneySubmission: (submission: any) => void;
   updateJourneySubmission: (id: string, submission: any) => Promise<void>;
   addCommunitySubmission: (submission: Omit<Community, 'id' | 'members' | 'posts' | 'online' | 'verified' | 'createdOn'>) => void;
@@ -61,13 +48,11 @@ interface ContributionContextValue {
 const ContributionContext = createContext<ContributionContextValue>({
   cultureSubmissions: [],
   gallerySubmissions: [],
-  personalitySubmissions: [],
   journeySubmissions: [],
   communitySubmissions: [],
   productSubmissions: [],
   addCultureSubmission: () => { },
   addGallerySubmission: () => { },
-  addPersonalitySubmission: () => { },
   addJourneySubmission: () => { },
   updateJourneySubmission: async () => { },
   addCommunitySubmission: () => { },
@@ -79,7 +64,6 @@ const ContributionContext = createContext<ContributionContextValue>({
 export const ContributionProvider = ({ children }: { children: React.ReactNode }) => {
   const [cultureSubmissions, setCultureSubmissions] = useState<CultureItem[]>([]);
   const [gallerySubmissions, setGallerySubmissions] = useState<GalleryItem[]>([]);
-  const [personalitySubmissions, setPersonalitySubmissions] = useState<PersonalityItem[]>([]);
   const [journeySubmissions, setJourneySubmissions] = useState<JourneySubmissionItem[]>([]);
   const [communitySubmissions, setCommunitySubmissions] = useState<Community[]>([]);
   const [productSubmissions, setProductSubmissions] = useState<ProductItem[]>([]);
@@ -285,56 +269,6 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
     });
   }, []);
 
-  const addPersonalitySubmission = useCallback(async (submission: Omit<PersonalityItem, 'id'>) => {
-    try {
-      const user = auth.currentUser;
-      if (!user) throw new Error("Must be logged in to submit a personality");
-
-      const token = await user.getIdToken();
-
-      const payload = {
-        name: submission.name,
-        category: submission.category,
-        district: submission.district,
-        description: submission.description,
-        imageUrl: submission.imageUrl,
-        fullBio: submission.imageUrl, // Or empty string, schema holds string/null
-        author: user.displayName || user.email || 'User',
-        status: 'PENDING'
-      };
-
-      const response = await fetch('http://localhost:5000/api/v1/culture/personalities', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        },
-        body: JSON.stringify(payload)
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to create personality: ${await response.text()}`);
-      }
-
-      const result = await response.json();
-      const createdItem: PersonalityItem = {
-        id: result.data.personality.id,
-        name: result.data.personality.name,
-        category: result.data.personality.category,
-        district: result.data.personality.district,
-        description: result.data.personality.description,
-        imageUrl: result.data.personality.imageUrl,
-        author: result.data.personality.author,
-        status: result.data.personality.status
-      };
-
-      setPersonalitySubmissions((prev) => [createdItem, ...prev]);
-    } catch (error) {
-      console.error('Failed to submit personality to backend:', error);
-      throw error;
-    }
-  }, []);
-
   const addJourneySubmission = useCallback(async (submission: any) => {
     try {
       const user = auth.currentUser;
@@ -474,13 +408,11 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
       value={{
         cultureSubmissions,
         gallerySubmissions,
-        personalitySubmissions,
         journeySubmissions,
         communitySubmissions,
         productSubmissions,
         addCultureSubmission,
         addGallerySubmission,
-        addPersonalitySubmission,
         addJourneySubmission,
         updateJourneySubmission,
         addCommunitySubmission,

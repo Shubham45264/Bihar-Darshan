@@ -8,7 +8,6 @@ async function main() {
     const discoverCount = await prisma.discoverItem.count();
     const categoryCount = await prisma.category.count();
     const districtCount = await prisma.district.count();
-    const personalityCount = await prisma.personality.count();
     const categories = await prisma.category.findMany({ select: { id: true, title: true } });
     console.log("✅ Current DB categories count:", categories.length);
     console.log("Categories list:", categories);

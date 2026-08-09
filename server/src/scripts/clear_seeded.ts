@@ -15,17 +15,6 @@ async function main() {
   });
   console.log(`Deleted ${deletedDiscover.count} discover items.`);
 
-  const deletedPersonalities = await db.personality.deleteMany({
-    where: {
-      OR: [
-        { author: 'Admin' },
-        { author: 'admin' },
-        { author: null }
-      ]
-    }
-  });
-  console.log(`Deleted ${deletedPersonalities.count} personalities.`);
-
   console.log("Cleanup complete!");
 }
 

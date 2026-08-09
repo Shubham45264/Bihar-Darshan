@@ -15,19 +15,6 @@ export const createTribeSchema = z.object({
 
 export const updateTribeSchema = createTribeSchema.partial();
 
-export const createPersonalitySchema = z.object({
-  name: z.string().min(1),
-  category: z.string().min(1),
-  district: z.string().min(1),
-  description: z.string().min(1),
-  imageUrl: z.string().min(1),
-  fullBio: z.string().optional().nullable(),
-  author: z.string().optional().default('Admin'),
-  status: z.enum(['PENDING', 'APPROVED', 'REJECTED']).optional().default('PENDING'),
-});
-
-export const updatePersonalitySchema = createPersonalitySchema.partial();
-
 export const createTribalArticleSchema = z.object({
   headline: z.string().min(1),
   description: z.string().min(1),
@@ -44,5 +31,4 @@ export const createTribalArticleSchema = z.object({
 export const updateTribalArticleSchema = createTribalArticleSchema.partial();
 
 export type CreateTribeInput = z.infer<typeof createTribeSchema>;
-export type CreatePersonalityInput = z.infer<typeof createPersonalitySchema>;
 export type CreateTribalArticleInput = z.infer<typeof createTribalArticleSchema>;

@@ -60,14 +60,28 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
   const currentItem = items[currentIndex];
 
   return (
-    <div className="relative w-full h-[320px] sm:h-[480px] md:h-[540px] bg-neutral-900 flex items-center justify-center overflow-hidden shrink-0 group rounded-2xl">
+    <div className="relative w-full min-h-[320px] max-h-[75vh] bg-stone-950 flex items-center justify-center overflow-hidden shrink-0 group rounded-2xl border border-stone-800 shadow-xl p-2">
+      {/* Ambient Blurred Backdrop for rich filling */}
+      {currentItem.url && (
+        <img
+          src={currentItem.url}
+          alt=""
+          className="absolute inset-0 w-full h-full object-cover blur-2xl opacity-35 scale-110 pointer-events-none"
+        />
+      )}
+
+      {/* Main Uncropped Media Display */}
       {currentItem.type === 'VIDEO' || currentItem.type === 'video' ? (
-        <video src={currentItem.url} controls className="w-full h-full object-cover" />
+        <video
+          src={currentItem.url}
+          controls
+          className="relative z-10 max-h-[70vh] w-auto max-w-full object-contain rounded-xl shadow-2xl"
+        />
       ) : (
         <img
           src={currentItem.url}
           alt={story.title}
-          className="w-full h-full object-cover"
+          className="relative z-10 max-h-[70vh] w-auto max-w-full object-contain mx-auto rounded-xl shadow-2xl"
         />
       )}
 
@@ -75,7 +89,7 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
       {items.length > 1 && (
         <>
           {/* Badge indicator */}
-          <div className="absolute top-4 right-4 bg-black/75 text-white font-bold text-xs px-3.5 py-1.5 rounded-full backdrop-blur-md z-10 tracking-wider shadow">
+          <div className="absolute top-4 right-4 bg-black/80 text-white font-bold text-xs px-3.5 py-1.5 rounded-full backdrop-blur-md z-20 tracking-wider shadow border border-white/20">
             {currentIndex + 1} / {items.length}
           </div>
 
@@ -87,7 +101,7 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
                 e.stopPropagation();
                 setCurrentIndex((prev) => prev - 1);
               }}
-              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white p-2.5 rounded-full transition-all shadow-md z-10 cursor-pointer"
+              className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black text-white p-2.5 rounded-full transition-all shadow-md z-20 cursor-pointer border border-white/20"
             >
               <ChevronLeft size={22} />
             </button>
@@ -101,14 +115,14 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
                 e.stopPropagation();
                 setCurrentIndex((prev) => prev + 1);
               }}
-              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/90 text-white p-2.5 rounded-full transition-all shadow-md z-10 cursor-pointer"
+              className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/70 hover:bg-black text-white p-2.5 rounded-full transition-all shadow-md z-20 cursor-pointer border border-white/20"
             >
               <ChevronRight size={22} />
             </button>
           )}
 
           {/* Dots Indicator */}
-          <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-2 z-10 pointer-events-none">
+          <div className="absolute bottom-4 inset-x-0 flex items-center justify-center gap-2 z-20 pointer-events-none">
             {items.map((_, idx) => (
               <button
                 key={idx}

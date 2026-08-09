@@ -74,8 +74,10 @@ export const getStories = async (filter: {
     select: {
       id: true,
       title: true,
+      content: true,
       mediaUrl: true,
       mediaType: true,
+      mediaFiles: true,
       authorName: true,
       authorAvatar: true,
       district: true,

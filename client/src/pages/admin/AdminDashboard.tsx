@@ -13,7 +13,6 @@ const AdminDashboard = () => {
     { label: 'Categories & Subcategories', count: 'Explore', icon: Sparkles, path: '/admin/categories', color: 'from-amber-500/30 to-amber-500/5', glow: 'bg-amber-500', textColor: 'text-amber-400', desc: 'Categories, subcategories & stories' },
     { label: 'Districts', count: data.districts.length, icon: MapPin, path: '/admin/districts', color: 'from-blue-500/30 to-blue-500/5', glow: 'bg-blue-500', textColor: 'text-blue-400', desc: 'Manage district profiles' },
     { label: 'Tribal Groups', count: data.tribes.length, icon: Mountain, path: '/admin/tribes', color: 'from-emerald-500/30 to-[#10B981]/5', glow: 'bg-emerald-500', textColor: 'text-emerald-400', desc: 'Indigenous heritage' },
-    { label: 'Personalities', count: data.personalities.length, icon: UserCircle, path: '/admin/personalities', color: 'from-purple-500/30 to-purple-500/5', glow: 'bg-purple-500', textColor: 'text-purple-400', desc: 'Notable figures' },
     { label: 'Popular Places', count: data.popularPlaces.length, icon: Sparkles, path: '/admin/places', color: 'from-yellow-500/30 to-[#EAB308]/5', glow: 'bg-yellow-500', textColor: 'text-yellow-400', desc: 'Manage showcase cards' },
   ];
 
