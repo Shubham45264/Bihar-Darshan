@@ -1,7 +1,6 @@
 import Navbar from "../components/layout/Navbar";
 import HeroSection from "../components/hero/HeroSection";
 import PopularPlaces from "../components/places/PopularPlaces";
-import DistrictSection from "../components/districts/DistrictSection";
 import BiharMapSection from "../components/map/BiharMapSection";
 import GallerySection from "../components/gallery/GallerySection";
 import ShareStorySection from "../components/cta/ShareStorySection";
@@ -21,9 +20,6 @@ const Home = () => {
 
       {/* 2. Popular Places */}
       <PopularPlaces />
-
-      {/* 3. Districts of Bihar */}
-      <DistrictSection />
 
       {/* 4. Interactive Bihar Map */}
       <BiharMapSection />

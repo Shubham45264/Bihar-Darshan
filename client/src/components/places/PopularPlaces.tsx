@@ -6,7 +6,7 @@ const PopularPlaces = () => {
   const { popularPlaces } = useAdminData();
 
   return (
-    <section id="places" className="pt-32 pb-16 sm:pt-40 sm:pb-20 lg:pt-48 lg:pb-24 overflow-hidden">
+    <section id="places" className="py-12 sm:py-16 lg:py-20 overflow-hidden">
       {popularPlaces.length > 0 ? (
         <Carousel title="Popular Places You Must Visit" subtitle="Explore">
           {popularPlaces.map((place, index) => (

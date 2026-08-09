@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Landmark, Map, Compass, Hourglass, Sparkles, BookOpen } from "lucide-react";
+import { Landmark, Map, Compass, Hourglass, Sparkles, BookOpen, PenLine } from "lucide-react";
 import heroVideo from "../../assets/hero-video.mp4";
 import type { SiteSettings } from "../../data/AdminContext";
 
@@ -83,12 +83,12 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
             <div className="h-[1px] w-24 sm:w-32 bg-gradient-to-r from-[#D4A017] to-transparent" />
           </div>
 
-          {/* Main Title (Strict 2-Line Arrangement with Crisp Shadow) */}
-          <h1 className="font-display text-3xl sm:text-5xl md:text-6xl lg:text-[76px] text-white tracking-tight leading-[1.05] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
-            <span className="block whitespace-nowrap">
+          {/* Main Title (Responsive text wrapping for mobile) */}
+          <h1 className="font-display text-2xl xs:text-3xl sm:text-5xl md:text-6xl lg:text-[76px] text-white tracking-tight leading-[1.1] drop-shadow-[0_4px_12px_rgba(0,0,0,0.85)]">
+            <span className="block">
               {settings ? settings.heroTitle : "Unveil the Eternal Heritage of"}
             </span>
-            <span className="block text-[#D4A017] text-5xl sm:text-7xl md:text-8xl lg:text-[105px] font-extrabold mt-1 font-display drop-shadow-[0_4px_20px_rgba(212,160,23,0.4)]">
+            <span className="block text-[#D4A017] text-4xl xs:text-5xl sm:text-7xl md:text-8xl lg:text-[105px] font-extrabold mt-1 font-display drop-shadow-[0_4px_20px_rgba(212,160,23,0.4)]">
               {settings ? settings.heroSubtitle : "Bihar"}
             </span>
           </h1>
@@ -106,18 +106,24 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
           </p>
 
           {/* Action Buttons */}
-          <div className="flex flex-wrap items-center gap-4 mb-12 sm:mb-16">
+          <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3.5 sm:gap-4 mb-12 sm:mb-16">
             <a
               href="/discover"
-              className="px-7 py-3.5 rounded-xl bg-[#D4A017] hover:bg-[#E6B52F] text-[#1A110B] font-extrabold text-sm tracking-wide transition-all shadow-[0_0_25px_rgba(212,160,23,0.45)] hover:shadow-[0_0_35px_rgba(212,160,23,0.7)] flex items-center gap-2.5 cursor-pointer active:scale-95"
+              className="px-7 py-3.5 rounded-xl bg-[#D4A017] hover:bg-[#E6B52F] text-[#1A110B] font-extrabold text-sm tracking-wide transition-all shadow-[0_0_25px_rgba(212,160,23,0.45)] hover:shadow-[0_0_35px_rgba(212,160,23,0.7)] flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
             >
               <Compass size={18} /> Begin the Journey
             </a>
             <a
               href="/districts"
-              className="px-7 py-3.5 rounded-xl border border-white/50 hover:border-white text-white hover:bg-white/15 font-semibold text-sm tracking-wide transition-all backdrop-blur-md shadow-lg flex items-center gap-2.5 cursor-pointer active:scale-95"
+              className="px-7 py-3.5 rounded-xl border border-white/50 hover:border-white text-white hover:bg-white/15 font-semibold text-sm tracking-wide transition-all backdrop-blur-md shadow-lg flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
             >
               <Map size={18} /> Explore Districts
+            </a>
+            <a
+              href="/share-story"
+              className="px-7 py-3.5 rounded-xl border border-white/50 hover:border-white text-white hover:bg-white/15 font-semibold text-sm tracking-wide transition-all backdrop-blur-md shadow-lg flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
+            >
+              <PenLine size={18} /> Share Your Story
             </a>
           </div>
 

@@ -4,9 +4,9 @@ import bodhGayaImage from "../../assets/bodh-gaya.png";
 
 const TravelGuide = () => {
   return (
-    <section className="py-24 bg-[#F8F5EF]">
-      <div className="container mx-auto px-6 max-w-[1200px]">
-        <div className="flex flex-col lg:flex-row gap-12 lg:gap-8 items-start">
+    <section className="py-12 sm:py-20 bg-[#F8F5EF]">
+      <div className="container mx-auto px-4 sm:px-6 max-w-[1200px]">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-8 items-start">
           
           {/* Left Side: Why Visit Bihar? */}
           <div className="w-full lg:w-[35%]">
@@ -14,7 +14,7 @@ const TravelGuide = () => {
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-4 mb-4"
+              className="flex items-center gap-4 mb-3 sm:mb-4"
             >
               <span className="text-[#c19a5b] text-[11px] font-bold uppercase tracking-[0.2em]">
                 WHY VISIT BIHAR?
@@ -27,7 +27,7 @@ const TravelGuide = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-base text-[#4e342e] mb-8 leading-relaxed max-w-sm"
+              className="text-sm sm:text-base text-[#4e342e] mb-6 sm:mb-8 leading-relaxed max-w-sm"
             >
               Bihar is not just a destination, it's an emotion. 
               A blend of spirituality, heritage, nature, and warm hospitality.
@@ -38,7 +38,7 @@ const TravelGuide = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.2 }}
-              className="flex flex-col gap-5"
+              className="flex flex-col gap-4 sm:gap-5"
             >
               <div className="flex items-start gap-4">
                 <div className="w-6 h-6 flex items-center justify-center text-[#c19a5b] mt-0.5">
@@ -77,7 +77,7 @@ const TravelGuide = () => {
               className="bg-[#f2ece1] rounded-3xl overflow-hidden flex flex-col md:flex-row shadow-sm"
             >
               {/* Guide Content */}
-              <div className="p-10 md:w-1/2 flex flex-col">
+              <div className="p-6 sm:p-10 md:w-1/2 flex flex-col">
                 <h3 className="text-2xl font-serif text-[#3e2723] mb-8">Travel Guide</h3>
                 
                 <div className="flex flex-col gap-6">

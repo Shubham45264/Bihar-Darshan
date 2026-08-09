@@ -26,7 +26,7 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
   return (
     <section
       ref={ref}
-      className="relative min-h-[90vh] md:min-h-[85vh] w-full flex flex-col pt-32 pb-24 md:pb-0 justify-center overflow-hidden"
+      className="relative min-h-[75vh] sm:min-h-[85vh] w-full flex flex-col pt-28 sm:pt-36 pb-16 md:pb-0 justify-center overflow-hidden"
     >
       {/* Parallax Background Image */}
       <motion.div className="absolute inset-0" style={{ y: bgY }}>
@@ -52,7 +52,7 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
 
       {/* Content */}
       <motion.div
-        className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 pt-16"
+        className="relative z-10 flex flex-col items-center justify-center h-full text-center px-4 pt-12 sm:pt-16"
         style={{ opacity: contentOpacity, y: contentY }}
       >
         <motion.div
@@ -66,11 +66,11 @@ const GalleryHero = ({ stats = { images: 0, videos: 0, contributors: 0, district
             initial={{ scaleX: 0 }}
             animate={{ scaleX: 1 }}
             transition={{ delay: 0.5, duration: 0.8 }}
-            className="w-14 h-px bg-brand-gold mx-auto mb-6"
+            className="w-14 h-px bg-brand-gold mx-auto mb-4 sm:mb-6"
           />
 
           {/* Heading */}
-          <h1 className="font-display font-extrabold text-5xl md:text-7xl text-white tracking-tight mb-4">
+          <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-white tracking-tight mb-4">
             Visual Archive of <span className="text-[#EAB308]">Bihar</span>
           </h1>
 

@@ -23,15 +23,15 @@ import { galleryData as defaultGalleryData, type GalleryItem } from "../../data/
 type Cfg = { col: string; showOverlay: boolean };
 
 const CFG: Cfg[] = [
-  { col: "col-span-2", showOverlay: false }, // 0 – hero
-  { col: "col-span-1", showOverlay: false }, // 1
-  { col: "col-span-1", showOverlay: false }, // 2
-  { col: "col-span-1", showOverlay: false }, // 3
-  { col: "col-span-2", showOverlay: false }, // 4 – wide centre
-  { col: "col-span-1", showOverlay: false }, // 5
-  { col: "col-span-1", showOverlay: false }, // 6
-  { col: "col-span-1", showOverlay: false }, // 7
-  { col: "col-span-2", showOverlay: false }, // 8 – wide right
+  { col: "col-span-2 md:col-span-2", showOverlay: true }, // 0 – hero
+  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 1
+  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 2
+  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 3
+  { col: "col-span-1 md:col-span-2", showOverlay: false }, // 4 – wide centre on desktop
+  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 5
+  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 6
+  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 7
+  { col: "col-span-1 md:col-span-2", showOverlay: false }, // 8 – wide right on desktop
 ];
 
 const GallerySection = () => {
@@ -94,10 +94,7 @@ const GallerySection = () => {
         </div>
 
         {/* ── Mosaic Grid ── */}
-        <div
-          className="grid gap-3"
-          style={{ gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "220px" }}
-        >
+        <div className="grid grid-cols-2 md:grid-cols-4 grid-flow-dense gap-2.5 sm:gap-3.5 auto-rows-[160px] sm:auto-rows-[200px] md:auto-rows-[220px]">
           {galleryItems.map((item, index) => {
             const cfg = CFG[index] ?? { col: "col-span-1", showOverlay: false };
             const isVideo = item.mediaType === "video";
@@ -114,8 +111,11 @@ const GallerySection = () => {
               >
                 {/* Photo */}
                 <img
-                  src={item.image}
+                  src={item.image || defaultGalleryData[0].image}
                   alt={item.title}
+                  onError={(e) => {
+                    (e.target as HTMLImageElement).src = defaultGalleryData[0].image;
+                  }}
                   className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.6]"
                   loading="lazy"
                 />
@@ -139,26 +139,26 @@ const GallerySection = () => {
                 {/* Always-visible play icon for video cards */}
                 {isVideo && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-12 h-12 rounded-full border-2 border-white/60 bg-white/15 backdrop-blur-sm flex items-center justify-center">
-                      <Play size={20} fill="white" className="text-white ml-0.5" />
+                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/60 bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                      <Play size={18} fill="white" className="text-white ml-0.5 sm:w-5 sm:h-5" />
                     </div>
                   </div>
                 )}
 
-                {/* Hover title + action overlay (all non-hero cards) */}
+                {/* Hover / Mobile title + action overlay (all non-hero cards) */}
                 {!cfg.showOverlay && (
                   <div
-                    className="absolute inset-x-0 bottom-0 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out p-3"
-                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)" }}
+                    className="absolute inset-x-0 bottom-0 p-2.5 sm:p-3 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)" }}
                   >
-                    <p className="text-white font-semibold text-sm leading-snug line-clamp-1 drop-shadow">
+                    <p className="text-white font-semibold text-xs sm:text-sm leading-snug line-clamp-1 drop-shadow">
                       {item.title}
                     </p>
-                    <div className="flex items-center gap-1.5 mt-1">
+                    <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1">
                       {isVideo ? (
-                        <><Play size={12} fill="white" className="text-white opacity-80" /><span className="text-white/70 text-xs">Play video</span></>
+                        <><Play size={10} fill="white" className="text-white opacity-80" /><span className="text-white/80 text-[10px] sm:text-xs">Play video</span></>
                       ) : (
-                        <><ZoomIn size={12} className="text-white opacity-80" /><span className="text-white/70 text-xs">View photo</span></>
+                        <><ZoomIn size={10} className="text-white opacity-80" /><span className="text-white/80 text-[10px] sm:text-xs">View photo</span></>
                       )}
                     </div>
                   </div>

@@ -37,16 +37,16 @@ const FeaturedJourneys = () => {
   const displayJourneys = showAll ? combinedJourneys : combinedJourneys.slice(0, 3);
 
   return (
-    <section className="py-24 bg-[#F8F5EF]">
-      <div className="container mx-auto px-6 max-w-[1200px]">
+    <section className="py-12 sm:py-20 bg-[#F8F5EF]">
+      <div className="container mx-auto px-4 sm:px-6 max-w-[1200px]">
         {/* Header */}
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 sm:gap-6 mb-8 sm:mb-12">
           <div>
             <motion.div
               initial={{ opacity: 0, y: 10 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="flex items-center gap-4 mb-3"
+              className="flex items-center gap-4 mb-2 sm:mb-3"
             >
               <span className="text-[#c19a5b] text-[11px] font-bold uppercase tracking-[0.2em] font-sans">
                 CURATED EXPERIENCES
@@ -57,48 +57,48 @@ const FeaturedJourneys = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.1 }}
-              className="text-4xl md:text-5xl font-serif text-[#3e2723] flex items-center gap-4"
+              className="text-2xl sm:text-4xl md:text-5xl font-serif text-[#3e2723] flex items-center gap-4"
             >
               Signature Journeys & Itineraries
               <div className="hidden md:block h-[2px] w-12 bg-[#c19a5b]" />
             </motion.h2>
           </div>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-3">
             <Link
               to="/tourism/create-journey"
-              className="flex items-center gap-2 text-sm font-bold text-white bg-[#c19a5b] px-6 py-2 rounded-full hover:bg-[#a8864d] transition-colors shadow-sm font-sans"
+              className="flex items-center gap-2 text-xs sm:text-sm font-bold text-white bg-[#c19a5b] px-4 py-2 sm:px-6 sm:py-2 rounded-full hover:bg-[#a8864d] transition-colors shadow-sm font-sans"
             >
               Create
             </Link>
             {combinedJourneys.length > 3 && (
               <button
                 onClick={() => setShowAll(!showAll)}
-                className="flex items-center gap-2 text-sm font-bold text-[#3e2723] hover:text-[#c19a5b] transition-colors border border-[#3e2723]/20 px-4 py-2 rounded-full hover:border-[#c19a5b] font-sans"
+                className="flex items-center gap-1.5 text-xs sm:text-sm font-bold text-[#3e2723] hover:text-[#c19a5b] transition-colors border border-[#3e2723]/20 px-3.5 py-2 sm:px-4 sm:py-2 rounded-full hover:border-[#c19a5b] font-sans"
               >
-                {showAll ? "Show Less" : "See all experiences"} <ArrowRight size={16} />
+                {showAll ? "Show Less" : "See all experiences"} <ArrowRight size={15} />
               </button>
             )}
           </div>
         </div>
 
         {displayJourneys.length === 0 ? (
-          <div className="text-center py-24 bg-white/40 border border-dashed border-[#c19a5b]/40 rounded-3xl backdrop-blur-sm max-w-2xl mx-auto">
-            <div className="w-16 h-16 bg-[#c19a5b]/10 rounded-full flex items-center justify-center mx-auto mb-6 text-[#c19a5b]">
-              <ArrowRight size={24} className="rotate-45" />
+          <div className="text-center py-16 sm:py-24 bg-white/40 border border-dashed border-[#c19a5b]/40 rounded-3xl backdrop-blur-sm max-w-2xl mx-auto px-4">
+            <div className="w-14 h-14 sm:w-16 sm:h-16 bg-[#c19a5b]/10 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6 text-[#c19a5b]">
+              <ArrowRight size={22} className="rotate-45" />
             </div>
-            <h4 className="text-xl font-serif text-[#3e2723] mb-2">No Published Journeys Yet</h4>
-            <p className="text-[#3e2723]/60 mb-8 max-w-md mx-auto text-sm font-sans">
+            <h4 className="text-lg sm:text-xl font-serif text-[#3e2723] mb-2">No Published Journeys Yet</h4>
+            <p className="text-[#3e2723]/60 mb-6 sm:mb-8 max-w-md mx-auto text-xs sm:text-sm font-sans leading-relaxed">
               All community-submitted itineraries require administrative review before becoming public. Share your unique Bihar travel experience now!
             </p>
             <Link
               to="/tourism/create-journey"
-              className="inline-flex items-center gap-2 text-sm font-bold text-white bg-[#c19a5b] px-8 py-3 rounded-full hover:bg-[#a8864d] transition-all duration-300 shadow-md font-sans hover:scale-105"
+              className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-white bg-[#c19a5b] px-6 py-2.5 sm:px-8 sm:py-3 rounded-full hover:bg-[#a8864d] transition-all duration-300 shadow-md font-sans hover:scale-105"
             >
               Share Your Journey
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
             {displayJourneys.map((trip, i) => {
               const isAuthor = currentUser && (trip as any).authorId === currentUser.uid;
               const tripCategory = (trip as any).category || "";
@@ -121,7 +121,7 @@ const FeaturedJourneys = () => {
                     className="bg-white rounded-2xl shadow-sm border border-[#e8dfcf]/50 overflow-hidden flex flex-col h-full group hover:shadow-[0_20px_40px_-15px_rgba(62,39,35,0.15)] hover:-translate-y-2 transition-all duration-500 relative"
                   >
                     {/* Image */}
-                    <div className="relative h-56 overflow-hidden shrink-0">
+                    <div className="relative h-44 sm:h-56 overflow-hidden shrink-0">
                       <img
                         src={trip.image}
                         alt={trip.title}
@@ -137,7 +137,7 @@ const FeaturedJourneys = () => {
                             e.stopPropagation();
                             navigate(`/tourism/create-journey?editId=${trip.id}`);
                           }}
-                          className="absolute top-3 right-3 z-20 bg-[#F4A261] hover:bg-[#E5914F] text-black w-9 h-9 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 font-sans"
+                          className="absolute top-3 right-3 z-20 bg-[#F4A261] hover:bg-[#E5914F] text-black w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 font-sans"
                           title="Edit Experience"
                         >
                           <Edit3 size={14} />
@@ -146,7 +146,7 @@ const FeaturedJourneys = () => {
                     </div>
 
                     {/* Content */}
-                    <div className="p-6 flex-1 flex flex-col justify-start items-center text-center relative bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]">
+                    <div className="p-4 sm:p-6 flex-1 flex flex-col justify-start items-center text-center relative bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]">
 
                       {/* Company name */}
                       {companyName && companyName !== "Community Contributor" && (

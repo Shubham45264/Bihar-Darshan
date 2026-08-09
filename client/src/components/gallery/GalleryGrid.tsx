@@ -84,13 +84,13 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1400px] mx-auto">
-        {/* Dynamic Grid Wrapper */}
+        {/* Dynamic Responsive Grid Wrapper */}
         <div 
-          className={`grid gap-4 grid-flow-dense
-            ${visibleItems.length === 1 ? "grid-cols-1 auto-rows-[400px]" : ""}
-            ${visibleItems.length === 2 ? "grid-cols-1 sm:grid-cols-2 auto-rows-[350px]" : ""}
-            ${visibleItems.length === 3 ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[300px]" : ""}
-            ${visibleItems.length >= 4 ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 auto-rows-[250px]" : ""}
+          className={`grid gap-2.5 sm:gap-4 grid-flow-dense
+            ${visibleItems.length === 1 ? "grid-cols-1 auto-rows-[280px] sm:auto-rows-[400px]" : ""}
+            ${visibleItems.length === 2 ? "grid-cols-2 sm:grid-cols-2 auto-rows-[180px] sm:auto-rows-[350px]" : ""}
+            ${visibleItems.length === 3 ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 auto-rows-[180px] sm:auto-rows-[300px]" : ""}
+            ${visibleItems.length >= 4 ? "grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 auto-rows-[160px] sm:auto-rows-[220px] md:auto-rows-[250px]" : ""}
           `}
         >
           {visibleItems.map((item, i) => {
@@ -102,18 +102,18 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
             } else if (total === 2) {
               spanClass = "col-span-1 row-span-1";
             } else if (total === 3) {
-              if (i === 0) spanClass = "col-span-1 sm:col-span-2 md:col-span-2 row-span-2";
+              if (i === 0) spanClass = "col-span-2 sm:col-span-2 md:col-span-2 row-span-2";
               else spanClass = "col-span-1 row-span-1";
             } else {
               const pattern = [
                 "col-span-1 row-span-2", // tall
-                "col-span-1 sm:col-span-2 row-span-1", // wide
+                "col-span-2 sm:col-span-2 row-span-1", // wide
                 "col-span-1 row-span-1", // small
                 "col-span-1 row-span-1", // small
-                "col-span-1 sm:col-span-2 row-span-2", // large
+                "col-span-2 sm:col-span-2 row-span-2", // large
                 "col-span-1 row-span-2", // tall
                 "col-span-1 row-span-1", // small
-                "col-span-1 sm:col-span-2 row-span-1", // wide
+                "col-span-2 sm:col-span-2 row-span-1", // wide
               ];
               spanClass = pattern[i % pattern.length];
             }

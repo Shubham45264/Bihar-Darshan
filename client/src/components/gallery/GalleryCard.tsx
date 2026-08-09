@@ -64,6 +64,7 @@ const GalleryCard = ({ item, index, spanClass, onClick }: GalleryCardProps) => {
           <img
             src={item.image}
             alt={item.title}
+            onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x300?text=Bihar+Gallery"; }}
             className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             loading="lazy"
           />

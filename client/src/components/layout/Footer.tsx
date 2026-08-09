@@ -42,44 +42,44 @@ const Footer = () => {
 
 
 
-      <div className="max-w-[1200px] mx-auto px-6 lg:px-8 pt-16 pb-12 relative z-10">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-12 lg:gap-16">
+      <div className="max-w-[1200px] mx-auto px-5 sm:px-6 lg:px-8 pt-8 sm:pt-12 pb-6 sm:pb-8 relative z-10">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 sm:gap-8 lg:gap-12">
           {/* Logo & Description */}
-          <div className="col-span-1 md:col-span-1 flex flex-col items-start">
-            <div className="mb-5">
+          <div className="col-span-2 md:col-span-1 flex flex-col items-start">
+            <div className="mb-3">
               <img
                 src={logo}
                 alt="Bihar Darshan"
-                className="h-20 lg:h-24 w-auto object-contain drop-shadow-[0_2px_8px_rgba(212,160,23,0.25)]"
+                className="h-14 sm:h-18 lg:h-20 w-auto object-contain drop-shadow-[0_2px_8px_rgba(212,160,23,0.25)]"
                 style={{
                   filter: "brightness(0) saturate(100%) invert(84%) sepia(25%) saturate(700%) hue-rotate(350deg) brightness(96%) contrast(90%)"
                 }}
               />
             </div>
-            <p className="text-[#AFA28F] text-[14px] leading-[1.7] max-w-[280px]">
+            <p className="text-[#AFA28F] text-xs sm:text-sm leading-relaxed max-w-xs">
               {siteSettings?.footerAbout || "Your portal to the timeless heritage, sacred landscapes, and living traditions of Bihar."}
             </p>
           </div>
 
           {/* Quick Links */}
-          <div className="md:ml-4">
-            <h3 className="text-[#E8DCC4] font-serif font-bold text-[16px] tracking-wide mb-6">
+          <div className="col-span-1">
+            <h3 className="text-[#E8DCC4] font-serif font-bold text-sm sm:text-[16px] tracking-wide mb-3">
               Explore Bihar
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-2 sm:space-y-3">
               {quickLinks.map((link) => (
                 <li key={link.label}>
                   {link.href.startsWith("/") ? (
                     <Link
                       to={link.href}
-                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-xs sm:text-[14px] transition-colors duration-300"
                     >
                       {link.label}
                     </Link>
                   ) : (
                     <a
                       href={link.href}
-                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-xs sm:text-[14px] transition-colors duration-300"
                     >
                       {link.label}
                     </a>
@@ -90,24 +90,24 @@ const Footer = () => {
           </div>
 
           {/* Connect */}
-          <div>
-            <h3 className="text-[#E8DCC4] font-serif font-bold text-[16px] tracking-wide mb-6">
-              Information & Assistance
+          <div className="col-span-1">
+            <h3 className="text-[#E8DCC4] font-serif font-bold text-sm sm:text-[16px] tracking-wide mb-3">
+              Information
             </h3>
-            <ul className="space-y-4">
+            <ul className="space-y-2 sm:space-y-3">
               {connectLinks.map((link) => (
                 <li key={link.label}>
                   {link.href.startsWith("/") ? (
                     <Link
                       to={link.href}
-                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-xs sm:text-[14px] transition-colors duration-300"
                     >
                       {link.label}
                     </Link>
                   ) : (
                     <a
                       href={link.href}
-                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-[15px] transition-colors duration-300"
+                      className="text-[#AFA28F] hover:text-[#E8DCC4] text-xs sm:text-[14px] transition-colors duration-300"
                     >
                       {link.label}
                     </a>
@@ -118,19 +118,19 @@ const Footer = () => {
           </div>
 
           {/* Social */}
-          <div>
-            <h3 className="text-[#E8DCC4] font-serif font-bold text-[16px] tracking-wide mb-6">
+          <div className="col-span-2 md:col-span-1">
+            <h3 className="text-[#E8DCC4] font-serif font-bold text-sm sm:text-[16px] tracking-wide mb-3">
               Connect With Us
             </h3>
-            <div className="flex gap-4">
+            <div className="flex gap-3">
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
                   aria-label={social.label}
-                  className="w-[42px] h-[42px] rounded-full border border-[#8C7A60] border-opacity-50 flex items-center justify-center text-[#E8DCC4] hover:bg-[#D4A017] hover:border-[#D4A017] hover:text-[#1A1814] transition-all duration-300"
+                  className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#8C7A60] border-opacity-50 flex items-center justify-center text-[#E8DCC4] hover:bg-[#D4A017] hover:border-[#D4A017] hover:text-[#1A1814] transition-all duration-300"
                 >
-                  <social.icon size={17} strokeWidth={1.5} />
+                  <social.icon size={16} strokeWidth={1.5} />
                 </a>
               ))}
             </div>
@@ -140,8 +140,8 @@ const Footer = () => {
 
       {/* Bottom Bar */}
       <div className="border-t border-[#312B22] relative z-10">
-        <div className="max-w-[1200px] mx-auto px-6 lg:px-8 py-5 flex items-center justify-center">
-          <p className="text-center text-[#978C79] text-[13px]">
+        <div className="max-w-[1200px] mx-auto px-5 sm:px-6 lg:px-8 py-3.5 flex items-center justify-center">
+          <p className="text-center text-[#978C79] text-xs">
             © 2026 Bihar Darshan. All Rights Reserved.
           </p>
         </div>

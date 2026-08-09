@@ -142,7 +142,7 @@ const GalleryFilters = ({
                   }`}
                 >
                   <SlidersHorizontal size={13} />
-                  <span className="hidden sm:inline">
+                  <span className="inline text-[11px] sm:text-xs">
                     {mediaOptions.find((m) => m.value === mediaFilter)?.label}
                   </span>
                   <ChevronDown
@@ -191,14 +191,14 @@ const GalleryFilters = ({
                     closeAllDropdowns();
                     setCategoryOpen(!prev);
                   }}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
                     categoryOpen
                       ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
                       : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
                   <span className="text-sm">{categoryIcons[categoryFilter] || "🏛️"}</span>
-                  <span className="max-w-[80px] sm:max-w-[100px] truncate hidden sm:inline">{categoryFilter}</span>
+                  <span className="max-w-[90px] sm:max-w-[120px] truncate inline text-[11px] sm:text-xs">{categoryFilter}</span>
                   <ChevronDown
                     size={13}
                     className={`transition-transform duration-300 ${categoryOpen ? "rotate-180" : ""}`}
@@ -247,14 +247,14 @@ const GalleryFilters = ({
                     closeAllDropdowns();
                     setSortOpen(!prev);
                   }}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
                     sortOpen
                       ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
                       : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
                   }`}
                 >
                   <span className="text-gray-400 text-[10px] uppercase tracking-wider hidden sm:inline">Sort</span>
-                  <span>{sortOptions.find((s) => s.value === sortBy)?.label}</span>
+                  <span className="inline text-[11px] sm:text-xs">{sortOptions.find((s) => s.value === sortBy)?.label}</span>
                   <ChevronDown
                     size={13}
                     className={`transition-transform duration-300 ${sortOpen ? "rotate-180" : ""}`}
