@@ -29,8 +29,8 @@ if (!admin.apps.length) {
 
     console.log('✅ Firebase Admin initialized successfully');
   } else {
-    throw new Error(
-      'Missing Firebase Admin environment variables'
+    console.warn(
+      '⚠️ Missing Firebase Admin environment variables (FIREBASE_PROJECT_ID, FIREBASE_PRIVATE_KEY, FIREBASE_CLIENT_EMAIL). Firebase authentication will not work until set.'
     );
   }
 }
