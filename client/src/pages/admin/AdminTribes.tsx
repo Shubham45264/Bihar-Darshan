@@ -40,7 +40,7 @@ const CONTENT_TABS = TABS.filter(t => t.key !== 'hero' && t.key !== 'articles' &
 
 
 
-const emptyForm: Partial<TribeItem> = {
+const emptyForm: Partial<TribeItem> & { bottomDesc?: string } = {
   id: '',
   hindiName: 'आदिवासी',
   englishName: '',
@@ -223,7 +223,7 @@ const AdminTribes = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [editingItem, setEditingItem] = useState<TribeItem | null>(null);
-  const [formData, setFormData] = useState<Partial<TribeItem>>(emptyForm);
+  const [formData, setFormData] = useState<Partial<TribeItem> & { bottomDesc?: string }>(emptyForm);
   const [itemToDelete, setItemToDelete] = useState<TribeItem | null>(null);
   const [activeTab, setActiveTab] = useState<TabKey>('hero');
 
@@ -330,7 +330,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
     if (typeof sections === 'string') {
       try { sections = JSON.parse(sections); } catch (e) { sections = []; }
     }
-    setFormData({ ...item, cultureSections: ensureAllSections(sections) });
+    setFormData({ ...item, cultureSections: ensureAllSections(Array.isArray(sections) ? sections : []) });
     setIsModalOpen(true);
   };
 

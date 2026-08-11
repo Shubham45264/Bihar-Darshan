@@ -124,20 +124,18 @@ export const personalities: Personality[] = [
 ];
 
 export default function Personalities() {
-  const { personalities: allPersonalitiesBase } = useAdminData();
-  const { personalitySubmissions } = useContributions();
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedDist, setSelectedDist] = useState('All Districts');
   const [selectedCat, setSelectedCat] = useState('All');
   const [selectedBio, setSelectedBio] = useState<Personality | null>(null);
 
   const allPersonalities = useMemo(() => {
-    return [...personalitySubmissions, ...allPersonalitiesBase];
-  }, [personalitySubmissions, allPersonalitiesBase]);
+    return personalities;
+  }, []);
 
   const getUniqueDistricts = () => {
-    const dists = allPersonalities.map(p => p.district);
-    return ['All Districts', ...new Set(dists)];
+    const dists = allPersonalities.map((p: Personality) => p.district);
+    return ['All Districts', ...Array.from(new Set(dists))];
   };
 
   const categories = [
@@ -152,8 +150,8 @@ export default function Personalities() {
   const districts = getUniqueDistricts();
 
   const filteredData = useMemo(() => {
-    return allPersonalities.filter((p) => {
-      const isApproved = p.status === 'APPROVED';
+    return allPersonalities.filter((p: Personality) => {
+      const isApproved = !p.status || p.status === 'APPROVED';
       if (!isApproved) return false;
 
       const matchSearch =
@@ -244,7 +242,7 @@ export default function Personalities() {
 
         {filteredData.length > 0 ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
-            {filteredData.map((person) => (
+            {filteredData.map((person: Personality) => (
               <Link
                 key={person.id}
                 to={`/personalities/${person.id}`}

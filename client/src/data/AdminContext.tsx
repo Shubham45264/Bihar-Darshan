@@ -35,6 +35,7 @@ export interface TribeItem {
   leftDesc?: string;
   rightTitle?: string;
   rightDesc?: string;
+  bottomDesc?: string;
   cultureSections?: CultureSection[];
 }
 

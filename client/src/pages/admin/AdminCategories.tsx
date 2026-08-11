@@ -167,7 +167,7 @@ const AdminCategories = () => {
   const [subDesc, setSubDesc] = useState('');
   const [subImage, setSubImage] = useState('');
 
-  const getAuthHeaders = async () => {
+  const getAuthHeaders = async (): Promise<Record<string, string>> => {
     const user = auth.currentUser;
     const token = user ? await user.getIdToken() : '';
     return token ? { 'Authorization': `Bearer ${token}` } : {};
@@ -179,7 +179,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/categories?status=ALL&_t=${Date.now()}`, {
         cache: 'no-store',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -196,7 +196,7 @@ const AdminCategories = () => {
     try {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/stories?status=PENDING`, {
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -211,7 +211,7 @@ const AdminCategories = () => {
     try {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/tribes/admin/articles/pending`, {
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -227,7 +227,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/tribes/articles/${articleId}/approve`, {
         method: 'PUT',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -249,7 +249,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/tribes/articles/${articleId}/reject`, {
         method: 'PUT',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -303,7 +303,7 @@ const AdminCategories = () => {
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json', ...authHeaders },
+        headers: { 'Content-Type': 'application/json', ...authHeaders } as HeadersInit,
         body: JSON.stringify({
           title: catTitle.trim(),
           description: catDesc.trim(),
@@ -331,7 +331,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/categories/${id}`, {
         method: 'DELETE',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -379,7 +379,7 @@ const AdminCategories = () => {
 
       const res = await fetch(url, {
         method,
-        headers: { 'Content-Type': 'application/json', ...authHeaders },
+        headers: { 'Content-Type': 'application/json', ...authHeaders } as HeadersInit,
         body: JSON.stringify({
           title: subTitle.trim(),
           description: subDesc.trim(),
@@ -406,7 +406,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/categories/subcategories/${subId}`, {
         method: 'DELETE',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -432,7 +432,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/stories/${storyId}/approve`, {
         method: 'PUT',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
@@ -455,7 +455,7 @@ const AdminCategories = () => {
       const authHeaders = await getAuthHeaders();
       const res = await fetch(`${API_BASE_URL}/stories/${storyId}/reject`, {
         method: 'PUT',
-        headers: { ...authHeaders }
+        headers: authHeaders as HeadersInit
       });
       const data = await res.json();
       if (data.success) {
