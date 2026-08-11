@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import '../../types/express';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendSuccess } from '../../helpers/responseHandler';
 

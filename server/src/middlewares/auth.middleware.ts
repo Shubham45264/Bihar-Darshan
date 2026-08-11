@@ -1,5 +1,4 @@
 import { Request, Response, NextFunction } from 'express';
-import '../types/express';
 import { firebaseAdmin } from '../config/firebase';
 import { AppError } from '../errors/AppError';
 import { catchAsync } from '../utils/catchAsync';
