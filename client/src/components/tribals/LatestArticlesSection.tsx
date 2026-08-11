@@ -1,10 +1,12 @@
 import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Calendar, Clock, ArrowRight, Newspaper, PenLine } from 'lucide-react';
 import type { TribalArticle } from '../../data/tribalArticlesData';
 import { useArticles } from '../../data/ArticlesContext';
 import ShareStoryModal from './ShareStoryModal';
 import ArticleDetailModal from './ArticleDetailModal';
+import { auth } from '../../lib/firebase';
 
 interface LatestArticlesSectionProps {
   tribeName?: string;
@@ -160,6 +162,7 @@ const EmptyState = ({ tribeName, onContribute }: { tribeName?: string, onContrib
 /* ── Main Section ────────────────────────────────────────────────── */
 
 const LatestArticlesSection = ({ tribeName }: LatestArticlesSectionProps) => {
+  const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(true);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedArticle, setSelectedArticle] = useState<TribalArticle | null>(null);
@@ -267,7 +270,13 @@ const LatestArticlesSection = ({ tribeName }: LatestArticlesSectionProps) => {
 
               {/* Contribute an Article */}
               <button
-                onClick={() => setIsModalOpen(true)}
+                onClick={() => {
+                  if (auth.currentUser) {
+                    setIsModalOpen(true);
+                  } else {
+                    navigate('/login');
+                  }
+                }}
                 className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-gradient-to-r from-[#E6B52F] to-[#D4A017] hover:from-[#F0C343] hover:to-[#E6B52F] text-[#3B2412] font-extrabold text-sm tracking-wider uppercase transition-all duration-300 shadow-md hover:shadow-lg hover:scale-[1.02] cursor-pointer"
               >
                 <PenLine className="w-4 h-4" />

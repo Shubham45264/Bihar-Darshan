@@ -54,6 +54,7 @@ const LoginPage: React.FC = () => {
   const [isLogin, setIsLogin] = useState(true);
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+  const [acceptedPrivacy, setAcceptedPrivacy] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
@@ -72,6 +73,11 @@ const LoginPage: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError('');
+
+    if (!isLogin && !acceptedPrivacy) {
+      setError('Please accept the Privacy Policy and Terms & Conditions to create an account.');
+      return;
+    }
 
     if (!isLogin && formData.newPassword !== formData.confirmPassword) {
       setError('Passwords do not match!');
@@ -108,6 +114,10 @@ const LoginPage: React.FC = () => {
 
   const handleGoogleLogin = async () => {
     setError('');
+    if (!isLogin && !acceptedPrivacy) {
+      setError('Please accept the Privacy Policy and Terms & Conditions to create an account.');
+      return;
+    }
     setIsLoading(true);
     try {
       const provider = new GoogleAuthProvider();
@@ -257,16 +267,39 @@ const LoginPage: React.FC = () => {
               )}
             </div>
 
-            {isLogin && (
+            {isLogin ? (
               <div className="flex items-center justify-end text-xs pt-0.5">
                 <Link to="/forgot-password" className="text-brand-gold hover:text-amber-300 transition-colors font-medium">Forgot password?</Link>
+              </div>
+            ) : (
+              <div className="flex items-start gap-2.5 pt-1 pb-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                <input
+                  type="checkbox"
+                  id="acceptPrivacy"
+                  checked={acceptedPrivacy}
+                  onChange={(e) => setAcceptedPrivacy(e.target.checked)}
+                  required
+                  className="mt-0.5 h-4 w-4 rounded border-white/20 bg-white/10 accent-amber-500 cursor-pointer shrink-0"
+                />
+                <label htmlFor="acceptPrivacy" className="text-xs leading-snug text-gray-300 select-none cursor-pointer">
+                  I accept the{' '}
+                  <Link
+                    to="/privacy-policy"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="text-brand-gold hover:text-amber-300 underline font-semibold transition-colors"
+                  >
+                    Privacy Policy
+                  </Link>{' '}
+                  and Terms &amp; Conditions
+                </label>
               </div>
             )}
 
             <button
               type="submit"
-              disabled={isLoading}
-              className="w-full py-3.5 px-4 bg-gold-dark hover:bg-accent-brown text-white font-bold rounded-2xl shadow-xl shadow-amber-950/40 transition-all active:scale-[0.97] mt-3 uppercase tracking-widest text-xs sm:text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              disabled={isLoading || (!isLogin && !acceptedPrivacy)}
+              className="w-full py-3.5 px-4 bg-gold-dark hover:bg-accent-brown text-white font-bold rounded-2xl shadow-xl shadow-amber-950/40 transition-all active:scale-[0.97] mt-3 uppercase tracking-widest text-xs sm:text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {isLoading ? (
                 <><Loader2 size={18} className="animate-spin" /> {isLogin ? 'Signing In...' : 'Creating Account...'}</>
@@ -284,8 +317,8 @@ const LoginPage: React.FC = () => {
             <button
               type="button"
               onClick={handleGoogleLogin}
-              disabled={isLoading}
-              className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-2xl transition-all active:scale-[0.97] flex items-center justify-center gap-2.5 text-sm cursor-pointer disabled:opacity-70 disabled:cursor-not-allowed"
+              disabled={isLoading || (!isLogin && !acceptedPrivacy)}
+              className="w-full py-3 px-4 bg-white/5 hover:bg-white/10 border border-white/10 text-white font-semibold rounded-2xl transition-all active:scale-[0.97] flex items-center justify-center gap-2.5 text-sm cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <svg className="w-5 h-5" viewBox="0 0 24 24">
                 <path fill="currentColor" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
@@ -302,7 +335,7 @@ const LoginPage: React.FC = () => {
               {isLogin ? "Don't have an account? " : "Already have an account? "}
             </span>
             <button
-              onClick={() => { setIsLogin(!isLogin); setError(''); }}
+              onClick={() => { setIsLogin(!isLogin); setError(''); setAcceptedPrivacy(false); }}
               className="text-brand-gold font-bold hover:underline decoration-2 underline-offset-4 bg-transparent border-none cursor-pointer"
             >
               {isLogin ? 'Register now' : 'Sign in instead'}

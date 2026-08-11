@@ -72,7 +72,7 @@ const KEYS = {
   tribalArticles: 'admin_tribal_articles',
   personalities: 'admin_personalities_v2',
   siteSettings: 'admin_site_settings',
-  popularPlaces: 'admin_popular_places',
+  popularPlaces: 'admin_popular_places_v3',
 };
 
 // ── Helper: load from localStorage or return default ──
@@ -122,7 +122,7 @@ interface AdminContextValue {
   updateTribes: (data: TribeItem[]) => void;
   updateTribalArticles: (data: TribalArticle[]) => void;
   updateSiteSettings: (data: SiteSettings) => void;
-  updatePopularPlaces: (data: PopularPlaceItem[]) => void;
+  updatePopularPlaces: (data: PopularPlaceItem[]) => Promise<void>;
 
   // Reset
   resetSection: (section: keyof typeof KEYS) => void;
@@ -528,6 +528,11 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
           saveToStorage(KEYS.siteSettings, merged);
           return merged;
         });
+
+        if (Array.isArray(serverSettings.popularPlaces)) {
+          setPopularPlaces(serverSettings.popularPlaces);
+          saveToStorage(KEYS.popularPlaces, serverSettings.popularPlaces);
+        }
       }
     } catch (e) {
       console.error('AdminContext: Failed to fetch site settings:', e);
@@ -649,7 +654,25 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       console.error('AdminContext: Failed to save site settings to server:', err);
     }
   }, []);
-  const updatePopularPlaces = createUpdater(KEYS.popularPlaces, setPopularPlaces);
+  const updatePopularPlaces = useCallback(async (data: PopularPlaceItem[]) => {
+    setPopularPlaces(data);
+    saveToStorage(KEYS.popularPlaces, data);
+    try {
+      const user = auth.currentUser;
+      const headers: any = { 'Content-Type': 'application/json' };
+      if (user) {
+        const token = await user.getIdToken();
+        headers['Authorization'] = `Bearer ${token}`;
+      }
+      await fetch(`${API_BASE_URL}/admin/settings`, {
+        method: 'PUT',
+        headers,
+        body: JSON.stringify({ popularPlaces: data })
+      });
+    } catch (err) {
+      console.error('AdminContext: Failed to save popular places to server:', err);
+    }
+  }, []);
 
   const approveProduct = async (id: string | number) => {
     try {

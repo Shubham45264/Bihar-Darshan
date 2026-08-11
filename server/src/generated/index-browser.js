@@ -354,6 +354,7 @@ exports.Prisma.SiteSettingsScalarFieldEnum = {
   statFestivals: 'statFestivals',
   statTourists: 'statTourists',
   footerAbout: 'footerAbout',
+  popularPlaces: 'popularPlaces',
   updatedAt: 'updatedAt'
 };
 

@@ -14,3 +14,9 @@ export const updateMyProfile = catchAsync(async (req: Request, res: Response, ne
   const updatedUser = await updateUserProfile(req.user!.id as string, validatedData);
   sendSuccess(res, 200, 'Profile updated successfully', { user: updatedUser });
 });
+
+export const getUserProfileById = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { id } = req.params;
+  const user = await getUserById(id as string);
+  sendSuccess(res, 200, 'User profile fetched successfully', { user });
+});

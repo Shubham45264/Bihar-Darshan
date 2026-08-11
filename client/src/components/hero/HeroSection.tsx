@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
 import { Landmark, Map, Compass, Hourglass, Sparkles, BookOpen, PenLine } from "lucide-react";
 import heroVideo from "../../assets/hero-video.mp4";
@@ -8,19 +9,44 @@ interface HeroSectionProps {
 }
 
 const HeroSection = ({ settings }: HeroSectionProps) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+  const [videoError, setVideoError] = useState(false);
+
+  const customSrc = settings?.heroVideo && settings.heroVideo.trim() !== "";
+  const activeVideoSrc = (!videoError && customSrc) ? settings!.heroVideo : heroVideo;
+
+  useEffect(() => {
+    setVideoError(false);
+  }, [settings?.heroVideo]);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.load();
+      videoRef.current.play().catch(() => {});
+    }
+  }, [activeVideoSrc]);
+
   return (
     <section id="home" className="relative min-h-screen w-full flex flex-col justify-center overflow-hidden pt-28 lg:pt-36 pb-12 bg-black">
       {/* Background Video with Enhanced Brightness & Saturation */}
       <video
-        key={settings?.heroVideo || "default-hero-video"}
+        ref={videoRef}
+        key={activeVideoSrc}
+        src={activeVideoSrc}
         autoPlay
         loop
         muted
         playsInline
+        onError={() => {
+          if (customSrc) {
+            console.warn("Custom hero video failed to load, falling back to default video.");
+            setVideoError(true);
+          }
+        }}
         poster={settings?.heroImage || undefined}
         className="absolute inset-0 w-full h-full object-cover brightness-[0.88] contrast-[1.08] saturate-[1.12]"
       >
-        <source src={settings?.heroVideo || heroVideo} type="video/mp4" />
+        <source src={activeVideoSrc} type="video/mp4" />
       </video>
 
       {/* Lightweight Cinematic Gradient (Left Text Readability without Pitch Darkness) */}

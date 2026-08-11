@@ -71,15 +71,6 @@ const PrivacyPolicy = () => {
             <span>✦</span> LEGAL & GOVERNANCE <span>✦</span>
           </div>
           <h1 className="privacy-hero-title">Privacy Policy</h1>
-          <div className="privacy-hero-dates">
-            <span className="privacy-date-item">
-              <strong>Effective Date:</strong> July 31, 2026
-            </span>
-            <span>•</span>
-            <span className="privacy-date-item">
-              <strong>Last Updated:</strong> July 31, 2026
-            </span>
-          </div>
 
           <div
             className="heritage-divider-line"
