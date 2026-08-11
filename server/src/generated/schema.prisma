@@ -339,6 +339,7 @@ model SiteSettings {
   statFestivals     String @default("50+")
   statTourists      String @default("1000+")
   footerAbout       String @default("Bihar Darshan is a digital platform to explore the rich cultural heritage, historical landmarks, and vibrant communities of Bihar.")
+  popularPlaces     Json?
 
   updatedAt DateTime @updatedAt
 }

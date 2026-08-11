@@ -17036,6 +17036,7 @@ export namespace Prisma {
     statFestivals: number
     statTourists: number
     footerAbout: number
+    popularPlaces: number
     updatedAt: number
     _all: number
   }
@@ -17097,6 +17098,7 @@ export namespace Prisma {
     statFestivals?: true
     statTourists?: true
     footerAbout?: true
+    popularPlaces?: true
     updatedAt?: true
     _all?: true
   }
@@ -17201,6 +17203,7 @@ export namespace Prisma {
     statFestivals: string
     statTourists: string
     footerAbout: string
+    popularPlaces: JsonValue | null
     updatedAt: Date
     _count: SiteSettingsCountAggregateOutputType | null
     _avg: SiteSettingsAvgAggregateOutputType | null
@@ -17237,6 +17240,7 @@ export namespace Prisma {
     statFestivals?: boolean
     statTourists?: boolean
     footerAbout?: boolean
+    popularPlaces?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -17254,6 +17258,7 @@ export namespace Prisma {
     statFestivals?: boolean
     statTourists?: boolean
     footerAbout?: boolean
+    popularPlaces?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -17271,6 +17276,7 @@ export namespace Prisma {
     statFestivals?: boolean
     statTourists?: boolean
     footerAbout?: boolean
+    popularPlaces?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["siteSettings"]>
 
@@ -17288,10 +17294,11 @@ export namespace Prisma {
     statFestivals?: boolean
     statTourists?: boolean
     footerAbout?: boolean
+    popularPlaces?: boolean
     updatedAt?: boolean
   }
 
-  export type SiteSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "heroEyebrow" | "heroTitle" | "heroSubtitle" | "heroDescription" | "heroImage" | "heroVideo" | "statPlaces" | "statDistricts" | "statCulturalSites" | "statFestivals" | "statTourists" | "footerAbout" | "updatedAt", ExtArgs["result"]["siteSettings"]>
+  export type SiteSettingsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "heroEyebrow" | "heroTitle" | "heroSubtitle" | "heroDescription" | "heroImage" | "heroVideo" | "statPlaces" | "statDistricts" | "statCulturalSites" | "statFestivals" | "statTourists" | "footerAbout" | "popularPlaces" | "updatedAt", ExtArgs["result"]["siteSettings"]>
 
   export type $SiteSettingsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "SiteSettings"
@@ -17310,6 +17317,7 @@ export namespace Prisma {
       statFestivals: string
       statTourists: string
       footerAbout: string
+      popularPlaces: Prisma.JsonValue | null
       updatedAt: Date
     }, ExtArgs["result"]["siteSettings"]>
     composites: {}
@@ -17747,6 +17755,7 @@ export namespace Prisma {
     readonly statFestivals: FieldRef<"SiteSettings", 'String'>
     readonly statTourists: FieldRef<"SiteSettings", 'String'>
     readonly footerAbout: FieldRef<"SiteSettings", 'String'>
+    readonly popularPlaces: FieldRef<"SiteSettings", 'Json'>
     readonly updatedAt: FieldRef<"SiteSettings", 'DateTime'>
   }
     
@@ -24273,6 +24282,7 @@ export namespace Prisma {
     statFestivals: 'statFestivals',
     statTourists: 'statTourists',
     footerAbout: 'footerAbout',
+    popularPlaces: 'popularPlaces',
     updatedAt: 'updatedAt'
   };
 
@@ -25874,6 +25884,7 @@ export namespace Prisma {
     statFestivals?: StringFilter<"SiteSettings"> | string
     statTourists?: StringFilter<"SiteSettings"> | string
     footerAbout?: StringFilter<"SiteSettings"> | string
+    popularPlaces?: JsonNullableFilter<"SiteSettings">
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }
 
@@ -25891,6 +25902,7 @@ export namespace Prisma {
     statFestivals?: SortOrder
     statTourists?: SortOrder
     footerAbout?: SortOrder
+    popularPlaces?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
   }
 
@@ -25911,6 +25923,7 @@ export namespace Prisma {
     statFestivals?: StringFilter<"SiteSettings"> | string
     statTourists?: StringFilter<"SiteSettings"> | string
     footerAbout?: StringFilter<"SiteSettings"> | string
+    popularPlaces?: JsonNullableFilter<"SiteSettings">
     updatedAt?: DateTimeFilter<"SiteSettings"> | Date | string
   }, "id">
 
@@ -25928,6 +25941,7 @@ export namespace Prisma {
     statFestivals?: SortOrder
     statTourists?: SortOrder
     footerAbout?: SortOrder
+    popularPlaces?: SortOrderInput | SortOrder
     updatedAt?: SortOrder
     _count?: SiteSettingsCountOrderByAggregateInput
     _avg?: SiteSettingsAvgOrderByAggregateInput
@@ -25953,6 +25967,7 @@ export namespace Prisma {
     statFestivals?: StringWithAggregatesFilter<"SiteSettings"> | string
     statTourists?: StringWithAggregatesFilter<"SiteSettings"> | string
     footerAbout?: StringWithAggregatesFilter<"SiteSettings"> | string
+    popularPlaces?: JsonNullableWithAggregatesFilter<"SiteSettings">
     updatedAt?: DateTimeWithAggregatesFilter<"SiteSettings"> | Date | string
   }
 
@@ -28015,6 +28030,7 @@ export namespace Prisma {
     statFestivals?: string
     statTourists?: string
     footerAbout?: string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: Date | string
   }
 
@@ -28032,6 +28048,7 @@ export namespace Prisma {
     statFestivals?: string
     statTourists?: string
     footerAbout?: string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: Date | string
   }
 
@@ -28049,6 +28066,7 @@ export namespace Prisma {
     statFestivals?: StringFieldUpdateOperationsInput | string
     statTourists?: StringFieldUpdateOperationsInput | string
     footerAbout?: StringFieldUpdateOperationsInput | string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28066,6 +28084,7 @@ export namespace Prisma {
     statFestivals?: StringFieldUpdateOperationsInput | string
     statTourists?: StringFieldUpdateOperationsInput | string
     footerAbout?: StringFieldUpdateOperationsInput | string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28083,6 +28102,7 @@ export namespace Prisma {
     statFestivals?: string
     statTourists?: string
     footerAbout?: string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: Date | string
   }
 
@@ -28100,6 +28120,7 @@ export namespace Prisma {
     statFestivals?: StringFieldUpdateOperationsInput | string
     statTourists?: StringFieldUpdateOperationsInput | string
     footerAbout?: StringFieldUpdateOperationsInput | string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -28117,6 +28138,7 @@ export namespace Prisma {
     statFestivals?: StringFieldUpdateOperationsInput | string
     statTourists?: StringFieldUpdateOperationsInput | string
     footerAbout?: StringFieldUpdateOperationsInput | string
+    popularPlaces?: NullableJsonNullValueInput | InputJsonValue
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
@@ -29765,6 +29787,7 @@ export namespace Prisma {
     statFestivals?: SortOrder
     statTourists?: SortOrder
     footerAbout?: SortOrder
+    popularPlaces?: SortOrder
     updatedAt?: SortOrder
   }
 

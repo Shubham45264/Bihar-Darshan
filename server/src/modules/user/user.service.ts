@@ -3,8 +3,13 @@ import { UpdateProfileInput } from './user.validation';
 import { AppError } from '../../errors/AppError';
 
 export const getUserById = async (id: string) => {
-  const user = await db.user.findUnique({
-    where: { id },
+  const user = await db.user.findFirst({
+    where: {
+      OR: [
+        { id },
+        { firebaseUid: id }
+      ]
+    },
     include: {
       journeys: true,
       galleryItems: true,

@@ -7,14 +7,18 @@ import defaultHeroVideo from '../../assets/hero-video.mp4';
 const AdminSettings = () => {
   const { siteSettings, updateSiteSettings, resetSection } = useAdminData();
   const [formData, setFormData] = useState(siteSettings);
+  const [hasLoadedInitial, setHasLoadedInitial] = useState(false);
   const [isUploadingVideo, setIsUploadingVideo] = useState(false);
   const [isUploadingImage, setIsUploadingImage] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState<string | null>(null);
 
   useEffect(() => {
-    setFormData(siteSettings);
-  }, [siteSettings]);
+    if (!hasLoadedInitial && siteSettings && (siteSettings.heroTitle || siteSettings.heroVideo || siteSettings.heroEyebrow)) {
+      setFormData(siteSettings);
+      setHasLoadedInitial(true);
+    }
+  }, [siteSettings, hasLoadedInitial]);
 
   const showToast = (msg: string) => {
     setToastMessage(msg);
@@ -58,7 +62,7 @@ const AdminSettings = () => {
       showToast('Background video uploaded successfully!');
     } catch (err) {
       console.error('Video upload failed:', err);
-      alert('Failed to upload video. Please check your network or try pasting a direct video URL.');
+      alert('Failed to upload video. Please check your network or paste a direct video URL.');
     } finally {
       setIsUploadingVideo(false);
     }

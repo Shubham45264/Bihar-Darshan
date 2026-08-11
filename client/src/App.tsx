@@ -38,6 +38,7 @@ import SubcategoryFeed from './pages/SubcategoryFeed';
 import StoryDetails from './pages/StoryDetails';
 import AdminCategories from './pages/admin/AdminCategories';
 import ProtectedRoute from './components/admin/ProtectedRoute';
+import UserProtectedRoute from './components/auth/UserProtectedRoute';
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -85,11 +86,16 @@ function App() {
           <Route path="/culture" element={<PageTransition><Discover /></PageTransition>} />
           <Route path="/culture/:id" element={<PageTransition><CultureDetails /></PageTransition>} />
           <Route path="/marketplace" element={<PageTransition><MarketPlace /></PageTransition>} />
-          <Route path="/marketplace/add" element={<PageTransition><AddProduct /></PageTransition>} />
           <Route path="/Marketplace" element={<PageTransition><MarketPlace /></PageTransition>} />
           <Route path="/tourism" element={<PageTransition><Tourism /></PageTransition>} />
-          <Route path="/tourism/create-journey" element={<PageTransition><CreateJourney /></PageTransition>} />
           <Route path="/tourism/:id" element={<PageTransition><JourneyDetails /></PageTransition>} />
+
+          {/* Protected User Creation & Sharing Routes */}
+          <Route element={<UserProtectedRoute />}>
+            <Route path="/share-story" element={<PageTransition><ShareStory /></PageTransition>} />
+            <Route path="/tourism/create-journey" element={<PageTransition><CreateJourney /></PageTransition>} />
+            <Route path="/marketplace/add" element={<PageTransition><AddProduct /></PageTransition>} />
+          </Route>
           <Route path="/tribals" element={<PageTransition><Tribals /></PageTransition>} />
           <Route path="/tribals/:id" element={<PageTransition><TribeDetail /></PageTransition>} />
           <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
@@ -97,8 +103,8 @@ function App() {
           <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
           <Route path="/forgot-password" element={<PageTransition><ForgotPasswordPage /></PageTransition>} />
           <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
+          <Route path="/profile/:userId" element={<PageTransition><Profile /></PageTransition>} />
           <Route path="/marketplace/:id" element={<PageTransition><ProductDetails /></PageTransition>} />
-          <Route path="/share-story" element={<PageTransition><ShareStory /></PageTransition>} />
           <Route path="/about-us" element={<PageTransition><AboutUs /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><ContactUs /></PageTransition>} />
           <Route path="/contact-us" element={<PageTransition><ContactUs /></PageTransition>} />

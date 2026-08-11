@@ -7,6 +7,8 @@ import { useContributions } from "../data/ContributionContext";
 import { product as initialProducts } from "../data/product";
 import heroBg from "../assets/hero.png";
 import "./ShareStory.css";
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload";
 
 const CATEGORIES = ["Art & Craft", "Textiles", "Handicrafts", "Wood Craft", "Jewelry", "Others"];
@@ -36,6 +38,15 @@ const AddProduct = () => {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate('/login', { replace: true });
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });

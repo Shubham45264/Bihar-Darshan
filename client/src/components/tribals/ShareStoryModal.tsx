@@ -57,9 +57,14 @@ const ShareStoryModal = ({ isOpen, onClose, defaultTribe }: ShareStoryModalProps
   const fileInputRef = useRef<HTMLInputElement>(null);
   const modalRef = useRef<HTMLDivElement>(null);
 
-  // Lock body scroll when modal is open
+  // Lock body scroll when modal is open and verify authentication
   useEffect(() => {
     if (isOpen) {
+      if (!auth.currentUser) {
+        onClose();
+        window.location.href = '/login';
+        return;
+      }
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';

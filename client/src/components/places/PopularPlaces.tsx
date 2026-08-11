@@ -11,7 +11,7 @@ const PopularPlaces = () => {
         <Carousel title="Popular Places You Must Visit" subtitle="Explore">
           {popularPlaces.map((place, index) => (
             <PlaceCard
-              key={place.name}
+              key={place.id || place.name || index}
               image={place.image}
               name={place.name}
               district={place.district}

@@ -71,10 +71,12 @@ const ShareStory = () => {
       if (user) {
         const name = user.displayName || user.email?.split('@')[0] || '';
         setPersonName(name);
+      } else {
+        navigate('/login', { replace: true });
       }
     });
     return () => unsubscribe();
-  }, []);
+  }, [navigate]);
 
   // Fetch Categories from Backend API
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';

@@ -57,8 +57,20 @@ const BIHAR_DISTRICTS = [
 // Component
 // ─────────────────────────────────────────────────────────────────────────────
 
+import { onAuthStateChanged } from "firebase/auth";
+import { auth } from "../lib/firebase";
+
 const CreateJourney = () => {
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (!user) {
+        navigate('/login', { replace: true });
+      }
+    });
+    return () => unsubscribe();
+  }, [navigate]);
   const [searchParams] = useSearchParams();
   const editId = searchParams.get("editId");
   const { journeySubmissions, addJourneySubmission, updateJourneySubmission } = useContributions();

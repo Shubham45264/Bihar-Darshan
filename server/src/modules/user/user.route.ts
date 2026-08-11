@@ -1,13 +1,17 @@
 import { Router } from 'express';
-import { getMyProfile, updateMyProfile } from './user.controller';
+import { getMyProfile, updateMyProfile, getUserProfileById } from './user.controller';
 import { authenticate } from '../../middlewares/auth.middleware';
 
 const router = Router();
 
-// All routes here require authentication
-router.use(authenticate);
+// Public route to get profile by ID
+router.get('/public/:id', getUserProfileById);
 
-router.get('/profile', getMyProfile);
-router.patch('/profile', updateMyProfile);
+// Protected user's own profile routes
+router.get('/profile', authenticate, getMyProfile);
+router.patch('/profile', authenticate, updateMyProfile);
+
+// Generic public profile route by ID (must come after /profile)
+router.get('/:id', getUserProfileById);
 
 export const userRoutes = router;

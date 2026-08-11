@@ -71,22 +71,22 @@ const Carousel = ({
               {actionLabel} →
             </Link>
           )}
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2.5">
             <button
               onClick={() => scroll('left')}
               disabled={!canScrollLeft}
               aria-label="Scroll left"
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-gray-300 dark:border-white/20 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-md flex items-center justify-center text-primary disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gold hover:text-black hover:border-gold transition-all shadow-sm cursor-pointer"
+              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-[#D4A017]/40 bg-[#D4A017]/10 dark:bg-[#D4A017]/15 text-[#D4A017] dark:text-[#EAB308] backdrop-blur-md flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#D4A017] hover:text-[#1A110B] dark:hover:bg-[#EAB308] dark:hover:text-[#1A110B] hover:border-[#D4A017] transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(212,160,23,0.4)] cursor-pointer active:scale-95 hover:scale-105"
             >
-              <ChevronLeft size={18} className="sm:w-5 sm:h-5" />
+              <ChevronLeft size={20} className="sm:w-5 sm:h-5" />
             </button>
             <button
               onClick={() => scroll('right')}
               disabled={!canScrollRight}
               aria-label="Scroll right"
-              className="w-8 h-8 sm:w-10 sm:h-10 rounded-full border border-gray-300 dark:border-white/20 bg-white/90 dark:bg-neutral-800/90 backdrop-blur-md flex items-center justify-center text-primary disabled:opacity-30 disabled:cursor-not-allowed hover:bg-gold hover:text-black hover:border-gold transition-all shadow-sm cursor-pointer"
+              className="w-9 h-9 sm:w-11 sm:h-11 rounded-full border border-[#D4A017]/40 bg-[#D4A017]/10 dark:bg-[#D4A017]/15 text-[#D4A017] dark:text-[#EAB308] backdrop-blur-md flex items-center justify-center disabled:opacity-30 disabled:cursor-not-allowed hover:bg-[#D4A017] hover:text-[#1A110B] dark:hover:bg-[#EAB308] dark:hover:text-[#1A110B] hover:border-[#D4A017] transition-all duration-300 shadow-md hover:shadow-[0_0_20px_rgba(212,160,23,0.4)] cursor-pointer active:scale-95 hover:scale-105"
             >
-              <ChevronRight size={18} className="sm:w-5 sm:h-5" />
+              <ChevronRight size={20} className="sm:w-5 sm:h-5" />
             </button>
           </div>
         </div>

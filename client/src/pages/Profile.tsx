@@ -1,13 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, FileText, Clock, Edit3, X, LogOut, Eye, Trash2, XCircle, Shield, Award } from 'lucide-react';
-import { Navigate, useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { signOut, onAuthStateChanged, updateProfile, type User as FirebaseUser } from 'firebase/auth';
 import { auth } from '../lib/firebase';
-import { useEffect } from 'react';
 
 interface UserPostItem {
   id: string | number;
@@ -39,12 +38,18 @@ const PREDEFINED_BACKGROUNDS = [
 
 const Profile = () => {
   const navigate = useNavigate();
+  const { userId: routeUserId } = useParams();
+  const [searchParams] = useSearchParams();
+  const targetId = routeUserId || searchParams.get('id') || searchParams.get('userId');
 
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [authChecking, setAuthChecking] = useState(true);
   const [loading, setLoading] = useState(true);
   const [userPosts, setUserPosts] = useState<UserPostItem[]>([]);
   const [isAdmin, setIsAdmin] = useState(false);
+
+  const [profileUserId, setProfileUserId] = useState<string>('');
+  const [isOwnProfile, setIsOwnProfile] = useState<boolean>(true);
 
   // Profile State
   const [profile, setProfile] = useState({
@@ -61,35 +66,62 @@ const Profile = () => {
     badgesEarned: 0,
   });
 
-  const fetchProfile = async (firebaseUser: FirebaseUser, isInitial = false) => {
+  const fetchProfile = async (firebaseUser: FirebaseUser | null, isInitial = false) => {
     if (isInitial) setLoading(true);
     try {
-      const token = await firebaseUser.getIdToken().catch(() => null);
-      const headers: Record<string, string> = {};
-      if (token) headers['Authorization'] = `Bearer ${token}`;
+      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+      let dbUser: any = null;
+      let isOwn = true;
 
-      // Fetch user profile and all post collections concurrently
-      const [profileRes, storiesData, discoverData, videoData, articlesData] = await Promise.all([
-        fetch(`${API_BASE_URL}/users/profile`, { headers }).then(r => r.json()).catch(() => null),
+      if (targetId) {
+        const publicRes = await fetch(`${API_BASE_URL}/users/public/${targetId}`).then(r => r.json()).catch(() => null);
+        if (publicRes?.success && publicRes.data?.user) {
+          dbUser = publicRes.data.user;
+          if (firebaseUser) {
+            isOwn = (firebaseUser.uid === dbUser.firebaseUid || firebaseUser.uid === dbUser.id || targetId === firebaseUser.uid);
+          } else {
+            isOwn = false;
+          }
+        } else if (firebaseUser) {
+          const token = await firebaseUser.getIdToken().catch(() => null);
+          const headers: Record<string, string> = {};
+          if (token) headers['Authorization'] = `Bearer ${token}`;
+          const profileRes = await fetch(`${API_BASE_URL}/users/profile`, { headers }).then(r => r.json()).catch(() => null);
+          dbUser = profileRes?.success && profileRes.data?.user ? profileRes.data.user : null;
+          isOwn = true;
+        }
+      } else if (firebaseUser) {
+        const token = await firebaseUser.getIdToken().catch(() => null);
+        const headers: Record<string, string> = {};
+        if (token) headers['Authorization'] = `Bearer ${token}`;
+        const profileRes = await fetch(`${API_BASE_URL}/users/profile`, { headers }).then(r => r.json()).catch(() => null);
+        dbUser = profileRes?.success && profileRes.data?.user ? profileRes.data.user : null;
+        isOwn = true;
+      }
+
+      setIsOwnProfile(isOwn);
+
+      const userIdToStore = dbUser?.id || dbUser?.firebaseUid || targetId || firebaseUser?.uid || '';
+      setProfileUserId(userIdToStore);
+
+      const userName = (dbUser?.name || firebaseUser?.displayName || "").toLowerCase().trim();
+      const userEmail = (dbUser?.email || firebaseUser?.email || "").toLowerCase().trim();
+      const userUid = dbUser?.firebaseUid || dbUser?.id || firebaseUser?.uid || targetId;
+
+      const isUserAdmin = isOwn && (userEmail === 'bihardarshanofficial@gmail.com' || dbUser?.role === 'ADMIN');
+      setIsAdmin(isUserAdmin);
+
+      // Fetch all post collections concurrently
+      const [storiesData, discoverData, videoData, articlesData] = await Promise.all([
         fetch(`${API_BASE_URL}/stories?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/discover?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/tribes/videos/all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/tribes/articles?status=all`).then(r => r.json()).catch(() => null)
       ]);
 
-      const dbUser = profileRes?.success && profileRes.data?.user ? profileRes.data.user : null;
-
-      const userName = (dbUser?.name || firebaseUser.displayName || "").toLowerCase().trim();
-      const userEmail = (dbUser?.email || firebaseUser.email || "").toLowerCase().trim();
-      const userUid = firebaseUser.uid;
-
-      const isUserAdmin = userEmail === 'bihardarshanofficial@gmail.com' || dbUser?.role === 'ADMIN';
-      setIsAdmin(isUserAdmin);
-
       const matchUser = (authorNameOrEmail: string | null | undefined, authorId?: string | null) => {
-        if (authorId && authorId === userUid) return true;
+        if (authorId && (authorId === userUid || authorId === dbUser?.id || authorId === dbUser?.firebaseUid || authorId === targetId)) return true;
         if (!authorNameOrEmail) return false;
         const authorStr = authorNameOrEmail.toLowerCase().trim();
         if (!authorStr) return false;
@@ -268,10 +300,10 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
       const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints);
 
       setProfile({
-        name: dbUser?.name || firebaseUser.displayName || "User",
+        name: dbUser?.name || firebaseUser?.displayName || "User",
         title: dbUser?.title || "Cultural Enthusiast",
         bio: dbUser?.bio || "Explore and discover the rich culture & destinations of Bihar!",
-        avatar: dbUser?.avatar || firebaseUser.photoURL || "/images/culture/avatar-man1.png",
+        avatar: dbUser?.avatar || firebaseUser?.photoURL || "/images/culture/avatar-man1.png",
         background: dbUser?.background || "/images/culture/hero-artwork.png",
         rewardPoints: totalRewardPoints,
         totalPosts: publishedCount,
@@ -293,25 +325,17 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       setCurrentUser(user);
       setAuthChecking(false);
-      if (user) {
-        fetchProfile(user, true);
-      } else {
-        setLoading(false);
-      }
+      fetchProfile(user, true);
     });
 
     // Real-time polling interval (every 4 seconds)
     const interval = setInterval(() => {
-      if (auth.currentUser) {
-        fetchProfile(auth.currentUser, false);
-      }
+      fetchProfile(auth.currentUser, false);
     }, 4000);
 
     // Sync on window focus and storage/submission events
     const handleRefresh = () => {
-      if (auth.currentUser) {
-        fetchProfile(auth.currentUser, false);
-      }
+      fetchProfile(auth.currentUser, false);
     };
 
     window.addEventListener('focus', handleRefresh);
@@ -327,7 +351,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
       window.removeEventListener('submissionCreated', handleRefresh);
       window.removeEventListener('userAvatarChanged', handleRefresh);
     };
-  }, []);
+  }, [targetId]);
 
   const [activeTab, setActiveTab] = useState<'published' | 'pending' | 'rejected'>('published');
 
@@ -337,8 +361,8 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
   const [customAvatarInput, setCustomAvatarInput] = useState("");
   const [isCustomAvatar, setIsCustomAvatar] = useState(false);
 
-  // If not authenticated and check is done, instantly redirect them to the login page without rendering the profile page
-  if (!authChecking && !currentUser) {
+  // If not authenticated and check is done and no targetId is requested, redirect to login page
+  if (!authChecking && !currentUser && !targetId) {
     return <Navigate to="/login" replace />;
   }
 
@@ -352,18 +376,22 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
   }
 
   const handleShare = async () => {
+    const shareId = profileUserId || targetId || currentUser?.uid;
+    const shareUrl = shareId ? `${window.location.origin}/profile/${shareId}` : window.location.href;
+
     if (navigator.share) {
       try {
         await navigator.share({
           title: `${profile.name}'s Bihar Darshan Profile`,
-          url: window.location.href,
+          text: `Check out ${profile.name}'s profile on Bihar Darshan!`,
+          url: shareUrl,
         });
       } catch (err) {
         console.error("Share failed", err);
       }
     } else {
-      navigator.clipboard.writeText(window.location.href);
-      alert("Profile URL copied to clipboard!");
+      await navigator.clipboard.writeText(shareUrl);
+      alert(`Profile link copied to clipboard!\n${shareUrl}`);
     }
   };
 
@@ -494,7 +522,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
     }
   };
 
-  const activePosts = userPosts.filter(post => post.status === activeTab);
+  const activePosts = userPosts.filter(post => !isOwnProfile ? post.status === 'published' : post.status === activeTab);
 
   return (
     <div className="min-h-screen font-sans bg-[#FDFBF7]">
@@ -543,7 +571,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
 
               {/* Action Buttons */}
               <div className="flex flex-wrap justify-center gap-3 mt-4 lg:mt-0">
-                {isAdmin && (
+                {isOwnProfile && isAdmin && (
                   <button
                     onClick={() => navigate('/admin')}
                     className="px-5 py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-[#7a3528] transition shadow-sm border border-[#F4A261]/40 cursor-pointer"
@@ -551,25 +579,35 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
                     <Shield className="w-4 h-4 text-[#F4A261]" /> Admin Dashboard
                   </button>
                 )}
-                <button onClick={openEditModal} className="px-5 py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-gray-50 transition shadow-sm">
-                  <Edit3 className="w-4 h-4" /> Edit Profile
-                </button>
+                {isOwnProfile && (
+                  <button onClick={openEditModal} className="px-5 py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-gray-50 transition shadow-sm">
+                    <Edit3 className="w-4 h-4" /> Edit Profile
+                  </button>
+                )}
                 <button onClick={handleShare} className="px-5 py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-[#7a3528] transition shadow-sm">
                   <Share2 className="w-4 h-4" /> Share Profile
                 </button>
-                <button onClick={handleLogout} className="px-5 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-red-50 transition shadow-sm">
-                  <LogOut className="w-4 h-4" /> Logout
-                </button>
+                {isOwnProfile ? (
+                  <button onClick={handleLogout} className="px-5 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-red-50 transition shadow-sm">
+                    <LogOut className="w-4 h-4" /> Logout
+                  </button>
+                ) : (
+                  currentUser && (
+                    <button onClick={() => navigate('/profile')} className="px-5 py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-gray-50 transition shadow-sm">
+                      My Profile
+                    </button>
+                  )
+                )}
               </div>
             </div>
           </div>
 
           {/* Stats Row */}
-          <div className={`grid grid-cols-2 ${!isAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-3 sm:gap-4 mb-8`}>
+          <div className={`grid grid-cols-2 ${isOwnProfile && !isAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-3 sm:gap-4 mb-8`}>
             {[
               ...(!isAdmin ? [{ icon: <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[#D97706]" />, label: 'Contribution Points', value: profile.rewardPoints, bg: 'bg-[#FEF3C7]' }] : []),
               { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#8B3E2F]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FFF3E5]' },
-              { icon: <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' },
+              ...(isOwnProfile ? [{ icon: <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' }] : []),
             ].map((stat, idx) => (
               <div key={idx} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
                 <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${stat.bg} flex items-center justify-center shrink-0`}>
@@ -595,18 +633,22 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
                 >
                   <FileText className="w-4 h-4" /> Published Posts
                 </button>
-                <button
-                  onClick={() => setActiveTab('pending')}
-                  className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'pending' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
-                >
-                  <Clock className="w-4 h-4" /> Pending Review
-                </button>
-                <button
-                  onClick={() => setActiveTab('rejected')}
-                  className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'rejected' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
-                >
-                  <XCircle className="w-4 h-4" /> Rejected Posts
-                </button>
+                {isOwnProfile && (
+                  <>
+                    <button
+                      onClick={() => setActiveTab('pending')}
+                      className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'pending' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
+                    >
+                      <Clock className="w-4 h-4" /> Pending Review
+                    </button>
+                    <button
+                      onClick={() => setActiveTab('rejected')}
+                      className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'rejected' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
+                    >
+                      <XCircle className="w-4 h-4" /> Rejected Posts
+                    </button>
+                  </>
+                )}
               </div>
 
               <h2 className="text-xl font-bold text-gray-800 pt-2">
@@ -671,12 +713,14 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
                           >
                             <Eye className="w-4 h-4" /> View
                           </button>
-                          <button
-                            onClick={() => handleDeletePost(post.id, post.type)}
-                            className="flex items-center gap-1.5 text-red-400 hover:text-red-600 text-xs font-bold transition cursor-pointer"
-                          >
-                            <Trash2 className="w-4 h-4" /> Delete
-                          </button>
+                          {isOwnProfile && (
+                            <button
+                              onClick={() => handleDeletePost(post.id, post.type)}
+                              className="flex items-center gap-1.5 text-red-400 hover:text-red-600 text-xs font-bold transition cursor-pointer"
+                            >
+                              <Trash2 className="w-4 h-4" /> Delete
+                            </button>
+                          )}
                         </div>
                       </div>
                     </div>

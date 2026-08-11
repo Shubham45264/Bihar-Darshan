@@ -1,8 +1,10 @@
 import { useState, useEffect, useRef } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { createPortal } from 'react-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Play, ChevronLeft, ChevronRight, Upload, X, Film, CheckCircle2, AlertCircle, Video, Clock } from 'lucide-react';
 import { uploadToCloudinary } from '../../utils/cloudinaryUpload';
+import { auth } from '../../lib/firebase';
 
 export interface TribeVideoItem {
   id: string;
@@ -108,6 +110,7 @@ const TribeVideoCard = ({ item, idx, onClick }: TribeVideoCardProps) => {
 
 // ── Main Video Slider Component ──────────────────────────────────────
 const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
+  const navigate = useNavigate();
   const [videos, setVideos] = useState<TribeVideoItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [selectedVideo, setSelectedVideo] = useState<TribeVideoItem | null>(null);
@@ -272,7 +275,13 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
 
         {/* Upload Action Button */}
         <button
-          onClick={() => setIsUploadOpen(true)}
+          onClick={() => {
+            if (auth.currentUser) {
+              setIsUploadOpen(true);
+            } else {
+              navigate('/login');
+            }
+          }}
           className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-full bg-gradient-to-r from-[#E6B52F] to-[#D4A017] hover:from-[#F0C343] hover:to-[#E6B52F] text-[#3B2412] font-extrabold text-xs tracking-wider uppercase transition-all shadow-md hover:shadow-lg hover:scale-[1.02] cursor-pointer shrink-0"
         >
           <Video className="w-4 h-4" />
