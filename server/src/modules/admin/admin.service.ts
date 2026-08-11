@@ -159,3 +159,41 @@ export const updateSiteSettings = async (data: any) => {
   });
   return settings;
 };
+
+export const awardUserPoints = async (
+  userId: string,
+  points: number,
+  badges: number = 0,
+  reason: string = 'Community Contribution Award'
+) => {
+  const user = await db.user.findFirst({
+    where: {
+      OR: [{ id: userId }, { firebaseUid: userId }],
+    },
+  });
+
+  if (!user) {
+    throw new Error('User not found');
+  }
+
+  const updatedUser = await db.user.update({
+    where: { id: user.id },
+    data: {
+      rewardPoints: { increment: points },
+      badges: { increment: badges },
+    },
+  });
+
+  // Create notification for user
+  await db.notification.create({
+    data: {
+      userId: user.id,
+      title: '🎉 Points & Rewards Awarded!',
+      message: `You earned +${points} reward points${badges > 0 ? ` and +${badges} badge(s)` : ''}! Reason: ${reason}`,
+      type: 'REWARD',
+    },
+  });
+
+  return updatedUser;
+};
+

@@ -32,3 +32,52 @@ export const updateUserProfile = async (id: string, data: UpdateProfileInput) =>
 
   return updatedUser;
 };
+
+export const getLeaderboardUsers = async (limit = 100) => {
+  const users = await db.user.findMany({
+    take: limit,
+    orderBy: [
+      { rewardPoints: 'desc' },
+      { badges: 'desc' },
+      { createdAt: 'asc' },
+    ],
+    select: {
+      id: true,
+      firebaseUid: true,
+      name: true,
+      email: true,
+      avatar: true,
+      title: true,
+      bio: true,
+      rewardPoints: true,
+      badges: true,
+      role: true,
+      createdAt: true,
+      _count: {
+        select: {
+          journeys: true,
+          galleryItems: true,
+          categoryStories: true,
+        },
+      },
+    },
+  });
+
+  // Calculate ranks and return formatted user list
+  return users.map((user, index) => {
+    let tier = 'Cultural Explorer';
+    if (index === 0) tier = 'Heritage Sovereign';
+    else if (index < 3) tier = 'Culture Champion';
+    else if (index < 10) tier = 'Vedic Scholar';
+    else if (index < 25) tier = 'Patliputra Pioneer';
+
+    return {
+      ...user,
+      rank: index + 1,
+      tier,
+      totalContributions:
+        user._count.journeys + user._count.galleryItems + user._count.categoryStories,
+    };
+  });
+};
+

@@ -452,14 +452,14 @@ const PrivacyPolicy = () => {
                   </h4>
                   <p style={{ margin: "4px 0", fontSize: "14px" }}>
                     Email:{" "}
-                    <a href="mailto:support@bihardarshan.com" className="privacy-contact-link">
-                      support@bihardarshan.com
+                    <a href="mailto:bihardarshanofficial@gmail.com" className="privacy-contact-link">
+                      bihardarshanofficial@gmail.com
                     </a>
                   </p>
                   <p style={{ margin: "4px 0", fontSize: "14px" }}>
                     Website:{" "}
-                    <a href="https://www.bihardarshan.com" target="_blank" rel="noopener noreferrer" className="privacy-contact-link">
-                      https://www.bihardarshan.com
+                    <a href="https://www.bihardarshan.in" target="_blank" rel="noopener noreferrer" className="privacy-contact-link">
+                      https://www.bihardarshan.in
                     </a>
                   </p>
                 </div>

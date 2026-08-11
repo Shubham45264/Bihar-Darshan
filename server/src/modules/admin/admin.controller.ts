@@ -22,3 +22,17 @@ export const updateSiteSettings = catchAsync(async (req: Request, res: Response,
   const settings = await adminService.updateSiteSettings(req.body);
   sendSuccess(res, 200, 'Site settings updated successfully', { settings });
 });
+
+export const awardUserPointsController = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const { userId } = req.params;
+  const { points, badges, reason } = req.body;
+  const updatedUser = await adminService.awardUserPoints(
+    userId as string,
+    Number(points || 0),
+    Number(badges || 0),
+    reason || 'Admin Reward Award'
+  );
+  sendSuccess(res, 200, 'Points awarded successfully', { user: updatedUser });
+});
+
+

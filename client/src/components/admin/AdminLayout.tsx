@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Link, useLocation, useNavigate, Outlet } from 'react-router-dom';
 import {
-  LayoutDashboard, MapPin, Palette, Plane, Image, Users, Store, Mountain, UserCircle, Settings, LogOut, Menu, X, ChevronRight, Shield, Sparkles, Layers
+  LayoutDashboard, MapPin, Palette, Plane, Image, Users, Store, Mountain, UserCircle, Settings, LogOut, Menu, X, ChevronRight, Shield, Sparkles, Layers, Trophy
 } from 'lucide-react';
 import { signOut } from 'firebase/auth';
 import { auth } from '../../lib/firebase';
@@ -10,6 +10,7 @@ import logo from '../../assets/new-logo.png';
 
 const sidebarItems = [
   { label: 'Dashboard', path: '/admin', icon: LayoutDashboard },
+  { label: 'Leaderboard', path: '/admin/leaderboard', icon: Trophy },
   { label: 'Categories', path: '/admin/categories', icon: Layers },
   { label: 'Districts', path: '/admin/districts', icon: MapPin },
   { label: 'Tourism', path: '/admin/tourism', icon: Plane },
@@ -19,6 +20,7 @@ const sidebarItems = [
   { label: 'Tribes', path: '/admin/tribes', icon: Mountain },
   { label: 'Site Settings', path: '/admin/settings', icon: Settings },
 ];
+
 
 const AdminLayout = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);

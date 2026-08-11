@@ -37,8 +37,11 @@ import AdminSettings from './pages/admin/AdminSettings';
 import SubcategoryFeed from './pages/SubcategoryFeed';
 import StoryDetails from './pages/StoryDetails';
 import AdminCategories from './pages/admin/AdminCategories';
+import Leaderboard from './pages/Leaderboard';
+import AdminLeaderboard from './pages/admin/AdminLeaderboard';
 import ProtectedRoute from './components/admin/ProtectedRoute';
 import UserProtectedRoute from './components/auth/UserProtectedRoute';
+
 
 const PageTransition = ({ children }: { children: React.ReactNode }) => {
   const location = useLocation();
@@ -99,6 +102,7 @@ function App() {
           <Route path="/tribals" element={<PageTransition><Tribals /></PageTransition>} />
           <Route path="/tribals/:id" element={<PageTransition><TribeDetail /></PageTransition>} />
           <Route path="/gallery" element={<PageTransition><Gallery /></PageTransition>} />
+          <Route path="/leaderboard" element={<PageTransition><Leaderboard /></PageTransition>} />
           <Route path="/districts/:name" element={<PageTransition><DistrictsDetails /></PageTransition>} />
           <Route path="/login" element={<PageTransition><LoginPage /></PageTransition>} />
           <Route path="/forgot-password" element={<PageTransition><ForgotPasswordPage /></PageTransition>} />
@@ -116,6 +120,7 @@ function App() {
           <Route path="/admin" element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route index element={<AdminDashboard />} />
+              <Route path="leaderboard" element={<AdminLeaderboard />} />
               <Route path="categories" element={<AdminCategories />} />
               <Route path="districts" element={<AdminDistricts />} />
               <Route path="culture" element={<Navigate to="/admin/categories" replace />} />
@@ -127,6 +132,7 @@ function App() {
               <Route path="settings" element={<AdminSettings />} />
             </Route>
           </Route>
+
         </Routes>
       </Router>
     </AdminDataProvider>

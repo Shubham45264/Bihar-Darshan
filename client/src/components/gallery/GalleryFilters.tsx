@@ -111,7 +111,7 @@ const GalleryFilters = ({
       <div className="max-w-[1400px] mx-auto">
         <div className="bg-white border border-gray-100 rounded-2xl px-4 sm:px-5 py-3.5 shadow-[0_4px_24px_rgba(0,0,0,0.08)]">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-            
+
             {/* Search Input */}
             <div className="relative flex-1 w-full lg:max-w-xs xl:max-w-md">
               <Search className="absolute left-3.5 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
@@ -126,7 +126,7 @@ const GalleryFilters = ({
 
             {/* Filter Group */}
             <div className="flex flex-wrap items-center gap-2.5 flex-1 lg:justify-end">
-              
+
               {/* Media Dropdown */}
               <div ref={mediaRef} className="relative">
                 <button
@@ -135,11 +135,10 @@ const GalleryFilters = ({
                     closeAllDropdowns();
                     setMediaOpen(!prev);
                   }}
-                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
-                    mediaOpen
-                      ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
-                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
+                  className={`flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${mediaOpen
+                    ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
+                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
                 >
                   <SlidersHorizontal size={13} />
                   <span className="inline text-[11px] sm:text-xs">
@@ -168,11 +167,10 @@ const GalleryFilters = ({
                             onMediaChange(opt.value);
                             setMediaOpen(false);
                           }}
-                          className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors ${
-                            mediaFilter === opt.value
-                              ? "bg-[#F4A261]/10 text-[#F4A261]"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                          }`}
+                          className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors ${mediaFilter === opt.value
+                            ? "bg-[#F4A261]/10 text-[#F4A261]"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
                         >
                           <opt.icon size={14} />
                           {opt.label}
@@ -191,11 +189,10 @@ const GalleryFilters = ({
                     closeAllDropdowns();
                     setCategoryOpen(!prev);
                   }}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
-                    categoryOpen
-                      ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
-                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${categoryOpen
+                    ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
+                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
                 >
                   <span className="text-sm">{categoryIcons[categoryFilter] || "🏛️"}</span>
                   <span className="max-w-[90px] sm:max-w-[120px] truncate inline text-[11px] sm:text-xs">{categoryFilter}</span>
@@ -222,11 +219,10 @@ const GalleryFilters = ({
                             onCategoryChange(cat);
                             setCategoryOpen(false);
                           }}
-                          className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors ${
-                            categoryFilter === cat
-                              ? "bg-[#F4A261]/10 text-[#F4A261]"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                          }`}
+                          className={`w-full flex items-center gap-2.5 px-4 py-2.5 text-xs font-semibold transition-colors ${categoryFilter === cat
+                            ? "bg-[#F4A261]/10 text-[#F4A261]"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
                         >
                           <span className="text-sm">{categoryIcons[cat]}</span>
                           {cat}
@@ -247,11 +243,10 @@ const GalleryFilters = ({
                     closeAllDropdowns();
                     setSortOpen(!prev);
                   }}
-                  className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${
-                    sortOpen
-                      ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
-                      : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
-                  }`}
+                  className={`flex items-center gap-1.5 sm:gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-300 border ${sortOpen
+                    ? "bg-[#F4A261]/10 border-[#F4A261]/40 text-[#F4A261]"
+                    : "bg-gray-50 border-gray-200 text-gray-600 hover:bg-gray-100 hover:text-gray-900"
+                    }`}
                 >
                   <span className="text-gray-400 text-[10px] uppercase tracking-wider hidden sm:inline">Sort</span>
                   <span className="inline text-[11px] sm:text-xs">{sortOptions.find((s) => s.value === sortBy)?.label}</span>
@@ -278,11 +273,10 @@ const GalleryFilters = ({
                             onSortChange(opt.value);
                             setSortOpen(false);
                           }}
-                          className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors ${
-                            sortBy === opt.value
-                              ? "bg-[#F4A261]/10 text-[#F4A261]"
-                              : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-                          }`}
+                          className={`w-full text-left px-4 py-2.5 text-xs font-semibold transition-colors ${sortBy === opt.value
+                            ? "bg-[#F4A261]/10 text-[#F4A261]"
+                            : "text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                            }`}
                         >
                           {opt.label}
                         </button>
@@ -294,12 +288,12 @@ const GalleryFilters = ({
 
             </div>
           </div>
-          
+
           {/* Mobile Results Count */}
           <div className="mt-3 flex items-center justify-between text-gray-400 text-[11px] font-medium lg:hidden">
             <span>{totalResults} media {totalResults === 1 ? 'item' : 'items'}</span>
           </div>
-          
+
         </div>
       </div>
     </div>

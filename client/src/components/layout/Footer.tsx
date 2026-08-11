@@ -19,10 +19,13 @@ const connectLinks = [
 ];
 
 const socialLinks = [
-  { icon: Facebook, href: "#", label: "Facebook" },
-  { icon: Instagram, href: "#", label: "Instagram" },
-  { icon: Youtube, href: "#", label: "YouTube" },
+  { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61592901971612", label: "Facebook" },
+  { icon: Instagram, href: "https://www.instagram.com/bihar_darshanofficial/", label: "Instagram" },
+  { icon: Youtube, href: "https://www.youtube.com/@BiharDarshanOfficial2026", label: "YouTube" },
 ];
+
+
+
 
 const Footer = () => {
   const { siteSettings } = useAdminData();
@@ -127,6 +130,8 @@ const Footer = () => {
                 <a
                   key={social.label}
                   href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   aria-label={social.label}
                   className="w-9 h-9 sm:w-10 sm:h-10 rounded-full border border-[#8C7A60] border-opacity-50 flex items-center justify-center text-[#E8DCC4] hover:bg-[#D4A017] hover:border-[#D4A017] hover:text-[#1A1814] transition-all duration-300"
                 >
@@ -134,6 +139,7 @@ const Footer = () => {
                 </a>
               ))}
             </div>
+
           </div>
         </div>
       </div>

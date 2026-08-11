@@ -1,7 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import '../../types/express';
 import { catchAsync } from '../../utils/catchAsync';
 import { sendSuccess } from '../../helpers/responseHandler';
-import { getUserById, updateUserProfile } from './user.service';
+
+import { getUserById, updateUserProfile, getLeaderboardUsers } from './user.service';
 import { updateProfileSchema } from './user.validation';
 
 export const getMyProfile = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
@@ -20,3 +22,10 @@ export const getUserProfileById = catchAsync(async (req: Request, res: Response,
   const user = await getUserById(id as string);
   sendSuccess(res, 200, 'User profile fetched successfully', { user });
 });
+
+export const getLeaderboard = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  const limit = req.query.limit ? parseInt(req.query.limit as string, 10) : 100;
+  const users = await getLeaderboardUsers(limit);
+  sendSuccess(res, 200, 'Leaderboard fetched successfully', { leaderboard: users });
+});
+

@@ -22,17 +22,27 @@ const Footer = () => {
               Defining the future of luxury heritage tourism in Bihar. Our mission is to preserve tradition while delivering excellence.
             </p>
             <div className="flex gap-4">
-              {[Facebook, Twitter, Instagram, Youtube].map((Icon, idx) => (
+              {[
+                { icon: Facebook, href: "https://www.facebook.com/profile.php?id=61592901971612" },
+                { icon: Twitter, href: "#" },
+                { icon: Instagram, href: "https://www.instagram.com/bihar_darshanofficial/" },
+                { icon: Youtube, href: "https://www.youtube.com/@BiharDarshanOfficial2026" }
+              ].map((item, idx) => (
+
+
                 <motion.a
                   key={idx}
-                  href="#"
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   whileHover={{ y: -5, color: '#F4A261' }}
                   className="w-10 h-10 rounded-full border border-brand-dark/10 flex items-center justify-center text-brand-dark/40 hover:border-brand-gold transition-colors"
                 >
-                  <Icon size={18} />
+                  <item.icon size={18} />
                 </motion.a>
               ))}
             </div>
+
           </div>
 
           {/* Quick Links */}

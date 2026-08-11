@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Share2, FileText, Clock, Edit3, X, LogOut, Eye, Trash2, XCircle, Shield, Award } from 'lucide-react';
-import { Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+import { Share2, FileText, Clock, Edit3, X, LogOut, Eye, Trash2, XCircle, Shield, Award, Trophy, ChevronRight } from 'lucide-react';
+import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
+
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
@@ -65,11 +66,29 @@ const Profile = () => {
     rejectedPosts: 0,
     badgesEarned: 0,
   });
+  const [leaderboardPreview, setLeaderboardPreview] = useState<any[]>([]);
+  const [userRank, setUserRank] = useState<number | null>(null);
 
   const fetchProfile = async (firebaseUser: FirebaseUser | null, isInitial = false) => {
     if (isInitial) setLoading(true);
     try {
       const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
+      // Fetch leaderboard preview
+      fetch(`${API_BASE_URL}/users/leaderboard?limit=5`)
+        .then(r => r.json())
+        .then(lbData => {
+          if (lbData.success && lbData.data?.leaderboard) {
+            setLeaderboardPreview(lbData.data.leaderboard);
+            const myUid = firebaseUser?.uid;
+            if (myUid) {
+              const found = lbData.data.leaderboard.find((u: any) => u.firebaseUid === myUid);
+              if (found) setUserRank(found.rank);
+            }
+          }
+        })
+        .catch(() => null);
+
 
       let dbUser: any = null;
       let isOwn = true;
@@ -620,6 +639,55 @@ const Profile = () => {
               </div>
             ))}
           </div>
+
+          {/* Leaderboard & Rewards Widget on Profile */}
+          <div className="bg-gradient-to-br from-[#1E1B18] to-[#120F0D] border border-amber-500/30 rounded-2xl p-6 text-white shadow-xl mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4 mb-4">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0">
+                  <Trophy size={20} />
+                </div>
+                <div>
+                  <h3 className="font-bold text-lg text-white flex items-center gap-2">
+                    Bihar Cultural Leaderboard
+                    {userRank && (
+                      <span className="text-xs bg-amber-400 text-black px-2 py-0.5 rounded-full font-black">
+                        Your Rank: #{userRank}
+                      </span>
+                    )}
+                  </h3>
+                  <p className="text-xs text-white/50">Top community guardians preserving Bihar's heritage and stories.</p>
+                </div>
+              </div>
+
+              <Link
+                to="/leaderboard"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-md shrink-0"
+              >
+                View Full Leaderboard <ChevronRight size={14} />
+              </Link>
+            </div>
+
+            {leaderboardPreview.length > 0 && (
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+                {leaderboardPreview.map((u) => (
+                  <div key={u.id} className="bg-white/5 border border-white/10 rounded-xl p-3 text-center relative">
+                    <span className="absolute top-1.5 left-1.5 text-[9px] font-black text-amber-300 bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.5 rounded-full">
+                      #{u.rank}
+                    </span>
+                    <img
+                      src={u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`}
+                      alt={u.name}
+                      className="w-10 h-10 rounded-full object-cover border border-amber-400/40 mx-auto mb-1.5 mt-1"
+                    />
+                    <p className="font-bold text-xs text-white truncate">{u.name}</p>
+                    <p className="text-amber-400 text-xs font-black mt-0.5">{u.rewardPoints} Pts</p>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
 
           {/* Main Content Area */}
           <div className="max-w-5xl mx-auto mb-20">

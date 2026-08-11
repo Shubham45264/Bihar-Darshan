@@ -100,6 +100,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     return false;
   };
 
+
   // Text/logo colour & background logic (Active on scroll OR hover)
   const showWhiteBg = scrolled || isHovered;
   const useDarkText = showWhiteBg || forceDarkText;

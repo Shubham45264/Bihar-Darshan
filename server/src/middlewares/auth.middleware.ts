@@ -1,9 +1,11 @@
 import { Request, Response, NextFunction } from 'express';
+import '../types/express';
 import { firebaseAdmin } from '../config/firebase';
 import { AppError } from '../errors/AppError';
 import { catchAsync } from '../utils/catchAsync';
 import { prisma as db } from '../db';
 import { Role } from '../db';
+
 
 /**
  * Middleware to verify Firebase token and attach user to request

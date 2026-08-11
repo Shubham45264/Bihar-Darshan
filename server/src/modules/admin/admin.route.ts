@@ -13,5 +13,7 @@ router.use(authenticate, restrictTo('ADMIN'));
 
 router.get('/dashboard', adminController.getDashboardStats);
 router.get('/approvals', adminController.getPendingApprovals);
+router.post('/users/:userId/points', adminController.awardUserPointsController);
 
 export const adminRoutes = router;
+
