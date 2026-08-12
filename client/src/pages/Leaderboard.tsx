@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
-import { Trophy, Award, Search, ArrowUpRight } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Trophy, Award, Search, ArrowUpRight, ArrowLeft } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { API_BASE_URL } from '../config/api';
@@ -24,6 +24,7 @@ interface LeaderboardUser {
 }
 
 const Leaderboard: React.FC = () => {
+  const navigate = useNavigate();
   const [users, setUsers] = useState<LeaderboardUser[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
@@ -81,19 +82,32 @@ const Leaderboard: React.FC = () => {
         <div className="absolute top-10 left-1/2 -translate-x-1/2 w-[600px] h-[300px] bg-brand-gold/10 blur-[120px] rounded-full pointer-events-none" />
         <div className="absolute top-40 left-1/4 w-[300px] h-[300px] bg-amber-500/10 blur-[100px] rounded-full pointer-events-none" />
 
-        <div className="max-w-7xl mx-auto text-center relative z-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-amber-900 text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md">
-            <Trophy size={14} className="text-brand-gold" />
-            Bihar Cultural Wall of Fame
+        <div className="max-w-7xl mx-auto relative z-10 space-y-4">
+          {/* Back Navigation Button */}
+          <div className="flex items-center justify-between sm:justify-start">
+            <button
+              onClick={() => navigate(-1)}
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/80 hover:bg-brand-gold text-brand-dark hover:text-black border border-gray-200/80 hover:border-brand-gold text-xs sm:text-sm font-bold shadow-sm transition-all duration-200 cursor-pointer"
+            >
+              <ArrowLeft size={16} />
+              Back
+            </button>
           </div>
 
-          <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-brand-dark tracking-tight leading-tight">
-            Community <span className="text-brand-gold">Leaderboard</span>
-          </h1>
+          <div className="text-center space-y-4">
+            <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-gold/10 border border-brand-gold/30 text-amber-900 text-xs font-bold uppercase tracking-[0.2em] backdrop-blur-md">
+              <Trophy size={14} className="text-brand-gold" />
+              Bihar Cultural Wall of Fame
+            </div>
 
-          <p className="max-w-2xl mx-auto text-gray-600 text-base sm:text-lg font-normal leading-relaxed">
-            Honoring our top heritage preservers, travel explorers, and cultural storytellers across Bihar. Earn points by sharing your stories & journeys!
-          </p>
+            <h1 className="font-display font-extrabold text-4xl sm:text-6xl md:text-7xl text-brand-dark tracking-tight leading-tight">
+              Community <span className="text-brand-gold">Leaderboard</span>
+            </h1>
+
+            <p className="max-w-2xl mx-auto text-gray-600 text-base sm:text-lg font-normal leading-relaxed">
+              Honoring our top heritage preservers, travel explorers, and cultural storytellers across Bihar. Earn points by sharing your stories & journeys!
+            </p>
+          </div>
         </div>
       </section>
 
