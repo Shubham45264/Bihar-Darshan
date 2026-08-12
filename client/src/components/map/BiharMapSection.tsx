@@ -34,13 +34,14 @@ const BiharMapSection = () => {
   const detailKey = selectedDisplay.toLowerCase().replace(/\s*\(.*\)/, "").trim();
   const detail = staticDistrictDetails[detailKey];
 
-  /* Photos: use topAttractions images if available, else fallback to district image */
-  const photos: string[] = [];
-  if (detail?.topAttractions?.[0]?.image) photos.push(detail.topAttractions[0].image);
-  if (detail?.topAttractions?.[1]?.image) photos.push(detail.topAttractions[1].image);
-  if (photos.length < 2 && districtData?.image) {
-    while (photos.length < 2) photos.push(districtData.image);
-  }
+  /* Unique Photos: use topAttractions images if available, else fallback to district image */
+  const rawPhotos: string[] = [];
+  if (detail?.topAttractions?.[0]?.image) rawPhotos.push(detail.topAttractions[0].image);
+  if (detail?.topAttractions?.[1]?.image) rawPhotos.push(detail.topAttractions[1].image);
+  if (districtData?.image) rawPhotos.push(districtData.image);
+
+  // Deduplicate photos so identical images are never shown twice
+  const photos = Array.from(new Set(rawPhotos.filter(Boolean)));
 
   const description =
     detail?.introduction ??
@@ -100,14 +101,14 @@ const BiharMapSection = () => {
                 {description}
               </p>
 
-              {/* 2-Photo grid */}
-              {photos.length >= 2 && (
-                <div className="grid grid-cols-2 gap-3">
+              {/* Photo Display: Single Image if 1 unique photo, 2-column grid if 2 unique photos */}
+              {photos.length > 0 && (
+                <div className={photos.length > 1 ? "grid grid-cols-2 gap-3" : "w-full"}>
                   {photos.slice(0, 2).map((src, i) => (
                     <div
                       key={i}
                       className="relative overflow-hidden rounded-xl"
-                      style={{ aspectRatio: "4/3" }}
+                      style={{ aspectRatio: photos.length > 1 ? "4/3" : "16/9", maxHeight: "240px" }}
                     >
                       <img
                         src={src}
