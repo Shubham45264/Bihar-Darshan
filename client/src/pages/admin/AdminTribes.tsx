@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useAdminData } from '../../data/AdminContext';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 import type { TribeItem } from '../../data/AdminContext';
 import { AdminTable } from '../../components/admin/AdminTable';
 import { AdminModal } from '../../components/admin/AdminModal';
@@ -245,7 +246,7 @@ const AdminTribes = () => {
   const [rejectingVideo, setRejectingVideo] = useState<any | null>(null);
   const [rejectionReasonText, setRejectionReasonText] = useState('');
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 
   const loadPendingVideos = async () => {
     try {

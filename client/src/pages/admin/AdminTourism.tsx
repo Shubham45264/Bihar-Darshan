@@ -7,6 +7,7 @@ import { AdminDeleteConfirm } from '../../components/admin/AdminDeleteConfirm';
 import { Plus, Trash2, Info, LayoutList, Phone, Map, Image as ImageIcon, Clock, CheckCircle, XCircle, Tag, Building2, Star, MapPin, ListChecks } from 'lucide-react';
 import type { TourTrip } from '../../data/tourismData';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 const CATEGORY_OPTIONS = [
   'Spiritual', 'Heritage', 'Wildlife', 'Nature',
@@ -112,7 +113,7 @@ const AdminTourism = () => {
   const [journeysSearch, setJourneysSearch] = useState('');
   const [journeysTab, setJourneysTab] = useState<JourneyTab>('PENDING');
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 
   const fetchJourneys = async () => {
     try {

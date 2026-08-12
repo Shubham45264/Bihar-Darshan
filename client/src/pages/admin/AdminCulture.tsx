@@ -9,8 +9,7 @@ import { Plus, Trash2, CheckCircle, XCircle, LayoutList, ListChecks, Sparkles } 
 import { auth } from '../../lib/firebase';
 
 import { useContributions } from '../../data/ContributionContext';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+import { API_BASE_URL } from '../../config/api';
 
 const emptyForm: Partial<CultureItem> = {
   title: '',

@@ -5,6 +5,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Play, ChevronLeft, ChevronRight, Upload, X, Film, CheckCircle2, AlertCircle, Video, Clock } from 'lucide-react';
 import { uploadToCloudinary } from '../../utils/cloudinaryUpload';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 export interface TribeVideoItem {
   id: string;
@@ -132,7 +133,7 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
     const fetchVideos = async () => {
       setIsLoading(true);
       try {
-        const res = await fetch(`http://localhost:5000/api/v1/tribes/videos/approved?tribeId=${tribeId}&tribeName=${encodeURIComponent(tribeName)}`);
+        const res = await fetch(`${API_BASE_URL}/tribes/videos/approved?tribeId=${tribeId}&tribeName=${encodeURIComponent(tribeName)}`);
         const data = await res.json();
         const serverVideos: TribeVideoItem[] = data.success && data.data?.videos
           ? data.data.videos.map((v: any) => ({
@@ -219,7 +220,7 @@ const TribeVideoSlider = ({ tribeId, tribeName }: TribeVideoSliderProps) => {
         tribeName,
       };
 
-      const res = await fetch('http://localhost:5000/api/v1/tribes/videos', {
+      const res = await fetch(`${API_BASE_URL}/tribes/videos`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

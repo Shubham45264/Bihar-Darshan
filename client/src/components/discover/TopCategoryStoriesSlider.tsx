@@ -5,6 +5,7 @@ import {
   Flame, Eye, Heart, ArrowRight, ChevronLeft, ChevronRight,
   Sparkles, MapPin, PlusCircle, Video, Calendar
 } from 'lucide-react';
+import { API_BASE_URL } from '../../config/api';
 
 interface Story {
   id: string;
@@ -40,7 +41,7 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isHovered, setIsHovered] = useState(false);
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 
   useEffect(() => {
     const fetchTopStories = async () => {

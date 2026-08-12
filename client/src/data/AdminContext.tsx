@@ -21,8 +21,7 @@ import type { DistrictDetail } from './districtDetailsData';
 import { type SiteSettings, defaultSiteSettings } from './siteSettingsDefaults';
 import { type PopularPlaceItem, defaultPopularPlaces } from './popularPlacesDefaults';
 import { mockTribes } from './mockTribes';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+import { API_BASE_URL } from '../config/api';
 
 // ── Tribe type (extracted from Tribals.tsx inline data) ──
 export interface TribeItem {

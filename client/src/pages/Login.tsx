@@ -4,15 +4,14 @@ import Navbar from '../components/layout/Navbar';
 import { Eye, EyeOff, AlertCircle, Loader2 } from 'lucide-react';
 import { signInWithPopup, GoogleAuthProvider, signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { API_BASE_URL } from '../config/api';
 
 import bgImage from '../assets/background.jpg';
-
-const BACKEND_URL = 'http://localhost:5000';
 
 /** Attempt to sync user with the backend. Does NOT throw — returns success flag. */
 const syncWithBackend = async (token: string): Promise<boolean> => {
   try {
-    const res = await fetch(`${BACKEND_URL}/api/v1/auth/verify`, {
+    const res = await fetch(`${API_BASE_URL}/auth/verify`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ token }),

@@ -4,6 +4,7 @@ import {
   X, Copy, Check, Share2, Send, MessageCircle, Facebook, Twitter, Linkedin, Sparkles
 } from 'lucide-react';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 interface ShareModalProps {
   isOpen: boolean;
@@ -40,7 +41,7 @@ export const ShareModal: React.FC<ShareModalProps> = ({
   const recordShareInBackend = async () => {
     if (!storyId) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${storyId}/share`, {
+      const res = await fetch(`${API_BASE_URL}/stories/${storyId}/share`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: currentUserId }),

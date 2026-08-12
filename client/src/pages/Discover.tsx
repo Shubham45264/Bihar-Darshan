@@ -8,6 +8,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import TopCategoryStoriesSlider from '../components/discover/TopCategoryStoriesSlider';
+import { API_BASE_URL } from '../config/api';
 
 interface SubCategory {
   id: string;
@@ -45,7 +46,7 @@ const Discover = () => {
   const [selectedSubFilter, setSelectedSubFilter] = useState<string>('All');
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 
   const fetchCategories = async () => {
     try {

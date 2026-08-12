@@ -5,7 +5,7 @@ import { Trophy, Award, Flame, Sparkles, BookOpen, MapPin, Image, Search, Chevro
 import { Link } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
-
+import { API_BASE_URL } from '../config/api';
 
 interface LeaderboardUser {
   id: string;
@@ -40,7 +40,7 @@ const Leaderboard: React.FC = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/v1/users/leaderboard');
+      const res = await fetch(`${API_BASE_URL}/users/leaderboard`);
       const data = await res.json();
       if (data.success && data.data?.leaderboard) {
         const list: LeaderboardUser[] = data.data.leaderboard;

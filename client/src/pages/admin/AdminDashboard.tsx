@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useAdminData } from '../../data/AdminContext';
+import { API_BASE_URL } from '../../config/api';
 import {
   MapPin, Palette, Plane, Image as ImageIcon,
   Users, Store, Mountain, UserCircle, Settings,
@@ -25,7 +26,7 @@ const AdminDashboard = () => {
   const [loadingLeaderboard, setLoadingLeaderboard] = useState(true);
 
   useEffect(() => {
-    fetch('http://localhost:5000/api/v1/users/leaderboard?limit=5')
+    fetch(`${API_BASE_URL}/users/leaderboard?limit=5`)
       .then((res) => res.json())
       .then((resData) => {
         if (resData.success && resData.data?.leaderboard) {

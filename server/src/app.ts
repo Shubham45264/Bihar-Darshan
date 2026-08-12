@@ -28,6 +28,7 @@ const app: Application = express();
 // Security Middlewares
 app.use(helmet());
 const allowedOrigins = [
+  'https://bihar-darshan.vercel.app',
   'http://localhost:5173',
   'http://localhost:3000',
   ...(env.CORS_ORIGIN !== '*' ? env.CORS_ORIGIN.split(',').map(o => o.trim()) : []),
@@ -98,6 +99,10 @@ app.use('/api/v1/tribes', tribeRoutes);
 app.use('/api/v1/categories', categoryRoutes);
 app.use('/api/v1/stories', storyRoutes);
 app.use('/api/v1/upload', uploadRoutes);
+
+app.get('/', (req: Request, res: Response) => {
+  res.status(200).json({ success: true, message: 'Bihar Darshan API is running' });
+});
 
 app.get('/api/v1/health', (req: Request, res: Response) => {
   res.status(200).json({ success: true, message: 'Server is healthy' });

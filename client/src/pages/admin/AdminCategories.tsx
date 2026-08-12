@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { Plus, Edit2, Trash2, Check, X, Search, Image as ImageIcon, Layers, FileText, RefreshCw, Eye, Upload } from 'lucide-react';
 import { AdminModal } from '../../components/admin/AdminModal';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 interface SubCategory {
   id: string;
@@ -142,7 +143,7 @@ const AdminImageUploader = ({
   );
 };
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 
 const AdminCategories = () => {
   const [categories, setCategories] = useState<Category[]>([]);
