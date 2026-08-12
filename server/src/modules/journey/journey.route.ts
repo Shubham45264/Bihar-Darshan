@@ -8,6 +8,7 @@ const router = Router();
 router.get('/admin/all', authenticate, restrictTo('ADMIN'), journeyController.getAllJourneys);
 router.patch('/:id/approve', authenticate, restrictTo('ADMIN'), journeyController.approveJourney);
 router.patch('/:id/reject', authenticate, restrictTo('ADMIN'), journeyController.rejectJourney);
+router.delete('/:id', authenticate, restrictTo('ADMIN'), journeyController.deleteJourney);
 
 // Public routes
 router.get('/', journeyController.getApprovedJourneys);

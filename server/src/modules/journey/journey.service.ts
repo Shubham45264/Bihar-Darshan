@@ -120,3 +120,9 @@ export const updateJourney = async (id: string, authorId: string, data: any) => 
     }
   });
 };
+
+export const deleteJourney = async (id: string) => {
+  const journey = await db.journey.findUnique({ where: { id } });
+  if (!journey) throw new AppError('Journey not found', 404);
+  return db.journey.delete({ where: { id } });
+};

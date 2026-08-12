@@ -41,3 +41,8 @@ export const updateJourney = catchAsync(async (req: Request, res: Response, next
   const journey = await journeyService.updateJourney(req.params.id as string, req.user!.id, req.body);
   sendSuccess(res, 200, 'Journey updated successfully', { journey });
 });
+
+export const deleteJourney = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+  await journeyService.deleteJourney(req.params.id as string);
+  sendSuccess(res, 200, 'Journey deleted successfully', null);
+});

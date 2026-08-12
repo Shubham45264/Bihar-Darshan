@@ -309,20 +309,24 @@ const AdminTourism = () => {
   const confirmDelete = async () => {
     if (!itemToDelete) return;
     try {
-      if ((itemToDelete as any)._isApprovedJourney) {
-        const user = auth.currentUser;
-        const token = user ? await user.getIdToken() : '';
-        await fetch(`${API_BASE_URL}/journeys/${itemToDelete.id}`, {
-          method: 'DELETE',
-          headers: { Authorization: `Bearer ${token}` }
-        });
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : '';
+      
+      const res = await fetch(`${API_BASE_URL}/journeys/${itemToDelete.id}`, {
+        method: 'DELETE',
+        headers: { Authorization: `Bearer ${token}` }
+      });
+
+      if (res.ok) {
         setJourneys(prev => prev.filter(j => j.id !== itemToDelete.id));
-        await fetchJourneys();
-      } else {
-        updateTourism(tourism.filter(t => t.id !== itemToDelete.id));
       }
+
+      updateTourism(tourism.filter(t => t.id !== itemToDelete.id));
+      await fetchJourneys();
     } catch (err) {
       console.error('Failed to delete journey:', err);
+      setJourneys(prev => prev.filter(j => j.id !== itemToDelete.id));
+      updateTourism(tourism.filter(t => t.id !== itemToDelete.id));
     } finally {
       setIsDeleteOpen(false);
       setItemToDelete(null);
