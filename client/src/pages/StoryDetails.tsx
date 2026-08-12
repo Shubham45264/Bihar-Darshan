@@ -82,7 +82,7 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
         <img
           src={currentItem.url}
           alt={story.title}
-          className="relative z-10 max-h-[70vh] w-auto max-w-full object-contain mx-auto rounded-xl shadow-2xl"
+          className="relative z-10 w-full h-full min-h-[320px] max-h-[70vh] object-cover scale-[1.35] mx-auto rounded-xl shadow-2xl"
         />
       )}
 

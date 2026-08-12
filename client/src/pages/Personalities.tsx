@@ -248,11 +248,19 @@ export default function Personalities() {
                 to={`/personalities/${person.id}`}
                 className="relative block h-[340px] sm:h-[360px] rounded-2xl overflow-hidden group bg-slate-100 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer"
               >
-                {/* Image */}
+                {/* Ambient Theme Backdrop Blur */}
+                {person.imageUrl && (
+                  <img
+                    src={person.imageUrl}
+                    alt=""
+                    className="absolute inset-0 w-full h-full object-cover blur-md opacity-50 scale-110 pointer-events-none"
+                  />
+                )}
+                {/* Main Image */}
                 <img
                   src={person.imageUrl}
                   alt={person.name}
-                  className="absolute inset-0 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
+                  className="relative z-10 w-full h-full object-cover object-top transition-transform duration-700 group-hover:scale-110"
                   onError={(e) => { (e.target as HTMLImageElement).src = "https://via.placeholder.com/400x600?text=Profile+Coming+Soon"; }}
                 />
 

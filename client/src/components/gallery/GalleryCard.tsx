@@ -61,13 +61,22 @@ const GalleryCard = ({ item, index, spanClass, onClick }: GalleryCardProps) => {
             }}
           />
         ) : (
-          <img
-            src={item.image}
-            alt={item.title}
-            onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x300?text=Bihar+Gallery"; }}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            loading="lazy"
-          />
+          <>
+            {item.image && (
+              <img
+                src={item.image}
+                alt=""
+                className="absolute inset-0 w-full h-full object-cover blur-xl opacity-40 scale-110 pointer-events-none"
+              />
+            )}
+            <img
+              src={item.image}
+              alt={item.title}
+              onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x300?text=Bihar+Gallery"; }}
+              className="relative z-10 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              loading="lazy"
+            />
+          </>
         )}
 
         {/* Video Play Button (center) */}

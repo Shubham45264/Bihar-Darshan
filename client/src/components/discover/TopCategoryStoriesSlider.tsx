@@ -206,128 +206,128 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: -20 }}
             transition={{ duration: 0.45, ease: 'easeOut' }}
-            className="flex flex-col lg:flex-row items-stretch relative z-10 w-full min-h-0 lg:min-h-[420px]"
+            className="flex flex-col lg:flex-row items-stretch relative z-10 w-full min-h-0 lg:min-h-[260px]"
           >
-            {/* MEDIA COLUMN: Top on mobile, Right on desktop */}
-            <div className="w-full lg:w-1/2 h-52 sm:h-72 lg:h-auto min-h-[200px] sm:min-h-[300px] lg:min-h-[420px] relative overflow-hidden bg-stone-900 group/media shrink-0">
+            {/* MEDIA COLUMN: Top on mobile, Left on desktop */}
+            <div className="w-full lg:w-5/12 h-44 sm:h-56 lg:h-auto min-h-[180px] sm:min-h-[220px] lg:min-h-[260px] relative overflow-hidden bg-stone-950 group/media shrink-0 flex items-center justify-center">
               {mediaInfo.type === 'VIDEO' || mediaInfo.type === 'video' ? (
                 <div className="relative w-full h-full flex items-center justify-center bg-stone-950">
                   <video
                     src={mediaInfo.url}
                     controls
-                    className="w-full h-full object-contain"
+                    className="w-full h-full object-contain relative z-10"
                   />
                 </div>
               ) : (
                 <img
                   src={mediaInfo.url}
                   alt={currentStory.title}
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover/media:scale-105"
+                  className="w-full h-full object-cover scale-[1.35] transition-transform duration-700 ease-out group-hover/media:scale-[1.45]"
                 />
               )}
 
               {/* Image Vignette Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/40 via-transparent to-transparent pointer-events-none" />
+              <div className="absolute inset-0 bg-gradient-to-t from-stone-950/40 via-transparent to-transparent pointer-events-none z-15" />
 
               {/* Video Badge */}
               {(mediaInfo.type === 'VIDEO' || mediaInfo.type === 'video') && (
-                <div className="absolute top-3 right-3 bg-stone-950/80 backdrop-blur-md text-white text-[11px] font-bold px-3 py-1 rounded-full border border-white/20 flex items-center gap-1.5 shadow-lg">
-                  <Video size={13} className="text-[#EAB308]" /> Video Story
+                <div className="absolute top-2.5 right-2.5 bg-stone-950/80 backdrop-blur-md text-white text-[10px] font-bold px-2.5 py-0.5 rounded-full border border-white/20 flex items-center gap-1 shadow-lg z-20">
+                  <Video size={11} className="text-[#EAB308]" /> Video Story
                 </div>
               )}
             </div>
 
-            {/* DETAILS COLUMN: Bottom on mobile, Left on desktop */}
-            <div className="w-full lg:w-1/2 p-5 sm:p-8 lg:p-10 pb-12 sm:pb-14 lg:pb-12 flex flex-col justify-between space-y-4">
+            {/* DETAILS COLUMN: Bottom on mobile, Right on desktop */}
+            <div className="w-full lg:w-7/12 p-4 sm:p-5 lg:p-6 pb-9 sm:pb-10 lg:pb-9 flex flex-col justify-between space-y-2.5 sm:space-y-3">
               {/* Badges Row */}
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
-                <span className="bg-gradient-to-r from-[#EAB308] to-[#F59E0B] text-stone-950 font-black text-[11px] sm:text-xs px-3 py-0.5 sm:px-3.5 sm:py-1 rounded-full shadow-[0_2px_10px_rgba(234,179,8,0.35)] uppercase tracking-wider flex items-center gap-1.5">
-                  <Flame size={13} className="fill-stone-950" />
+                <span className="bg-gradient-to-r from-[#EAB308] to-[#F59E0B] text-stone-950 font-black text-[10px] sm:text-[11px] px-2.5 py-0.5 sm:px-3 sm:py-0.5 rounded-full shadow-[0_2px_8px_rgba(234,179,8,0.3)] uppercase tracking-wider flex items-center gap-1">
+                  <Flame size={12} className="fill-stone-950" />
                   <span>#{currentIndex + 1} TOP STORY</span>
                 </span>
 
                 {currentStory.subcategory && (
-                  <span className="bg-[#EAB308]/15 text-[#7A5200] font-extrabold text-[11px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-[#EAB308]/30 font-sans">
+                  <span className="bg-[#EAB308]/15 text-[#7A5200] font-extrabold text-[10px] sm:text-[11px] px-2.5 py-0.5 rounded-full border border-[#EAB308]/30 font-sans">
                     {currentStory.subcategory.title}
                   </span>
                 )}
 
                 {currentStory.district && (
-                  <span className="bg-white/90 text-stone-800 font-extrabold text-[11px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-stone-200/80 flex items-center gap-1 shadow-sm font-sans">
-                    <MapPin size={12} className="text-[#EAB308]" />
+                  <span className="bg-white/90 text-stone-800 font-extrabold text-[10px] sm:text-[11px] px-2.5 py-0.5 rounded-full border border-stone-200/80 flex items-center gap-1 shadow-sm font-sans">
+                    <MapPin size={11} className="text-[#EAB308]" />
                     <span>{currentStory.district}</span>
                   </span>
                 )}
               </div>
 
               {/* Title & Content Preview */}
-              <div className="space-y-2.5 sm:space-y-3">
-                <h3 className="text-xl sm:text-2xl lg:text-3xl font-display font-extrabold text-stone-900 leading-snug tracking-tight drop-shadow-sm">
+              <div className="space-y-1.5 sm:space-y-2">
+                <h3 className="text-base sm:text-lg lg:text-xl font-display font-extrabold text-stone-900 leading-snug tracking-tight drop-shadow-sm line-clamp-1 sm:line-clamp-2">
                   {currentStory.title}
                 </h3>
 
-                <p className="text-stone-700 text-xs sm:text-sm leading-relaxed text-justify font-sans font-medium line-clamp-3 sm:line-clamp-4">
+                <p className="text-stone-700 text-xs leading-relaxed text-justify font-sans font-medium line-clamp-2 sm:line-clamp-3">
                   {currentStory.content}
                 </p>
               </div>
 
               {/* Author & Stats Row */}
-              <div className="pt-3 sm:pt-4 border-t border-[#EAB308]/20 flex flex-wrap items-center justify-between gap-3 sm:gap-4">
+              <div className="pt-2 border-t border-[#EAB308]/20 flex flex-wrap items-center justify-between gap-2">
                 {/* Author Info */}
-                <div className="flex items-center gap-2.5 sm:gap-3">
+                <div className="flex items-center gap-2">
                   {currentStory.authorAvatar ? (
                     <img
                       src={currentStory.authorAvatar}
                       alt={currentStory.authorName}
-                      className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-[#EAB308] shadow-md"
+                      className="w-7 h-7 sm:w-8 sm:h-8 rounded-full object-cover border border-[#EAB308] shadow-sm"
                     />
                   ) : (
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#EAB308] text-stone-950 font-extrabold flex items-center justify-center text-xs sm:text-sm shadow font-sans">
+                    <div className="w-7 h-7 sm:w-8 sm:h-8 rounded-full bg-[#EAB308] text-stone-950 font-extrabold flex items-center justify-center text-xs shadow font-sans">
                       {currentStory.authorName?.charAt(0) || 'U'}
                     </div>
                   )}
                   <div>
-                    <p className="text-stone-900 font-extrabold text-xs sm:text-sm leading-none font-sans">
+                    <p className="text-stone-900 font-extrabold text-xs leading-none font-sans">
                       {currentStory.authorName || 'Explorer'}
                     </p>
-                    <p className="text-stone-500 text-[10px] sm:text-[11px] font-semibold mt-1 flex items-center gap-1 font-sans">
-                      <Calendar size={11} className="text-[#EAB308]" />
+                    <p className="text-stone-500 text-[10px] font-semibold mt-0.5 flex items-center gap-1 font-sans">
+                      <Calendar size={10} className="text-[#EAB308]" />
                       {currentStory.createdAt
                         ? new Date(currentStory.createdAt).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           year: 'numeric',
                         })
-                        : 'Community Contributor'}
+                        : 'Contributor'}
                     </p>
                   </div>
                 </div>
 
                 {/* Engagement Numbers */}
-                <div className="flex items-center gap-2.5 sm:gap-3 bg-white/90 border border-[#EAB308]/30 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs text-stone-800 shadow-sm font-bold font-sans">
+                <div className="flex items-center gap-2 bg-white/90 border border-[#EAB308]/30 px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full text-[11px] text-stone-800 shadow-sm font-bold font-sans">
                   <span className="flex items-center gap-1 text-stone-700">
-                    <Eye size={13} className="text-[#EAB308]" />
+                    <Eye size={12} className="text-[#EAB308]" />
                     <span>{currentStory.views || 0}</span>
                   </span>
                   <span className="w-1 h-1 rounded-full bg-stone-300" />
                   <span className="flex items-center gap-1 text-rose-600">
-                    <Heart size={13} className="fill-rose-500 text-rose-500" />
+                    <Heart size={12} className="fill-rose-500 text-rose-500" />
                     <span>{currentStory.likes || 0}</span>
                   </span>
                 </div>
               </div>
 
               {/* Action Button */}
-              <div className="pt-2">
+              <div className="pt-1">
                 <button
                   type="button"
                   onClick={() => handleViewStory(currentStory.id)}
-                  className="group/btn inline-flex items-center gap-2 bg-gradient-to-r from-[#EAB308] via-[#F59E0B] to-[#D97706] hover:brightness-105 text-stone-950 font-black text-xs sm:text-sm px-6 py-2.5 sm:px-7 sm:py-3 rounded-full shadow-[0_4px_15px_rgba(234,179,8,0.35)] transition-all cursor-pointer font-sans uppercase tracking-wider"
+                  className="group/btn inline-flex items-center gap-1.5 bg-gradient-to-r from-[#EAB308] via-[#F59E0B] to-[#D97706] hover:brightness-105 text-stone-950 font-black text-xs px-4 py-1.5 sm:px-5 sm:py-2 rounded-full shadow-[0_2px_10px_rgba(234,179,8,0.3)] transition-all cursor-pointer font-sans uppercase tracking-wider"
                 >
                   <span>View Story</span>
                   <ArrowRight
-                    size={15}
-                    className="group-hover/btn:translate-x-1.5 transition-transform"
+                    size={13}
+                    className="group-hover/btn:translate-x-1 transition-transform"
                   />
                 </button>
               </div>

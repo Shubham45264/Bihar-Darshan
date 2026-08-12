@@ -54,14 +54,14 @@ const StoryMediaCarousel = ({ story }: { story: Story }) => {
   const currentItem = items[currentIndex];
 
   return (
-    <div className="relative w-full h-48 sm:h-60 bg-neutral-900 flex items-center justify-center overflow-hidden shrink-0 group">
+    <div className="relative w-full h-52 sm:h-64 bg-stone-950 flex items-center justify-center overflow-hidden shrink-0 group">
       {currentItem.type === 'VIDEO' || currentItem.type === 'video' ? (
-        <video src={currentItem.url} controls className="w-full h-full object-cover" />
+        <video src={currentItem.url} controls className="w-full h-full object-contain relative z-10" />
       ) : (
         <img
           src={currentItem.url}
           alt={story.title}
-          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+          className="w-full h-full object-cover scale-[1.35] group-hover:scale-[1.45] transition-transform duration-500"
         />
       )}
 
