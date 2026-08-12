@@ -11,12 +11,14 @@ import { galleryData } from "../data/galleryData";
 import type { GalleryItem } from "../data/galleryData";
 import { useContributions } from "../data/ContributionContext";
 import { useAdminData } from "../data/AdminContext";
+import { API_BASE_URL } from "../config/api";
 import type {
   MediaFilter,
   SortOption,
 } from "../components/gallery/GalleryFilters";
 
-export interface ExtendedGalleryItem extends GalleryItem {
+export interface ExtendedGalleryItem extends Omit<GalleryItem, 'id'> {
+  id: string | number;
   source: "official" | "community";
   link?: string;
 }
@@ -36,10 +38,43 @@ const Gallery = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [sortBy, setSortBy] = useState<SortOption>("latest");
   const [selectedItem, setSelectedItem] = useState<ExtendedGalleryItem | null>(null);
+  const [fetchedVideos, setFetchedVideos] = useState<ExtendedGalleryItem[]>([]);
 
   // Scroll to top on mount
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
+  }, []);
+
+  // Fetch approved videos from backend
+  useEffect(() => {
+    const fetchVideos = async () => {
+      try {
+        const res = await fetch(`${API_BASE_URL}/tribes/videos/all?status=APPROVED`);
+        const data = await res.json();
+        if (data.success && data.data?.videos) {
+          const mapped: ExtendedGalleryItem[] = data.data.videos.map((v: any, idx: number) => ({
+            id: `tribe-vid-${v.id || idx}`,
+            title: v.caption || v.title || 'Tribal Heritage Video',
+            image: v.videoUrl,
+            mediaType: 'video',
+            category: 'Culture',
+            photographer: v.uploaderName || 'Community Member',
+            likes: Math.floor(Math.random() * 400) + 50,
+            views: Math.floor(Math.random() * 2500) + 150,
+            comments: Math.floor(Math.random() * 30) + 5,
+            uploadDate: v.createdAt || new Date().toISOString(),
+            location: v.tribeName ? `${v.tribeName} Tribe` : 'Bihar',
+            aspectRatio: 'landscape',
+            source: 'community',
+            link: v.tribeName ? `/tribe/${v.tribeName.toLowerCase().replace(/\s+/g, '-')}` : '/tribes'
+          }));
+          setFetchedVideos(mapped);
+        }
+      } catch (err) {
+        console.error('Failed to fetch videos for gallery:', err);
+      }
+    };
+    fetchVideos();
   }, []);
 
   // Combine and map data
@@ -111,6 +146,24 @@ const Gallery = () => {
       link: "/culture"
     }));
 
+    // Map Culture Videos
+    const cultureVideoItems: ExtendedGalleryItem[] = cultureData.filter(c => c.videoUrl).map(c => ({
+      id: `culture-vid-${c.id}`,
+      title: `${c.title} (Video)`,
+      image: c.videoUrl || c.image,
+      mediaType: "video",
+      category: "Culture",
+      photographer: c.submittedBy || "Official Bihar Darshan",
+      likes: Math.floor(Math.random() * 800) + 100,
+      views: Math.floor(Math.random() * 3000) + 300,
+      comments: Math.floor(Math.random() * 50) + 10,
+      uploadDate: new Date().toISOString(),
+      location: c.district || "Bihar",
+      aspectRatio: "landscape",
+      source: "official",
+      link: "/culture"
+    }));
+
     // Map Tribes
     const tribeItems: ExtendedGalleryItem[] = tribalArticles.filter(t => t.image).map(t => ({
       id: baseId++,
@@ -126,18 +179,20 @@ const Gallery = () => {
       location: t.location,
       aspectRatio: "square",
       source: "official",
-      link: `/tribe/${t.tribe.toLowerCase().replace(/\\s+/g, '-')}`
+      link: `/tribe/${t.tribe.toLowerCase().replace(/\s+/g, '-')}`
     }));
 
     return [
+      ...fetchedVideos,
       ...community,
       ...officialGallery,
+      ...cultureVideoItems,
       ...districtItems,
       ...tourismItems,
       ...cultureItems,
       ...tribeItems
     ];
-  }, [gallerySubmissions, galleryData, allDistricts, featuredTrips, cultureData, tribalArticles]);
+  }, [gallerySubmissions, galleryData, allDistricts, featuredTrips, cultureData, tribalArticles, fetchedVideos]);
 
   // Filter + Sort logic
   const filteredItems = useMemo(() => {
