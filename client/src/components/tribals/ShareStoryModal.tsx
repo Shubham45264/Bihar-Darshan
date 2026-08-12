@@ -132,11 +132,20 @@ const ShareStoryModal = ({ isOpen, onClose, defaultTribe }: ShareStoryModalProps
     }
   };
 
+  const countWords = (text: string): number => {
+    const trimmed = text.trim();
+    return trimmed ? trimmed.split(/\s+/).length : 0;
+  };
+
   const validate = (): boolean => {
     const newErrors: FormErrors = {};
     if (!formData.headline.trim()) newErrors.headline = 'Headline is required';
     if (formData.images.length === 0) newErrors.images = 'At least one image is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
+    if (!formData.description.trim()) {
+      newErrors.description = 'Description is required';
+    } else if (countWords(formData.description) > 2000) {
+      newErrors.description = 'Description cannot exceed 2000 words';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -345,24 +354,31 @@ const ShareStoryModal = ({ isOpen, onClose, defaultTribe }: ShareStoryModalProps
 
               {/* Description */}
               <div>
-                <label className={labelClass}>
-                  Description <span className="text-[#D4A017]">*</span>
-                </label>
+                <div className="flex items-center justify-between mb-1.5">
+                  <label className={labelClass}>
+                    Description <span className="text-[#D4A017]">*</span>
+                  </label>
+                  <span className={`text-xs font-semibold ${countWords(formData.description) > 2000 ? 'text-red-400 font-bold' : 'text-white/40'}`}>
+                    {countWords(formData.description)} / 2000 words
+                  </span>
+                </div>
                 <textarea
                   value={formData.description}
                   onChange={(e) => {
-                    setFormData(prev => ({ ...prev, description: e.target.value }));
-                    if (errors.description) setErrors(prev => ({ ...prev, description: undefined }));
+                    const text = e.target.value;
+                    const words = countWords(text);
+                    setFormData(prev => ({ ...prev, description: text }));
+                    if (words > 2000) {
+                      setErrors(prev => ({ ...prev, description: 'Description cannot exceed 2000 words' }));
+                    } else if (errors.description) {
+                      setErrors(prev => ({ ...prev, description: undefined }));
+                    }
                   }}
-                  placeholder="Tell us about your story..."
-                  rows={4}
-                  className={`${inputBaseClass} resize-none ${errors.description ? 'ring-2 ring-red-500/50 border-red-500/50' : ''}`}
-                  maxLength={500}
+                  placeholder="Tell us about your story (up to 2000 words)..."
+                  rows={6}
+                  className={`${inputBaseClass} resize-y min-h-[120px] ${errors.description ? 'ring-2 ring-red-500/50 border-red-500/50' : ''}`}
                 />
-                <div className="flex justify-between items-center mt-1">
-                  {errors.description && <p className={errorClass}>{errors.description}</p>}
-                  <p className="text-xs text-white/40 ml-auto">{formData.description.length}/500</p>
-                </div>
+                {errors.description && <p className={errorClass}>{errors.description}</p>}
               </div>
 
               {/* Tribe/Community */}

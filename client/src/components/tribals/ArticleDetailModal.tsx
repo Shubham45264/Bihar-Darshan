@@ -41,22 +41,8 @@ const ArticleDetailModal = ({ article, isOpen, onClose }: ArticleDetailModalProp
 
   if (!article) return null;
 
-  // Generate extended article body from the description
-  const articleBody = [
-    article.description,
-    "",
-    `The ${article.tribe.replace(' Tribe', '')} community has long been recognized for their profound connection to land, culture, and tradition. This story is a testament to the resilience and creativity that defines their way of life across the villages and towns of Bihar.`,
-    "",
-    "Across generations, these practices have been passed down through oral traditions, community gatherings, and sacred rituals. Elders in the village recall a time when every household participated in these activities, making them an inseparable part of daily life.",
-    "",
-    `"We want the world to see what our ancestors built," says a community elder. "This is not just art or tradition — this is our identity, our soul, our way of speaking to the earth."`,
-    "",
-    "Local organizations and cultural bodies have taken notice, offering support through workshops, exhibitions, and documentation projects. The goal is to ensure that these rich traditions are not only preserved but celebrated, finding new relevance in modern India while staying true to their roots.",
-    "",
-    "The initiative has already attracted attention from researchers, journalists, and cultural enthusiasts from across the country. Many believe that such grassroots movements are essential for maintaining India's incredibly diverse cultural landscape.",
-    "",
-    `As the ${article.tribe.replace(' Tribe', '')} community continues to navigate the challenges of modernization, stories like these serve as powerful reminders of the irreplaceable value of indigenous heritage. They inspire hope that tradition and progress can coexist, enriching each other in the process.`,
-  ].join('\n');
+  // Only display the description written and submitted by the user
+  const articleBody = article.description || '';
 
   return (
     <AnimatePresence>
