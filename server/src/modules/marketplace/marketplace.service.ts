@@ -23,20 +23,6 @@ export const getAllProducts = async (category?: string, status?: string, page?: 
     where: whereClause,
     take,
     skip,
-    select: {
-      id: true,
-      businessName: true,
-      productName: true,
-      category: true,
-      image: true,
-      description: true,
-      contact: true,
-      email: true,
-      status: true,
-      publicId: true,
-      createdAt: true,
-      updatedAt: true,
-    },
     orderBy: { createdAt: 'desc' }
   });
 };
