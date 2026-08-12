@@ -82,11 +82,11 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
   }
 
   return (
-    <div className="px-3 sm:px-6 lg:px-8">
+    <div className="px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1400px] mx-auto">
-        {/* CSS Columns Masonry Grid (2 columns on mobile, 3 on md, 4 on lg) */}
+        {/* Normal Responsive Masonry Grid */}
         <div 
-          className="columns-2 sm:columns-2 md:columns-3 lg:columns-4 gap-3 sm:gap-4 lg:gap-6"
+          className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 sm:gap-6"
         >
           {visibleItems.map((item, i) => (
             <GalleryCard

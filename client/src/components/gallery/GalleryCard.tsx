@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import { Heart, Play, Video, MessageCircle, Eye, Users } from "lucide-react";
+import { Heart, Play, Video, MessageCircle, Eye, Users, MapPin } from "lucide-react";
 import type { ExtendedGalleryItem } from "../../pages/Gallery";
 
 interface GalleryCardProps {
@@ -22,44 +22,30 @@ const getPosterUrl = (url: string) => {
   return url;
 };
 
-const getAspectClass = (aspect?: string) => {
-  switch (aspect) {
-    case 'portrait':
-      return 'aspect-[3/4]';
-    case 'landscape':
-      return 'aspect-[4/3]';
-    case 'square':
-      return 'aspect-square';
-    default:
-      return 'aspect-[4/3] sm:aspect-[3/4]';
-  }
-};
-
 const GalleryCard = ({ item, index, onClick }: GalleryCardProps) => {
   const isVideo = item.mediaType === "video" || item.image.includes('/video/upload/') || item.image.endsWith('.mp4');
   const posterUrl = isVideo ? getPosterUrl(item.image) : item.image;
-  const aspectClass = getAspectClass(item.aspectRatio);
 
   return (
     <motion.div
-      initial={{ opacity: 0, y: 25 }}
+      initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-20px" }}
       transition={{
         duration: 0.4,
-        delay: (index % 10) * 0.05,
+        delay: (index % 10) * 0.04,
         ease: [0.25, 0.46, 0.45, 0.94],
       }}
-      className={`break-inside-avoid inline-block w-full mb-3 sm:mb-4 lg:mb-6 group relative overflow-hidden rounded-xl sm:rounded-2xl cursor-pointer bg-neutral-900 border border-white/10 hover:border-[#D4A017]/60 shadow-sm hover:shadow-2xl transition-all duration-300 ${aspectClass}`}
+      className="break-inside-avoid inline-block w-full mb-4 sm:mb-6 group relative overflow-hidden rounded-2xl cursor-pointer bg-[#0d1520] border border-white/10 hover:border-[#D4A017]/60 shadow-md hover:shadow-2xl transition-all duration-300"
       onClick={onClick}
     >
       {/* ── Image / Video Container ── */}
-      <div className="relative w-full h-full overflow-hidden">
+      <div className="relative w-full overflow-hidden">
         {isVideo ? (
           <video
             src={item.image}
             poster={posterUrl}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-auto max-h-[480px] object-cover transition-transform duration-500 group-hover:scale-105"
             muted
             playsInline
             preload="metadata"
@@ -74,56 +60,56 @@ const GalleryCard = ({ item, index, onClick }: GalleryCardProps) => {
             src={item.image}
             alt={item.title}
             onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x500?text=Bihar+Gallery"; }}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+            className="w-full h-auto max-h-[520px] object-cover transition-transform duration-500 group-hover:scale-105"
             loading="lazy"
           />
         )}
 
         {/* ── Top-Right Media Badge ── */}
-        <div className="absolute top-2.5 right-2.5 z-10 flex items-center gap-1.5 pointer-events-none">
+        <div className="absolute top-3 right-3 z-10 flex items-center gap-1.5 pointer-events-none">
           {isVideo && (
             <div className="p-1.5 rounded-lg bg-black/60 backdrop-blur-md border border-white/20 text-white shadow-md">
-              <Video size={13} />
+              <Video size={14} />
             </div>
           )}
           {item.source === "community" && (
-            <div className="px-2 py-1 rounded-lg bg-[#D4A017]/90 text-black backdrop-blur-md font-bold text-[10px] flex items-center gap-1 shadow-md">
-              <Users size={10} /> <span>Community</span>
+            <div className="px-2.5 py-1 rounded-lg bg-[#D4A017] text-black font-extrabold text-[10px] uppercase tracking-wider shadow-md">
+              Community
             </div>
           )}
         </div>
 
-        {/* ── Default Mobile Bottom Caption Overlay ── */}
-        <div className="absolute inset-x-0 bottom-0 p-3 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none group-hover:opacity-0 transition-opacity duration-300">
-          <p className="text-white font-bold text-xs sm:text-sm truncate drop-shadow-sm">{item.title}</p>
-          <p className="text-[#D4A017] text-[10px] sm:text-xs truncate font-medium mt-0.5">By {item.photographer}</p>
-        </div>
-
-        {/* ── Masonry Hover Stats Overlay ── */}
-        <div className="absolute inset-0 bg-black/70 backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-between p-3.5 sm:p-5 z-20">
-          {/* Top Category Tag */}
-          <div className="flex items-center justify-between">
-            <span className="text-[10px] sm:text-xs font-extrabold uppercase tracking-wider text-[#D4A017] bg-[#D4A017]/10 px-2.5 py-1 rounded-full border border-[#D4A017]/30">
+        {/* ── Bottom Overlay Card Details ── */}
+        <div className="p-4 bg-gradient-to-t from-[#0d1520] via-[#0d1520]/95 to-transparent pt-8 -mt-6 relative z-10">
+          <div className="flex items-center justify-between gap-2 mb-1.5">
+            <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017] bg-[#D4A017]/10 px-2.5 py-0.5 rounded-md border border-[#D4A017]/30">
               {item.category}
             </span>
+            {item.location && (
+              <span className="text-[10px] text-white/50 flex items-center gap-1 font-medium">
+                <MapPin size={10} className="text-[#D4A017]" /> {item.location}
+              </span>
+            )}
           </div>
 
-          {/* Center Masonry Stats */}
-          <div className="flex items-center justify-center gap-5 text-white font-extrabold text-sm sm:text-base">
-            <span className="flex items-center gap-1.5 drop-shadow-md">
-              <Heart size={18} fill="white" className="text-white" />
-              {formatCount(item.likes)}
-            </span>
-            <span className="flex items-center gap-1.5 drop-shadow-md">
-              <MessageCircle size={18} fill="white" className="text-white" />
-              {formatCount(item.comments || item.views || 12)}
-            </span>
-          </div>
+          <h3 className="font-serif font-bold text-white text-sm sm:text-base leading-snug line-clamp-2 group-hover:text-[#D4A017] transition-colors">
+            {item.title}
+          </h3>
 
-          {/* Bottom Title & Author */}
-          <div className="text-left w-full">
-            <p className="text-white font-bold text-xs sm:text-sm md:text-base line-clamp-1 drop-shadow-sm">{item.title}</p>
-            <p className="text-[#D4A017] text-[11px] sm:text-xs truncate font-medium mt-0.5">By {item.photographer}</p>
+          <div className="flex items-center justify-between pt-3 mt-3 border-t border-white/10 text-xs text-white/60">
+            <span className="font-medium text-white/70 truncate max-w-[60%]">
+              By {item.photographer}
+            </span>
+            <div className="flex items-center gap-3 shrink-0 font-semibold text-white/80">
+              <span className="flex items-center gap-1">
+                <Heart size={13} className="text-red-400 fill-red-400/30" />
+                {formatCount(item.likes)}
+              </span>
+              <span className="flex items-center gap-1">
+                <Eye size={13} className="text-[#D4A017]" />
+                {formatCount(item.views)}
+              </span>
+            </div>
           </div>
         </div>
       </div>
