@@ -169,9 +169,17 @@ const AdminCategories = () => {
   const [subImage, setSubImage] = useState('');
 
   const getAuthHeaders = async (): Promise<Record<string, string>> => {
-    const user = auth.currentUser;
-    const token = user ? await user.getIdToken() : '';
-    return token ? { 'Authorization': `Bearer ${token}` } : {};
+    try {
+      const user = auth.currentUser;
+      if (!user) return {};
+      let token = await user.getIdToken().catch(() => null);
+      if (!token) {
+        token = await user.getIdToken(true).catch(() => null);
+      }
+      return token ? { 'Authorization': `Bearer ${token}` } : {};
+    } catch {
+      return {};
+    }
   };
 
   const fetchCategories = async () => {

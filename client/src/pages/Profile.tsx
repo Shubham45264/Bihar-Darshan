@@ -79,10 +79,12 @@ const Profile = () => {
         .then(r => r.json())
         .then(lbData => {
           if (lbData.success && lbData.data?.leaderboard) {
-            setLeaderboardPreview(lbData.data.leaderboard);
+            const list = lbData.data.leaderboard || [];
+            setLeaderboardPreview(list);
             const myUid = firebaseUser?.uid;
-            if (myUid) {
-              const found = lbData.data.leaderboard.find((u: any) => u.firebaseUid === myUid);
+            const myEmail = firebaseUser?.email;
+            if (myUid || myEmail) {
+              const found = list.find((u: any) => u.firebaseUid === myUid || u.id === myUid || (myEmail && u.email === myEmail));
               if (found) setUserRank(found.rank);
             }
           }
@@ -641,28 +643,28 @@ const Profile = () => {
           </div>
 
           {/* Leaderboard & Rewards Widget on Profile */}
-          <div className="bg-gradient-to-br from-[#1E1B18] to-[#120F0D] border border-amber-500/30 rounded-2xl p-6 text-white shadow-xl mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-white/10 pb-4 mb-4">
+          <div className="bg-white border border-gray-200/80 rounded-2xl p-6 text-brand-dark shadow-sm mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 border border-amber-500/30 flex items-center justify-center shrink-0">
-                  <Trophy size={20} />
+                <div className="w-10 h-10 rounded-xl bg-brand-gold/10 text-amber-900 border border-brand-gold/30 flex items-center justify-center shrink-0">
+                  <Trophy size={20} className="text-brand-gold" />
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg text-white flex items-center gap-2">
+                  <h3 className="font-display font-bold text-xl text-brand-dark flex items-center gap-2">
                     Bihar Cultural Leaderboard
                     {userRank && (
-                      <span className="text-xs bg-amber-400 text-black px-2 py-0.5 rounded-full font-black">
+                      <span className="text-xs bg-brand-gold/15 border border-brand-gold/30 text-amber-900 px-2.5 py-0.5 rounded-full font-extrabold">
                         Your Rank: #{userRank}
                       </span>
                     )}
                   </h3>
-                  <p className="text-xs text-white/50">Top community guardians preserving Bihar's heritage and stories.</p>
+                  <p className="text-xs text-gray-500 font-normal">Top community guardians preserving Bihar's heritage and stories.</p>
                 </div>
               </div>
 
               <Link
                 to="/leaderboard"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-amber-500 hover:bg-amber-400 text-black font-bold text-xs uppercase tracking-wider transition-all shadow-md shrink-0"
+                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-extrabold text-xs uppercase tracking-wider transition-all shadow-sm shrink-0 hover:scale-105"
               >
                 View Full Leaderboard <ChevronRight size={14} />
               </Link>
@@ -671,17 +673,17 @@ const Profile = () => {
             {leaderboardPreview.length > 0 && (
               <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                 {leaderboardPreview.map((u) => (
-                  <div key={u.id} className="bg-white/5 border border-white/10 rounded-xl p-3 text-center relative">
-                    <span className="absolute top-1.5 left-1.5 text-[9px] font-black text-amber-300 bg-amber-500/20 border border-amber-500/30 px-1.5 py-0.5 rounded-full">
+                  <div key={u.id} className="bg-[#FDFBF7] border border-gray-200/80 rounded-xl p-3.5 text-center relative hover:border-brand-gold/50 hover:shadow-md transition-all">
+                    <span className="absolute top-1.5 left-1.5 text-[9px] font-black text-amber-900 bg-brand-gold/15 border border-brand-gold/30 px-1.5 py-0.5 rounded-full">
                       #{u.rank}
                     </span>
                     <img
                       src={u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`}
                       alt={u.name}
-                      className="w-10 h-10 rounded-full object-cover border border-amber-400/40 mx-auto mb-1.5 mt-1"
+                      className="w-12 h-12 rounded-full object-cover border-2 border-brand-gold/50 mx-auto mb-2 mt-1 shadow-sm"
                     />
-                    <p className="font-bold text-xs text-white truncate">{u.name}</p>
-                    <p className="text-amber-400 text-xs font-black mt-0.5">{u.rewardPoints} Pts</p>
+                    <p className="font-display font-bold text-xs text-brand-dark truncate">{u.name}</p>
+                    <p className="text-brand-gold text-xs font-black mt-0.5">{u.rewardPoints} Pts</p>
                   </div>
                 ))}
               </div>

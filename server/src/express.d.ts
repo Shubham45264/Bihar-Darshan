@@ -1,4 +1,4 @@
-import { User } from '../../db';
+import { User } from './db';
 
 declare module 'express' {
   export interface Request {
@@ -13,6 +13,3 @@ declare module 'express-serve-static-core' {
     firebaseUid?: string;
   }
 }
-
-export {};
-
