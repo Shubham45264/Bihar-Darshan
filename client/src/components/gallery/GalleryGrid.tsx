@@ -82,18 +82,17 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
   }
 
   return (
-    <div className="px-4 sm:px-6 lg:px-8">
+    <div className="px-2 sm:px-6 lg:px-8">
       <div className="max-w-[1400px] mx-auto">
-        {/* Uniform Responsive Grid Wrapper */}
+        {/* Instagram Style Square Grid (3 columns on mobile, 3-4 on desktop) */}
         <div 
-          className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-4 auto-rows-[240px] sm:auto-rows-[260px]"
+          className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 md:gap-4 lg:gap-6"
         >
           {visibleItems.map((item, i) => (
             <GalleryCard
               key={item.id}
               item={item}
               index={i}
-              spanClass="col-span-1 row-span-1"
               onClick={() => onItemClick(item)}
             />
           ))}

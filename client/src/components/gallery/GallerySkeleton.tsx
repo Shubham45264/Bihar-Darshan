@@ -1,31 +1,15 @@
 const GallerySkeleton = () => {
-  // Varying heights for masonry effect
-  const heights = [200, 280, 240, 320, 200, 260, 300, 220, 280, 240];
-
   return (
-    <div className="gallery-masonry">
-      {heights.map((h, i) => (
+    <div className="grid grid-cols-3 sm:grid-cols-3 md:grid-cols-3 lg:grid-cols-4 gap-1.5 sm:gap-3 md:gap-4 lg:gap-6">
+      {Array.from({ length: 9 }).map((_, i) => (
         <div
           key={i}
-          className="gallery-skeleton rounded-2xl overflow-hidden"
-          style={{ height: h }}
+          className="aspect-square rounded-lg sm:rounded-xl bg-white/[0.05] animate-pulse relative overflow-hidden border border-white/5"
         >
-          {/* Image skeleton */}
-          <div className="w-full h-full relative">
-            {/* Category badge skeleton */}
-            <div className="absolute top-3 left-3 w-16 h-5 rounded-full bg-white/[0.06]" />
-
-            {/* Bottom overlay skeleton */}
-            <div className="absolute bottom-0 left-0 right-0 p-3">
-              <div className="flex items-center gap-2 mb-2">
-                <div className="w-6 h-6 rounded-full bg-white/[0.06]" />
-                <div className="w-20 h-3 rounded bg-white/[0.06]" />
-              </div>
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-3 rounded bg-white/[0.06]" />
-                <div className="w-12 h-3 rounded bg-white/[0.06]" />
-              </div>
-            </div>
+          <div className="absolute top-2 right-2 w-5 h-5 rounded-full bg-white/10" />
+          <div className="absolute bottom-2 left-2 right-2 space-y-1">
+            <div className="w-3/4 h-2.5 rounded bg-white/10" />
+            <div className="w-1/2 h-2 rounded bg-white/10" />
           </div>
         </div>
       ))}
