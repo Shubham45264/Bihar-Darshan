@@ -4,8 +4,9 @@ import { Link } from "react-router-dom";
 import { MapPin, ArrowRight } from "lucide-react";
 import biharHeritage from "../../assets/bihar-heritage.png";
 import DistrictsPageMap from "../districts/DistrictsPageMap";
-import { allDistricts } from "../../data/districtsData";
+import { allDistricts, resolveDistrictImage } from "../../data/districtsData";
 import { staticDistrictDetails } from "../../data/districtDetailsData";
+import { useAdminData } from "../../data/AdminContext";
 import {
   geoNameToDisplayName,
   displayNameToGeoName,
@@ -16,6 +17,7 @@ const DEFAULT_DISTRICT = "Patna";
 
 const BiharMapSection = () => {
   const [selectedDisplay, setSelectedDisplay] = useState<string>(DEFAULT_DISTRICT);
+  const { districts } = useAdminData();
 
   /* Convert between GeoJSON names and display names */
   const handleMapSelect = (geoName: string | null) => {
@@ -27,18 +29,16 @@ const BiharMapSection = () => {
   const handleMapHover = () => {/* no-op */};
 
   /* ── Derive data for the selected district ── */
-  const districtData = allDistricts.find(
-    (d) => d.name.toLowerCase() === selectedDisplay.toLowerCase()
-  );
+  const matchedDistrict =
+    districts.find((d) => d.name.toLowerCase() === selectedDisplay.toLowerCase()) ||
+    allDistricts.find((d) => d.name.toLowerCase() === selectedDisplay.toLowerCase());
 
   const detailKey = selectedDisplay.toLowerCase().replace(/\s*\(.*\)/, "").trim();
   const detail = staticDistrictDetails[detailKey];
 
-  /* Main Photo: use topAttractions image if available, else fallback to district image */
-  const mainPhoto =
-    detail?.topAttractions?.[0]?.image ||
-    districtData?.image ||
-    "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?q=80&w=1200&auto=format&fit=crop";
+  /* Main Photo: district banner image resolved same as DistrictDetails page */
+  const rawImage = matchedDistrict?.image || (detail as any)?.image || "";
+  const mainPhoto = resolveDistrictImage(rawImage);
 
   const description =
     detail?.introduction ??
@@ -106,6 +106,9 @@ const BiharMapSection = () => {
                     alt={selectedDisplay}
                     className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
                     loading="lazy"
+                    onError={(e) => {
+                      e.currentTarget.src = resolveDistrictImage('');
+                    }}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 </div>
