@@ -11,20 +11,7 @@ export const getApprovedJourneys = async (page?: number, limit?: number) => {
     where: { status: 'APPROVED' },
     take,
     skip,
-    select: {
-      id: true,
-      title: true,
-      shortDesc: true,
-      image: true,
-      duration: true,
-      budget: true,
-      price: true,
-      district: true,
-      category: true,
-      companyName: true,
-      rating: true,
-      status: true,
-      createdAt: true,
+    include: {
       author: { select: { id: true, name: true, avatar: true } }
     },
     orderBy: { createdAt: 'desc' }
@@ -68,20 +55,7 @@ export const getAllJourneys = async (page?: number, limit?: number) => {
   return db.journey.findMany({
     take,
     skip,
-    select: {
-      id: true,
-      title: true,
-      shortDesc: true,
-      image: true,
-      duration: true,
-      budget: true,
-      price: true,
-      district: true,
-      category: true,
-      companyName: true,
-      rating: true,
-      status: true,
-      createdAt: true,
+    include: {
       author: { select: { id: true, name: true, avatar: true } }
     },
     orderBy: { createdAt: 'desc' }
