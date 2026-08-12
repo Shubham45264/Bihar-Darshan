@@ -242,35 +242,64 @@ const AdminTribes = () => {
 
   // Video Moderation State
   const [adminPendingVideos, setAdminPendingVideos] = useState<any[]>([]);
+  const [adminApprovedVideos, setAdminApprovedVideos] = useState<any[]>([]);
   const [isFetchingPendingVideos, setIsFetchingPendingVideos] = useState(false);
   const [rejectingVideo, setRejectingVideo] = useState<any | null>(null);
   const [rejectionReasonText, setRejectionReasonText] = useState('');
 
-
-
-  const loadPendingVideos = async () => {
+  const loadAdminVideos = async () => {
     try {
       setIsFetchingPendingVideos(true);
       const token = await auth.currentUser?.getIdToken();
-      const res = await fetch(`${API_BASE_URL}/tribes/admin/videos/pending`, {
+      
+      // 1. Pending videos
+      const pendingRes = await fetch(`${API_BASE_URL}/tribes/admin/videos/pending`, {
         headers: { 'Authorization': `Bearer ${token}` }
       });
-      const data = await res.json();
-      if (data.success && data.data?.videos) {
-        setAdminPendingVideos(data.data.videos);
+      const pendingData = await pendingRes.json();
+      if (pendingData.success && pendingData.data?.videos) {
+        setAdminPendingVideos(pendingData.data.videos);
+      }
+
+      // 2. Approved videos
+      const approvedRes = await fetch(`${API_BASE_URL}/tribes/videos/all?status=APPROVED`, {
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      const approvedData = await approvedRes.json();
+      if (approvedData.success && approvedData.data?.videos) {
+        setAdminApprovedVideos(approvedData.data.videos);
       }
     } catch (err) {
-      console.error('Failed to load pending videos:', err);
+      console.error('Failed to load videos for admin:', err);
     } finally {
       setIsFetchingPendingVideos(false);
     }
   };
 
   useEffect(() => {
-    if (activeTab === 'videos') {
-      loadPendingVideos();
+    loadAdminVideos();
+  }, [mainTab, activeTab, isModalOpen]);
+
+  const handleDeleteAdminVideo = async (videoId: string) => {
+    if (!window.confirm("Are you sure you want to permanently delete this video?")) return;
+    try {
+      const token = await auth.currentUser?.getIdToken();
+      const res = await fetch(`${API_BASE_URL}/tribes/admin/videos/${videoId}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${token}` }
+      });
+      if (res.ok) {
+        setAdminPendingVideos(prev => prev.filter(v => v.id !== videoId));
+        setAdminApprovedVideos(prev => prev.filter(v => v.id !== videoId));
+        alert('Video deleted successfully.');
+      } else {
+        alert('Failed to delete video.');
+      }
+    } catch (err) {
+      console.error('Failed to delete video:', err);
+      alert('Failed to delete video.');
     }
-  }, [activeTab]);
+  };
 
   const handleApproveAdminVideo = async (videoId: string) => {
     try {
@@ -281,6 +310,7 @@ const AdminTribes = () => {
       });
       if (res.ok) {
         setAdminPendingVideos(prev => prev.filter(v => v.id !== videoId));
+        await loadAdminVideos();
         alert('Video approved successfully! It is now live on the public video slider.');
       }
     } catch (err) {
@@ -513,6 +543,20 @@ const AdminTribes = () => {
             </span>
           )}
         </button>
+        <button
+          type="button"
+          onClick={() => setMainTab('videos')}
+          className={`flex items-center gap-2 px-4 py-2.5 rounded-xl text-xs font-bold transition-all ${
+            mainTab === 'videos' ? 'bg-[#EAB308] text-black shadow-lg' : 'text-white/60 hover:text-white hover:bg-white/5'
+          }`}
+        >
+          <Film size={15} /> Video Moderation & Approved Videos
+          {adminPendingVideos.length > 0 && (
+            <span className="px-2.5 py-0.5 rounded-full bg-yellow-400 text-black text-[10px] font-black animate-pulse">
+              {adminPendingVideos.length} PENDING
+            </span>
+          )}
+        </button>
       </div>
 
       {/* ── TRIBES TABLE VIEW ── */}
@@ -650,6 +694,95 @@ const AdminTribes = () => {
         </div>
       )}
 
+      {/* ── VIDEO MODERATION & APPROVED VIDEOS VIEW ── */}
+      {mainTab === 'videos' && (
+        <div className="p-6 bg-white/[0.02] border border-white/10 rounded-2xl space-y-8">
+          <div className="border-b border-white/10 pb-4">
+            <h3 className="text-lg font-bold text-white flex items-center gap-2">
+              <Film className="text-[#EAB308]" size={20} />
+              Tribal Video Moderation & Live Videos Management
+            </h3>
+            <p className="text-xs text-white/50 mt-1">
+              Approve user-submitted videos, review published videos for each tribal group, or delete any video permanently from the site.
+            </p>
+          </div>
+
+          {/* Pending Videos Subsection */}
+          <div>
+            <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Clock size={14} /> Pending User Video Submissions ({adminPendingVideos.length})
+            </h4>
+            {adminPendingVideos.length === 0 ? (
+              <div className="py-8 text-center bg-white/[0.01] border border-dashed border-white/10 rounded-xl">
+                <p className="text-white/40 text-xs">No pending videos awaiting moderation.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {adminPendingVideos.map((vid) => (
+                  <div key={vid.id} className="border border-white/10 rounded-2xl bg-white/[0.03] p-4 flex flex-col justify-between space-y-3">
+                    <div className="w-full aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
+                      <video src={vid.videoUrl} controls preload="metadata" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                        Pending
+                      </span>
+                      <h5 className="font-serif font-bold text-white text-sm leading-snug line-clamp-1">{vid.caption || vid.title}</h5>
+                      <p className="text-xs text-white/50">Tribe: {vid.tribeName || 'General'} • By {vid.uploaderName || 'User'}</p>
+                    </div>
+                    <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+                      <button type="button" onClick={() => handleApproveAdminVideo(vid.id)} className="px-3 py-1.5 rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer border border-green-500/30">
+                        <Check size={13} /> Approve
+                      </button>
+                      <button type="button" onClick={() => { setRejectingVideo(vid); setRejectionReasonText(''); }} className="px-3 py-1.5 rounded-xl bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer border border-yellow-500/30">
+                        <X size={13} /> Reject
+                      </button>
+                      <button type="button" onClick={() => handleDeleteAdminVideo(vid.id)} className="px-3 py-1.5 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1 cursor-pointer border border-red-500/30">
+                        <Trash2 size={13} /> Delete
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {/* Approved & Published Videos Subsection */}
+          <div className="pt-4 border-t border-white/10">
+            <h4 className="text-xs font-bold text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+              <Check size={14} /> Approved & Live Published Videos ({adminApprovedVideos.length})
+            </h4>
+            {adminApprovedVideos.length === 0 ? (
+              <div className="py-8 text-center bg-white/[0.01] border border-dashed border-white/10 rounded-xl">
+                <p className="text-white/40 text-xs">No approved videos currently published.</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {adminApprovedVideos.map((vid) => (
+                  <div key={vid.id} className="border border-green-500/20 rounded-2xl bg-green-500/[0.03] p-4 flex flex-col justify-between space-y-3">
+                    <div className="w-full aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
+                      <video src={vid.videoUrl} controls preload="metadata" className="w-full h-full object-contain" />
+                    </div>
+                    <div className="space-y-1">
+                      <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                        Live
+                      </span>
+                      <h5 className="font-serif font-bold text-white text-sm leading-snug line-clamp-1">{vid.caption || vid.title}</h5>
+                      <p className="text-xs text-white/50">Tribe: {vid.tribeName || 'General'} • By {vid.uploaderName || 'User'}</p>
+                    </div>
+                    <div className="flex items-center justify-end pt-2 border-t border-white/10">
+                      <button type="button" onClick={() => handleDeleteAdminVideo(vid.id)} className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-red-500/30">
+                        <Trash2 size={14} /> Delete Video
+                      </button>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
       {/* ── Edit / Add Modal ── */}
       <AdminModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}
         title={editingItem ? `Edit: ${editingItem.englishName}` : 'Add New Tribe'}
@@ -744,7 +877,7 @@ const AdminTribes = () => {
                 </div>
                 <button
                   type="button"
-                  onClick={loadPendingVideos}
+                  onClick={loadAdminVideos}
                   className="flex items-center gap-1 px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-white text-xs font-semibold transition-all"
                 >
                   <RefreshCw size={12} /> Refresh Submissions
@@ -770,59 +903,122 @@ const AdminTribes = () => {
                   <div className="py-12 text-center text-white/50 text-sm">
                     Loading video submissions...
                   </div>
-                ) : adminPendingVideos.length === 0 ? (
-                  <div className="py-12 text-center bg-white/[0.01] border border-dashed border-white/10 rounded-xl">
-                    <Film size={28} className="mx-auto mb-2 text-white/20" />
-                    <p className="text-white/40 text-sm">No pending videos awaiting moderation for this tribe.</p>
-                  </div>
                 ) : (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
-                    {adminPendingVideos.map((vid) => (
-                      <div key={vid.id} className="border border-white/10 rounded-2xl bg-white/[0.03] p-4 flex flex-col justify-between space-y-3">
-                        {/* Inline Video Player for Admin Verification */}
-                        <div className="w-full aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
-                          <video
-                            src={vid.videoUrl}
-                            controls
-                            preload="metadata"
-                            className="w-full h-full object-contain"
-                          />
+                  <div className="space-y-8">
+                    {/* ── Pending Submissions Section ── */}
+                    <div>
+                      <h4 className="text-xs font-bold text-yellow-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <Clock size={14} /> Pending Approvals ({adminPendingVideos.length})
+                      </h4>
+                      {adminPendingVideos.length === 0 ? (
+                        <div className="py-8 text-center bg-white/[0.01] border border-dashed border-white/10 rounded-xl">
+                          <p className="text-white/40 text-xs">No pending videos awaiting moderation for this tribe.</p>
                         </div>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {adminPendingVideos.map((vid) => (
+                            <div key={vid.id} className="border border-white/10 rounded-2xl bg-white/[0.03] p-4 flex flex-col justify-between space-y-3">
+                              <div className="w-full aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
+                                <video
+                                  src={vid.videoUrl}
+                                  controls
+                                  preload="metadata"
+                                  className="w-full h-full object-contain"
+                                />
+                              </div>
+                              <div className="space-y-1.5">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
+                                    Pending Approval
+                                  </span>
+                                  <span className="text-[11px] text-white/40">Tribe: {vid.tribeName}</span>
+                                </div>
+                                <h5 className="font-serif font-bold text-white text-sm leading-snug">
+                                  {vid.caption || vid.title || 'Untitled Video'}
+                                </h5>
+                                <p className="text-xs text-white/60">Uploaded by {vid.uploaderName || 'Community Member'}</p>
+                              </div>
+                              <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+                                <button
+                                  type="button"
+                                  onClick={() => handleApproveAdminVideo(vid.id)}
+                                  className="px-3.5 py-2 rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-green-500/30"
+                                >
+                                  <Check size={14} /> Approve
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setRejectingVideo(vid);
+                                    setRejectionReasonText('');
+                                  }}
+                                  className="px-3 py-2 rounded-xl bg-yellow-500/20 hover:bg-yellow-500/30 text-yellow-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-yellow-500/30"
+                                >
+                                  <X size={14} /> Reject
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteAdminVideo(vid.id)}
+                                  className="px-3 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-red-500/30"
+                                  title="Delete video permanently"
+                                >
+                                  <Trash2 size={14} /> Delete
+                                </button>
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                      )}
+                    </div>
 
-                        <div className="space-y-1.5">
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-yellow-500/20 text-yellow-400 border border-yellow-500/30">
-                              Pending Approval
-                            </span>
-                            <span className="text-[11px] text-white/40">Tribe: {vid.tribeName}</span>
-                          </div>
-                          <h5 className="font-serif font-bold text-white text-sm leading-snug">
-                            {vid.caption || vid.title || 'Untitled Video'}
-                          </h5>
-                          <p className="text-xs text-white/60">Uploaded by {vid.uploaderName || 'Community Member'}</p>
+                    {/* ── Approved & Published Section ── */}
+                    <div className="pt-4 border-t border-white/10">
+                      <h4 className="text-xs font-bold text-green-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+                        <Check size={14} /> Approved & Published Videos ({adminApprovedVideos.length})
+                        <span className="text-white/30 font-normal normal-case tracking-normal">— Live on website.</span>
+                      </h4>
+                      {adminApprovedVideos.length === 0 ? (
+                        <div className="py-8 text-center bg-white/[0.01] border border-dashed border-white/10 rounded-xl">
+                          <p className="text-white/40 text-xs">No approved videos currently published.</p>
                         </div>
-
-                        <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
-                          <button
-                            type="button"
-                            onClick={() => handleApproveAdminVideo(vid.id)}
-                            className="px-4 py-2 rounded-xl bg-green-500/20 hover:bg-green-500/30 text-green-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-green-500/30"
-                          >
-                            <Check size={14} /> Approve Video
-                          </button>
-                          <button
-                            type="button"
-                            onClick={() => {
-                              setRejectingVideo(vid);
-                              setRejectionReasonText('');
-                            }}
-                            className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-red-500/30"
-                          >
-                            <X size={14} /> Reject
-                          </button>
+                      ) : (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          {adminApprovedVideos.map((vid) => (
+                            <div key={vid.id} className="border border-green-500/20 rounded-2xl bg-green-500/[0.03] p-4 flex flex-col justify-between space-y-3">
+                              <div className="w-full aspect-video rounded-xl bg-black overflow-hidden relative border border-white/10">
+                                <video
+                                  src={vid.videoUrl}
+                                  controls
+                                  preload="metadata"
+                                  className="w-full h-full object-contain"
+                                />
+                              </div>
+                              <div className="space-y-1">
+                                <div className="flex items-center justify-between">
+                                  <span className="text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">
+                                    Approved & Live
+                                  </span>
+                                  <span className="text-[11px] text-white/40">{vid.tribeName}</span>
+                                </div>
+                                <h5 className="font-serif font-bold text-white text-sm leading-snug">
+                                  {vid.caption || vid.title || 'Untitled Video'}
+                                </h5>
+                                <p className="text-xs text-white/60">Uploaded by {vid.uploaderName || 'Community Member'}</p>
+                              </div>
+                              <div className="flex items-center justify-end pt-2 border-t border-white/10">
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteAdminVideo(vid.id)}
+                                  className="px-4 py-2 rounded-xl bg-red-500/20 hover:bg-red-500/30 text-red-300 text-xs font-bold transition-all flex items-center gap-1.5 cursor-pointer border border-red-500/30"
+                                >
+                                  <Trash2 size={14} /> Delete Video
+                                </button>
+                              </div>
+                            </div>
+                          ))}
                         </div>
-                      </div>
-                    ))}
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
