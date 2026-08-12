@@ -34,14 +34,11 @@ const BiharMapSection = () => {
   const detailKey = selectedDisplay.toLowerCase().replace(/\s*\(.*\)/, "").trim();
   const detail = staticDistrictDetails[detailKey];
 
-  /* Unique Photos: use topAttractions images if available, else fallback to district image */
-  const rawPhotos: string[] = [];
-  if (detail?.topAttractions?.[0]?.image) rawPhotos.push(detail.topAttractions[0].image);
-  if (detail?.topAttractions?.[1]?.image) rawPhotos.push(detail.topAttractions[1].image);
-  if (districtData?.image) rawPhotos.push(districtData.image);
-
-  // Deduplicate photos so identical images are never shown twice
-  const photos = Array.from(new Set(rawPhotos.filter(Boolean)));
+  /* Main Photo: use topAttractions image if available, else fallback to district image */
+  const mainPhoto =
+    detail?.topAttractions?.[0]?.image ||
+    districtData?.image ||
+    "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?q=80&w=1200&auto=format&fit=crop";
 
   const description =
     detail?.introduction ??
@@ -101,23 +98,16 @@ const BiharMapSection = () => {
                 {description}
               </p>
 
-              {/* Photo Display: Single Image if 1 unique photo, 2-column grid if 2 unique photos */}
-              {photos.length > 0 && (
-                <div className={photos.length > 1 ? "grid grid-cols-2 gap-3" : "w-full"}>
-                  {photos.slice(0, 2).map((src, i) => (
-                    <div
-                      key={i}
-                      className="relative overflow-hidden rounded-xl"
-                      style={{ aspectRatio: photos.length > 1 ? "4/3" : "16/9", maxHeight: "240px" }}
-                    >
-                      <img
-                        src={src}
-                        alt={`${selectedDisplay} ${i + 1}`}
-                        className="w-full h-full object-cover"
-                        loading="lazy"
-                      />
-                    </div>
-                  ))}
+              {/* Single Featured District Image */}
+              {mainPhoto && (
+                <div className="relative w-full h-48 sm:h-56 lg:h-60 overflow-hidden rounded-2xl border border-white/10 shadow-lg group">
+                  <img
+                    src={mainPhoto}
+                    alt={selectedDisplay}
+                    className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+                    loading="lazy"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
                 </div>
               )}
 
