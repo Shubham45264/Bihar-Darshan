@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Trophy, Award, Gift, Search, Sparkles, UserCheck, Flame, RefreshCw, X } from 'lucide-react';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 interface LeaderboardUser {
   id: string;
@@ -32,7 +33,7 @@ const AdminLeaderboard: React.FC = () => {
   const fetchLeaderboard = async () => {
     setLoading(true);
     try {
-      const res = await fetch('http://localhost:5000/api/v1/users/leaderboard');
+      const res = await fetch(`${API_BASE_URL}/users/leaderboard`);
       const data = await res.json();
       if (data.success && data.data?.leaderboard) {
         setUsers(data.data.leaderboard);
@@ -64,7 +65,7 @@ const AdminLeaderboard: React.FC = () => {
       const currentUser = auth.currentUser;
       const token = currentUser ? await currentUser.getIdToken() : '';
 
-      const res = await fetch(`http://localhost:5000/api/v1/admin/users/${selectedUser.id}/points`, {
+      const res = await fetch(`${API_BASE_URL}/admin/users/${selectedUser.id}/points`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

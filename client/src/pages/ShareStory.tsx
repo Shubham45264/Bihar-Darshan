@@ -8,6 +8,7 @@ import Footer from "../components/layout/Footer";
 import heroBg from "../assets/hero.png";
 import "./ShareStory.css";
 import { uploadToCloudinary } from "../utils/cloudinaryUpload";
+import { API_BASE_URL } from "../config/api";
 
 const BIHAR_DISTRICTS = [
   "Araria", "Arwal", "Aurangabad", "Banka", "Begusarai", "Bhagalpur", "Bhojpur",
@@ -79,7 +80,6 @@ const ShareStory = () => {
   }, [navigate]);
 
   // Fetch Categories from Backend API
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
   useEffect(() => {
     const fetchCategories = async () => {
@@ -253,7 +253,7 @@ const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/
         subcategoryId: selectedSubId,
       };
 
-      const res = await fetch('http://localhost:5000/api/v1/stories', {
+      const res = await fetch(`${API_BASE_URL}/stories`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),

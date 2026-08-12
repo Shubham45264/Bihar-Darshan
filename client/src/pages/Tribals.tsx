@@ -6,6 +6,7 @@ import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import { Search, ChevronRight } from 'lucide-react';
 import { mockTribes } from '../data/mockTribes';
+import { API_BASE_URL } from '../config/api';
 
 export const Tribals = () => {
   const [searchTerm, setSearchTerm] = useState('');
@@ -15,7 +16,7 @@ export const Tribals = () => {
   useEffect(() => {
     const fetchTribes = async () => {
       try {
-        const res = await fetch('http://localhost:5000/api/v1/tribes');
+        const res = await fetch(`${API_BASE_URL}/tribes`);
         const data = await res.json();
         if (data.success && data.data.tribes) {
           const dbTribes = data.data.tribes;

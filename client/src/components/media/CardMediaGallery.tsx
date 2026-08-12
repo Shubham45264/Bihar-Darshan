@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ThumbsUp, ThumbsDown, Share2, Plus, Upload, X, Check, Video, Image as ImageIcon, Sparkles, Copy, ExternalLink, Play } from 'lucide-react';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 export interface MediaItem {
   id: string;
@@ -65,7 +66,7 @@ export const CardMediaGallery: React.FC<CardMediaGalleryProps> = ({
   const fetchCardMedia = async () => {
     try {
       setLoading(true);
-      const res = await fetch(`http://localhost:5000/api/v1/discover/${itemId}/media`);
+      const res = await fetch(`${API_BASE_URL}/discover/${itemId}/media`);
       const data = await res.json();
       
       let fetched: MediaItem[] = [];
@@ -184,7 +185,7 @@ export const CardMediaGallery: React.FC<CardMediaGalleryProps> = ({
         uploadedBy: effectiveUploader,
       };
 
-      await fetch(`http://localhost:5000/api/v1/discover/${itemId}/media`, {
+      await fetch(`${API_BASE_URL}/discover/${itemId}/media`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
@@ -253,7 +254,7 @@ export const CardMediaGallery: React.FC<CardMediaGalleryProps> = ({
     // Backend call if real ID
     if (!media.id.startsWith('init-') && !media.id.startsWith('custom-')) {
       try {
-        await fetch(`http://localhost:5000/api/v1/discover/media/${media.id}/like`, {
+        await fetch(`${API_BASE_URL}/discover/media/${media.id}/like`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: currentUserId }),
@@ -305,7 +306,7 @@ export const CardMediaGallery: React.FC<CardMediaGalleryProps> = ({
 
     if (!media.id.startsWith('init-') && !media.id.startsWith('custom-')) {
       try {
-        await fetch(`http://localhost:5000/api/v1/discover/media/${media.id}/dislike`, {
+        await fetch(`${API_BASE_URL}/discover/media/${media.id}/dislike`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({ userId: currentUserId }),

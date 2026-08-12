@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { MessageSquare, Eye, ArrowBigUp, ArrowBigDown, Share2, Image as ImageIcon, Video, Send } from 'lucide-react';
 import type { Discussion, Comment } from '../../data/communityData';
 import { auth } from '../../lib/firebase';
+import { API_BASE_URL } from '../../config/api';
 
 interface DiscussionItemProps {
   discussion: Discussion;
@@ -60,7 +61,7 @@ const DiscussionItem = ({ discussion }: DiscussionItemProps) => {
     const fetchComments = async () => {
       setLoadingComments(true);
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/community/posts/${discussion.id}/comments`);
+        const response = await fetch(`${API_BASE_URL}/community/posts/${discussion.id}/comments`);
         if (response.ok) {
           const result = await response.json();
           if (result.success && result.data && result.data.comments) {
@@ -86,7 +87,7 @@ const DiscussionItem = ({ discussion }: DiscussionItemProps) => {
 
     const incrementView = async () => {
       try {
-        const response = await fetch(`http://localhost:5000/api/v1/community/posts/${discussion.id}/view`, {
+        const response = await fetch(`${API_BASE_URL}/community/posts/${discussion.id}/view`, {
           method: 'PATCH'
         });
         if (response.ok) {
@@ -137,7 +138,7 @@ const DiscussionItem = ({ discussion }: DiscussionItemProps) => {
 
     try {
       const token = await user.getIdToken();
-      const response = await fetch(`http://localhost:5000/api/v1/community/posts/${discussion.id}/vote`, {
+      const response = await fetch(`${API_BASE_URL}/community/posts/${discussion.id}/vote`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -191,7 +192,7 @@ const DiscussionItem = ({ discussion }: DiscussionItemProps) => {
 
     try {
       const token = await user.getIdToken();
-      const response = await fetch(`http://localhost:5000/api/v1/community/posts/${discussion.id}/like`, {
+      const response = await fetch(`${API_BASE_URL}/community/posts/${discussion.id}/like`, {
         method: 'PATCH',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -248,7 +249,7 @@ const DiscussionItem = ({ discussion }: DiscussionItemProps) => {
 
     try {
       const token = await user.getIdToken();
-      const response = await fetch(`http://localhost:5000/api/v1/community/posts/${discussion.id}/comments`, {
+      const response = await fetch(`${API_BASE_URL}/community/posts/${discussion.id}/comments`, {
         method: 'POST',
         headers: {
           'Authorization': `Bearer ${token}`,

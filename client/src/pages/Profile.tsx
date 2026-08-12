@@ -8,6 +8,7 @@ import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { signOut, onAuthStateChanged, updateProfile, type User as FirebaseUser } from 'firebase/auth';
 import { auth } from '../lib/firebase';
+import { API_BASE_URL } from '../config/api';
 
 interface UserPostItem {
   id: string | number;
@@ -72,7 +73,6 @@ const Profile = () => {
   const fetchProfile = async (firebaseUser: FirebaseUser | null, isInitial = false) => {
     if (isInitial) setLoading(true);
     try {
-      const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
 
       // Fetch leaderboard preview
       fetch(`${API_BASE_URL}/users/leaderboard?limit=5`)
@@ -448,7 +448,7 @@ const Profile = () => {
           avatar: finalAvatar || null,
         };
 
-        const res = await fetch('http://localhost:5000/api/v1/users/profile', {
+        const res = await fetch(`${API_BASE_URL}/users/profile`, {
           method: 'PATCH',
           headers: {
             'Content-Type': 'application/json',
@@ -513,15 +513,15 @@ const Profile = () => {
       const stringId = String(id);
 
       if (type === 'story') {
-        await fetch(`http://localhost:5000/api/v1/stories/${stringId}`, { method: 'DELETE', headers });
+        await fetch(`${API_BASE_URL}/stories/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'culture') {
-        await fetch(`http://localhost:5000/api/v1/discover/${stringId}`, { method: 'DELETE', headers });
+        await fetch(`${API_BASE_URL}/discover/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'tribe_video') {
-        await fetch(`http://localhost:5000/api/v1/tribes/videos/${stringId}`, { method: 'DELETE', headers });
+        await fetch(`${API_BASE_URL}/tribes/videos/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'journey') {
-        await fetch(`http://localhost:5000/api/v1/tourism/${stringId}`, { method: 'DELETE', headers });
+        await fetch(`${API_BASE_URL}/tourism/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'gallery') {
-        await fetch(`http://localhost:5000/api/v1/gallery/${stringId}`, { method: 'DELETE', headers });
+        await fetch(`${API_BASE_URL}/gallery/${stringId}`, { method: 'DELETE', headers });
       }
 
       // Clean local storage submissions if present

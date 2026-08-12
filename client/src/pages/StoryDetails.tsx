@@ -7,6 +7,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { auth } from '../lib/firebase';
+import { API_BASE_URL } from '../config/api';
 
 import ShareModal from '../components/common/ShareModal';
 
@@ -161,13 +162,13 @@ const StoryDetails = () => {
     try {
       setLoading(true);
       setErrorMsg('');
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${storyId}`);
+      const res = await fetch(`${API_BASE_URL}/stories/${storyId}`);
       const data = await res.json();
       if (data.success && data.data.story) {
         setStory(data.data.story);
         // Record view increment only for logged-in users
         if (currentUserId && currentUserId !== 'guest') {
-          fetch(`http://localhost:5000/api/v1/stories/${storyId}/views`, {
+          fetch(`${API_BASE_URL}/stories/${storyId}/views`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ userId: currentUserId }),
@@ -198,7 +199,7 @@ const StoryDetails = () => {
   const handleLike = async () => {
     if (!story) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${story.id}/like`, {
+      const res = await fetch(`${API_BASE_URL}/stories/${story.id}/like`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: currentUserId }),
@@ -215,7 +216,7 @@ const StoryDetails = () => {
   const handleDislike = async () => {
     if (!story) return;
     try {
-      const res = await fetch(`http://localhost:5000/api/v1/stories/${story.id}/dislike`, {
+      const res = await fetch(`${API_BASE_URL}/stories/${story.id}/dislike`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ userId: currentUserId }),

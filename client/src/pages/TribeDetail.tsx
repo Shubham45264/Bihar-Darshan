@@ -8,6 +8,7 @@ import TribeCulturalSections from '../components/tribals/CulturalHighlightsGrid'
 import TribeVideoSlider from '../components/tribals/TribeVideoSlider';
 import { getTribeCulturalSections } from '../data/tribeCulturalData';
 import { useAdminData } from '../data/AdminContext';
+import { API_BASE_URL } from '../config/api';
 
 
 const TribeDetail = () => {
@@ -28,7 +29,7 @@ const TribeDetail = () => {
     } else {
       const fetchTribe = async () => {
         try {
-          const res = await fetch(`http://localhost:5000/api/v1/tribes/${id}`);
+          const res = await fetch(`${API_BASE_URL}/tribes/${id}`);
           const data = await res.json();
           if (data.success && data.data.tribe) {
             setTribe(data.data.tribe);

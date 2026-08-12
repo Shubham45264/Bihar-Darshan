@@ -8,6 +8,7 @@ import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
 import Container from '../components/layout/Container';
 import { auth } from '../lib/firebase';
+import { API_BASE_URL } from '../config/api';
 
 import ShareModal from '../components/common/ShareModal';
 
@@ -137,7 +138,7 @@ const SubcategoryFeed = () => {
   const currentUser = auth.currentUser;
   const currentUserId = currentUser ? currentUser.uid : 'guest';
 
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+
 
   const fetchCategoryAndStories = async () => {
     try {

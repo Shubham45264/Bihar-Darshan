@@ -5,8 +5,7 @@ import type { TourTrip } from './tourismData';
 
 import type { Community } from './communityData';
 import { auth } from '../lib/firebase';
-
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api/v1';
+import { API_BASE_URL } from '../config/api';
 
 export interface JourneySubmissionItem extends TourTrip {
   desc: string;
@@ -212,7 +211,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
         status: 'PENDING'
       };
 
-      const response = await fetch('http://localhost:5000/api/v1/discover', {
+      const response = await fetch(`${API_BASE_URL}/discover`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -278,7 +277,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
 
       // The API uses 'description' as the main field; if the frontend passes 'desc' or 'overviewText', we'll map it to 'description'.
       // The CreateJourney form passes both. Let's pass the whole payload directly.
-      const response = await fetch('http://localhost:5000/api/v1/journeys', {
+      const response = await fetch(`${API_BASE_URL}/journeys`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -305,7 +304,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
 
-      const response = await fetch(`http://localhost:5000/api/v1/journeys/${id}`, {
+      const response = await fetch(`${API_BASE_URL}/journeys/${id}`, {
         method: 'PUT', // The backend currently expects PUT for author updates
         headers: {
           'Content-Type': 'application/json',
@@ -339,7 +338,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
-      const response = await fetch('http://localhost:5000/api/v1/community', {
+      const response = await fetch(`${API_BASE_URL}/community`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -383,7 +382,7 @@ export const ContributionProvider = ({ children }: { children: React.ReactNode }
         contact: submission.contact?.trim() || null,
       };
 
-      const response = await fetch('http://localhost:5000/api/v1/marketplace', {
+      const response = await fetch(`${API_BASE_URL}/marketplace`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
