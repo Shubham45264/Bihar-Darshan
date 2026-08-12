@@ -23,15 +23,15 @@ import { galleryData as defaultGalleryData, type GalleryItem } from "../../data/
 type Cfg = { col: string; showOverlay: boolean };
 
 const CFG: Cfg[] = [
-  { col: "col-span-2 md:col-span-2", showOverlay: true }, // 0 – hero
-  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 1
-  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 2
-  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 3
-  { col: "col-span-1 md:col-span-2", showOverlay: false }, // 4 – wide centre on desktop
-  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 5
-  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 6
-  { col: "col-span-1 md:col-span-1", showOverlay: false }, // 7
-  { col: "col-span-1 md:col-span-2", showOverlay: false }, // 8 – wide right on desktop
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: true },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
 ];
 
 const GallerySection = () => {

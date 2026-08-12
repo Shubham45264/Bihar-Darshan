@@ -325,7 +325,7 @@ const SubcategoryFeed = () => {
                         </Link>
 
                         {/* Short Content Description */}
-                        <p className="text-gray-600 text-xs leading-relaxed line-clamp-2">
+                        <p className="text-gray-600 text-xs leading-relaxed line-clamp-2 text-justify">
                           {story.content}
                         </p>
 

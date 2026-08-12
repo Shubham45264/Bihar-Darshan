@@ -241,12 +241,12 @@ export default function Personalities() {
         </div>
 
         {filteredData.length > 0 ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 sm:gap-8">
             {filteredData.map((person: Personality) => (
               <Link
                 key={person.id}
                 to={`/personalities/${person.id}`}
-                className="relative block h-[450px] rounded-[1.5rem] overflow-hidden group bg-slate-100 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer"
+                className="relative block h-[340px] sm:h-[360px] rounded-2xl overflow-hidden group bg-slate-100 shadow-md hover:shadow-2xl transition-all duration-500 cursor-pointer"
               >
                 {/* Image */}
                 <img

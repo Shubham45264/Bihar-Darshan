@@ -356,9 +356,9 @@ const StoryDetails = () => {
               <StoryMediaCarousel story={story} />
 
               {/* Full Multi-Paragraph Content */}
-              <div className="space-y-4 pt-2 border-t border-gray-100 text-gray-800 text-base sm:text-lg leading-relaxed">
+              <div className="space-y-4 pt-2 border-t border-gray-100 text-gray-800 text-base sm:text-lg leading-relaxed font-sans">
                 {paragraphs.map((p, idx) => (
-                  <p key={idx} className="leading-relaxed">
+                  <p key={idx} className="leading-relaxed text-justify">
                     {p}
                   </p>
                 ))}

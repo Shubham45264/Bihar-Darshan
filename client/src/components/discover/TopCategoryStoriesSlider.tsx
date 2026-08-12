@@ -238,22 +238,22 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
             </div>
 
             {/* DETAILS COLUMN: Bottom on mobile, Left on desktop */}
-            <div className="w-full lg:w-1/2 p-4 sm:p-8 lg:p-10 flex flex-col justify-between space-y-3 sm:space-y-4">
+            <div className="w-full lg:w-1/2 p-5 sm:p-8 lg:p-10 pb-12 sm:pb-14 lg:pb-12 flex flex-col justify-between space-y-4">
               {/* Badges Row */}
               <div className="flex flex-wrap items-center gap-1.5 sm:gap-2">
                 <span className="bg-gradient-to-r from-[#EAB308] to-[#F59E0B] text-stone-950 font-black text-[11px] sm:text-xs px-3 py-0.5 sm:px-3.5 sm:py-1 rounded-full shadow-[0_2px_10px_rgba(234,179,8,0.35)] uppercase tracking-wider flex items-center gap-1.5">
                   <Flame size={13} className="fill-stone-950" />
-                  <span>#{currentIndex + 1} Top Story</span>
+                  <span>#{currentIndex + 1} TOP STORY</span>
                 </span>
 
                 {currentStory.subcategory && (
-                  <span className="bg-[#EAB308]/15 text-[#7A5200] font-extrabold text-[11px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-[#EAB308]/30">
+                  <span className="bg-[#EAB308]/15 text-[#7A5200] font-extrabold text-[11px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-[#EAB308]/30 font-sans">
                     {currentStory.subcategory.title}
                   </span>
                 )}
 
                 {currentStory.district && (
-                  <span className="bg-white/80 text-stone-800 font-extrabold text-[11px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-stone-200/80 flex items-center gap-1 shadow-sm">
+                  <span className="bg-white/90 text-stone-800 font-extrabold text-[11px] sm:text-xs px-2.5 py-0.5 sm:px-3 sm:py-1 rounded-full border border-stone-200/80 flex items-center gap-1 shadow-sm font-sans">
                     <MapPin size={12} className="text-[#EAB308]" />
                     <span>{currentStory.district}</span>
                   </span>
@@ -261,12 +261,12 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
               </div>
 
               {/* Title & Content Preview */}
-              <div className="space-y-2 sm:space-y-3">
-                <h3 className="text-xl sm:text-3xl lg:text-4xl font-extrabold text-stone-900 leading-snug font-display tracking-tight drop-shadow-sm">
+              <div className="space-y-2.5 sm:space-y-3">
+                <h3 className="text-xl sm:text-2xl lg:text-3xl font-display font-extrabold text-stone-900 leading-snug tracking-tight drop-shadow-sm">
                   {currentStory.title}
                 </h3>
 
-                <p className="text-stone-700 text-xs sm:text-sm leading-relaxed line-clamp-2 sm:line-clamp-3 font-medium">
+                <p className="text-stone-700 text-xs sm:text-sm leading-relaxed text-justify font-sans font-medium line-clamp-3 sm:line-clamp-4">
                   {currentStory.content}
                 </p>
               </div>
@@ -282,15 +282,15 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
                       className="w-8 h-8 sm:w-10 sm:h-10 rounded-full object-cover border-2 border-[#EAB308] shadow-md"
                     />
                   ) : (
-                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#EAB308] text-stone-950 font-extrabold flex items-center justify-center text-xs sm:text-sm shadow">
+                    <div className="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[#EAB308] text-stone-950 font-extrabold flex items-center justify-center text-xs sm:text-sm shadow font-sans">
                       {currentStory.authorName?.charAt(0) || 'U'}
                     </div>
                   )}
                   <div>
-                    <p className="text-stone-900 font-extrabold text-xs sm:text-sm leading-none">
+                    <p className="text-stone-900 font-extrabold text-xs sm:text-sm leading-none font-sans">
                       {currentStory.authorName || 'Explorer'}
                     </p>
-                    <p className="text-stone-500 text-[10px] sm:text-[11px] font-semibold mt-1 flex items-center gap-1">
+                    <p className="text-stone-500 text-[10px] sm:text-[11px] font-semibold mt-1 flex items-center gap-1 font-sans">
                       <Calendar size={11} className="text-[#EAB308]" />
                       {currentStory.createdAt
                         ? new Date(currentStory.createdAt).toLocaleDateString('en-US', {
@@ -304,7 +304,7 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
                 </div>
 
                 {/* Engagement Numbers */}
-                <div className="flex items-center gap-2.5 sm:gap-3 bg-white/90 border border-[#EAB308]/30 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs text-stone-800 shadow-sm font-bold">
+                <div className="flex items-center gap-2.5 sm:gap-3 bg-white/90 border border-[#EAB308]/30 px-3 py-1 sm:px-4 sm:py-1.5 rounded-full text-xs text-stone-800 shadow-sm font-bold font-sans">
                   <span className="flex items-center gap-1 text-stone-700">
                     <Eye size={13} className="text-[#EAB308]" />
                     <span>{currentStory.views || 0}</span>
@@ -318,11 +318,11 @@ const TopCategoryStoriesSlider: React.FC<TopCategoryStoriesSliderProps> = ({
               </div>
 
               {/* Action Button */}
-              <div className="pt-1 sm:pt-2">
+              <div className="pt-2">
                 <button
                   type="button"
                   onClick={() => handleViewStory(currentStory.id)}
-                  className="group/btn inline-flex items-center gap-2 bg-gradient-to-r from-[#EAB308] via-[#F59E0B] to-[#D97706] hover:brightness-105 text-stone-950 font-black text-xs sm:text-sm px-5 py-2.5 sm:px-7 sm:py-3.5 rounded-full shadow-[0_4px_15px_rgba(234,179,8,0.35)] transition-all cursor-pointer"
+                  className="group/btn inline-flex items-center gap-2 bg-gradient-to-r from-[#EAB308] via-[#F59E0B] to-[#D97706] hover:brightness-105 text-stone-950 font-black text-xs sm:text-sm px-6 py-2.5 sm:px-7 sm:py-3 rounded-full shadow-[0_4px_15px_rgba(234,179,8,0.35)] transition-all cursor-pointer font-sans uppercase tracking-wider"
                 >
                   <span>View Story</span>
                   <ArrowRight
