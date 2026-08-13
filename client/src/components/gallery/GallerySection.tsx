@@ -6,33 +6,27 @@ import { useAdminData } from "../../data/AdminContext";
 import { useContributions } from "../../data/ContributionContext";
 import { galleryData as defaultGalleryData, type GalleryItem } from "../../data/galleryData";
 
-/* ─────────────────────────────────────────────────────────────────
-   Mosaic layout  (matches reference screenshot)
-
-   Uses a 4-column CSS grid with 3 rows of height ~220 px each.
-
-   Row 1  │ [0] col-span-2  │ [1] col-span-1 │ [2] col-span-1 │
-   Row 2  │ [3] col-span-1  │ [4] col-span-2 │ [5] col-span-1 │
-   Row 3  │ [6] col-span-1  │ [7] col-span-1 │ [8] col-span-2 │
-
-   Item 0  → hero card with title + description gradient overlay
-   Item 4  → video / wide centre  (play-button shown if video)
-   All cards → rounded-xl, gap-3, hover scale + dim
-───────────────────────────────────────────────────────────────── */
-
 type Cfg = { col: string; showOverlay: boolean };
 
 const CFG: Cfg[] = [
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: true },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
-  { col: "col-span-1 sm:col-span-1 md:col-span-1", showOverlay: false },
+  { col: "col-span-2", showOverlay: false }, // 0 – hero
+  { col: "col-span-1", showOverlay: false }, // 1
+  { col: "col-span-1", showOverlay: false }, // 2
+  { col: "col-span-1", showOverlay: false }, // 3
+  { col: "col-span-2", showOverlay: false }, // 4 – wide centre
+  { col: "col-span-1", showOverlay: false }, // 5
+  { col: "col-span-1", showOverlay: false }, // 6
+  { col: "col-span-1", showOverlay: false }, // 7
+  { col: "col-span-2", showOverlay: false }, // 8 – wide right
 ];
+
+const getPosterUrl = (url: string) => {
+  if (!url) return '';
+  if (url.includes('cloudinary.com') || url.includes('res.cloudinary.com')) {
+    return url.replace(/\/video\/upload\/(v\d+\/)?/, '/video/upload/f_jpg,so_0/$1').replace(/\.(mp4|mov|webm|mkv)$/i, '.jpg');
+  }
+  return url;
+};
 
 const GallerySection = () => {
   const { gallerySubmissions } = useContributions();
@@ -94,10 +88,13 @@ const GallerySection = () => {
         </div>
 
         {/* ── Mosaic Grid ── */}
-        <div className="grid grid-cols-2 md:grid-cols-4 grid-flow-dense gap-2.5 sm:gap-3.5 auto-rows-[160px] sm:auto-rows-[200px] md:auto-rows-[220px]">
+        <div
+          className="grid gap-3"
+          style={{ gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "220px" }}
+        >
           {galleryItems.map((item, index) => {
             const cfg = CFG[index] ?? { col: "col-span-1", showOverlay: false };
-            const isVideo = item.mediaType === "video";
+            const isVideo = item.mediaType === "video" || (item.image && (item.image.includes('/video/upload/') || item.image.endsWith('.mp4')));
 
             return (
               <motion.div
@@ -109,16 +106,29 @@ const GallerySection = () => {
                 className={`${cfg.col} relative overflow-hidden rounded-xl cursor-pointer group bg-black`}
                 onClick={() => openLightbox(item)}
               >
-                {/* Photo */}
-                <img
-                  src={item.image || defaultGalleryData[0].image}
-                  alt={item.title}
-                  onError={(e) => {
-                    (e.target as HTMLImageElement).src = defaultGalleryData[0].image;
-                  }}
-                  className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.6]"
-                  loading="lazy"
-                />
+                {/* Photo or Video */}
+                {isVideo ? (
+                  <video
+                    src={item.image}
+                    poster={getPosterUrl(item.image)}
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.6]"
+                    muted
+                    playsInline
+                    preload="metadata"
+                    onMouseEnter={(e) => e.currentTarget.play().catch(() => {})}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.pause();
+                      e.currentTarget.currentTime = 0;
+                    }}
+                  />
+                ) : (
+                  <img
+                    src={item.image}
+                    alt={item.title}
+                    className="w-full h-full object-cover transition-all duration-500 group-hover:scale-105 group-hover:brightness-[0.6]"
+                    loading="lazy"
+                  />
+                )}
 
                 {/* Hero text overlay (item 0 only) */}
                 {cfg.showOverlay && (
@@ -139,26 +149,26 @@ const GallerySection = () => {
                 {/* Always-visible play icon for video cards */}
                 {isVideo && (
                   <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-                    <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full border-2 border-white/60 bg-white/15 backdrop-blur-sm flex items-center justify-center">
-                      <Play size={18} fill="white" className="text-white ml-0.5 sm:w-5 sm:h-5" />
+                    <div className="w-12 h-12 rounded-full border-2 border-white/60 bg-white/15 backdrop-blur-sm flex items-center justify-center">
+                      <Play size={20} fill="white" className="text-white ml-0.5" />
                     </div>
                   </div>
                 )}
 
-                {/* Hover / Mobile title + action overlay (all non-hero cards) */}
+                {/* Hover title + action overlay */}
                 {!cfg.showOverlay && (
                   <div
-                    className="absolute inset-x-0 bottom-0 p-2.5 sm:p-3 opacity-90 sm:opacity-0 group-hover:opacity-100 transition-all duration-300 ease-out"
-                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.4) 70%, transparent 100%)" }}
+                    className="absolute inset-x-0 bottom-0 translate-y-2 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 ease-out p-3"
+                    style={{ background: "linear-gradient(to top, rgba(0,0,0,0.82) 0%, rgba(0,0,0,0.3) 70%, transparent 100%)" }}
                   >
-                    <p className="text-white font-semibold text-xs sm:text-sm leading-snug line-clamp-1 drop-shadow">
+                    <p className="text-white font-semibold text-sm leading-snug line-clamp-1 drop-shadow">
                       {item.title}
                     </p>
-                    <div className="flex items-center gap-1.5 mt-0.5 sm:mt-1">
+                    <div className="flex items-center gap-1.5 mt-1">
                       {isVideo ? (
-                        <><Play size={10} fill="white" className="text-white opacity-80" /><span className="text-white/80 text-[10px] sm:text-xs">Play video</span></>
+                        <><Play size={12} fill="white" className="text-white opacity-80" /><span className="text-white/70 text-xs">Play video</span></>
                       ) : (
-                        <><ZoomIn size={10} className="text-white opacity-80" /><span className="text-white/80 text-[10px] sm:text-xs">View photo</span></>
+                        <><ZoomIn size={12} className="text-white opacity-80" /><span className="text-white/70 text-xs">View photo</span></>
                       )}
                     </div>
                   </div>
@@ -203,17 +213,21 @@ const GallerySection = () => {
               className="relative max-w-4xl w-full rounded-xl overflow-hidden flex flex-col max-h-[90dvh]"
               onClick={(e) => e.stopPropagation()}
             >
-              {lightboxItem.mediaType === "video" ? (
-                <div className="relative bg-black aspect-video">
-                  <img src={lightboxItem.image} alt="" className="w-full h-full object-cover" />
-                  <div className="absolute inset-0 flex items-center justify-center bg-black/40">
-                    <div
-                      className="w-16 h-16 rounded-full flex items-center justify-center"
-                      style={{ background: "rgba(184, 134, 11, 0.9)" }}
-                    >
-                      <Play size={28} fill="white" className="text-white ml-1" />
-                    </div>
-                  </div>
+              {lightboxItem.mediaType === "video" || (lightboxItem.image && (lightboxItem.image.includes('/video/upload/') || lightboxItem.image.endsWith('.mp4'))) ? (
+                <div className="relative bg-black aspect-video w-full flex items-center justify-center">
+                  <video
+                    key={lightboxItem.image}
+                    src={lightboxItem.image}
+                    controls
+                    autoPlay
+                    playsInline
+                    preload="auto"
+                    poster={getPosterUrl(lightboxItem.image)}
+                    className="w-full h-full max-h-[calc(90dvh-72px)] object-contain"
+                  >
+                    <source src={lightboxItem.image} type="video/mp4" />
+                    Your browser does not support playing this video.
+                  </video>
                 </div>
               ) : (
                 <img
@@ -235,7 +249,7 @@ const GallerySection = () => {
                   </p>
                 </div>
                 <span className="text-xs uppercase tracking-widest font-semibold text-right" style={{ color: "#F4A261" }}>
-                  {lightboxItem.category} • {lightboxItem.mediaType === "video" ? "Video" : "Photo"}
+                  {lightboxItem.category} • {lightboxItem.mediaType === "video" || (lightboxItem.image && (lightboxItem.image.includes('/video/upload/') || lightboxItem.image.endsWith('.mp4'))) ? "Video" : "Photo"}
                 </span>
               </div>
             </motion.div>

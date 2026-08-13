@@ -55,7 +55,7 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
 
   if (items.length === 0) {
     return (
-      <motion.div 
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-center justify-center py-32 px-4 text-center max-w-lg mx-auto"
@@ -67,10 +67,10 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
         </div>
         <h3 className="font-serif text-3xl font-bold text-white mb-3">No Media Found</h3>
         <p className="text-white/50 text-sm leading-relaxed mb-8">
-          We couldn't find any photos or videos matching your current filters. 
+          We couldn't find any photos or videos matching your current filters.
           Try adjusting your search criteria, selecting a different district, or exploring another category.
         </p>
-        <button 
+        <button
           onClick={() => window.location.reload()}
           className="flex items-center gap-2 px-6 py-3 rounded-xl bg-white/[0.05] border border-white/10 text-white hover:bg-white/[0.1] hover:border-white/20 transition-all font-semibold text-sm"
         >
@@ -84,18 +84,50 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
   return (
     <div className="px-4 sm:px-6 lg:px-8">
       <div className="max-w-[1400px] mx-auto">
-        {/* Normal Responsive Masonry Grid */}
-        <div 
-          className="columns-1 sm:columns-2 md:columns-3 lg:columns-4 gap-4 sm:gap-6"
+        {/* Dynamic Grid Wrapper */}
+        <div
+          className={`grid gap-4 grid-flow-dense
+            ${visibleItems.length === 1 ? "grid-cols-1 auto-rows-[400px]" : ""}
+            ${visibleItems.length === 2 ? "grid-cols-1 sm:grid-cols-2 auto-rows-[350px]" : ""}
+            ${visibleItems.length === 3 ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[300px]" : ""}
+            ${visibleItems.length >= 4 ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 auto-rows-[250px]" : ""}
+          `}
         >
-          {visibleItems.map((item, i) => (
-            <GalleryCard
-              key={item.id}
-              item={item}
-              index={i}
-              onClick={() => onItemClick(item)}
-            />
-          ))}
+          {visibleItems.map((item, i) => {
+            let spanClass = "";
+            const total = visibleItems.length;
+
+            if (total === 1) {
+              spanClass = "col-span-1 row-span-1";
+            } else if (total === 2) {
+              spanClass = "col-span-1 row-span-1";
+            } else if (total === 3) {
+              if (i === 0) spanClass = "col-span-1 sm:col-span-2 md:col-span-2 row-span-2";
+              else spanClass = "col-span-1 row-span-1";
+            } else {
+              const pattern = [
+                "col-span-1 row-span-2", // tall
+                "col-span-1 sm:col-span-2 row-span-1", // wide
+                "col-span-1 row-span-1", // small
+                "col-span-1 row-span-1", // small
+                "col-span-1 sm:col-span-2 row-span-2", // large
+                "col-span-1 row-span-2", // tall
+                "col-span-1 row-span-1", // small
+                "col-span-1 sm:col-span-2 row-span-1", // wide
+              ];
+              spanClass = pattern[i % pattern.length];
+            }
+
+            return (
+              <GalleryCard
+                key={item.id}
+                item={item}
+                index={i}
+                spanClass={spanClass}
+                onClick={() => onItemClick(item)}
+              />
+            );
+          })}
         </div>
 
         {/* Loading Skeleton */}
