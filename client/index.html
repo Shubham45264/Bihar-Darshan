@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link
-    href="https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
+    href="https://fonts.googleapis.com/css2?family=Marcellus&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap"
     rel="stylesheet" />
   <title>Bihar Darshan</title>
 </head>
@@ -31,7 +31,8 @@
   <style>
     .goog-te-banner-frame,
     .goog-te-banner-frame.skiptranslate,
-    iframe.skiptranslate {
+    iframe.skiptranslate,
+    .goog-te-menu-frame {
       display: none !important;
     }
 
@@ -41,28 +42,38 @@
     }
 
     #goog-gt-tt,
-    .goog-te-balloon-frame {
-      display: none !important;
-    }
-
+    #goog-gt-tt *,
+    #goog-gt-vt,
+    #goog-gt-vt *,
+    .goog-te-balloon-frame,
+    .goog-tooltip,
+    .goog-tooltip *,
+    .goog-tooltip-card,
     .VIpgJd-Zvi9od-ORHb-OEVmcd,
     .VIpgJd-Zvi9od-l4eHX-hSRGPd,
-    .VIpgJd-Zvi9od-aZ2wEe-wOHMyf {
-      display: none !important;
-    }
-
-    .goog-te-bd-container,
-    .goog-tooltip,
-    .goog-tooltip-card,
+    .VIpgJd-Zvi9od-aZ2wEe-wOHMyf,
     .VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q,
     .VIpgJd-yAWNEb-hvhgNd,
     .goog-te-spinner-pos,
     .jfk-bubble,
     .goog-te-ftab-float,
-    .goog-text-highlight {
+    .goog-te-bd-container {
       display: none !important;
+      visibility: hidden !important;
+      opacity: 0 !important;
+      pointer-events: none !important;
+    }
+
+    .goog-text-highlight {
       background-color: transparent !important;
       box-shadow: none !important;
+      border: none !important;
+      outline: none !important;
+      text-shadow: none !important;
+    }
+
+    font[style*="vertical-align: inherit"] {
+      vertical-align: inherit;
     }
   </style>
   <script type="module" src="/src/main.tsx"></script>

@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Marcellus&family=Noto+Sans+Devanagari:wght@400;500;600;700&family=Source+Sans+3:ital,wght@0,200..900;1,200..900&display=swap');
 @import "tailwindcss";
 
 @theme {
-  --font-sans: "Source Sans 3", system-ui, -apple-system, sans-serif;
-  --font-serif: "Marcellus", serif;
-  --font-display: "Marcellus", serif;
+  --font-sans: "Source Sans 3", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
+  --font-serif: "Marcellus", "Noto Sans Devanagari", serif;
+  --font-display: "Marcellus", "Noto Sans Devanagari", serif;
 
   --color-gold: #D4A017;
   --color-gold-dark: #B8860B;
@@ -25,7 +25,7 @@
 h1, h2, h3, h4, h5, h6,
 .font-serif,
 .font-display {
-  font-family: "Marcellus", serif !important;
+  font-family: "Marcellus", "Noto Sans Devanagari", serif !important;
 }
 
 body,
@@ -38,7 +38,7 @@ textarea,
 select,
 label,
 .font-sans {
-  font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  font-family: "Source Sans 3", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
 }
 
 /* Smooth scrolling */
@@ -47,7 +47,7 @@ html {
 }
 
 body {
-  font-family: "Source Sans 3", system-ui, -apple-system, sans-serif;
+  font-family: "Source Sans 3", "Noto Sans Devanagari", system-ui, -apple-system, sans-serif;
   color: var(--color-primary);
   background: var(--color-bg);
   overflow-x: hidden;
@@ -58,16 +58,38 @@ body {
 /* ── Suppress Google Translate floating badges / tooltips ── */
 .goog-te-bd-container,
 .goog-tooltip,
+.goog-tooltip *,
 .goog-tooltip-card,
 .goog-te-spinner-pos,
 .jfk-bubble,
 .goog-te-ftab-float,
+.goog-te-balloon-frame,
+.VIpgJd-Zvi9od-ORHb-OEVmcd,
+.VIpgJd-Zvi9od-l4eHX-hSRGPd,
+.VIpgJd-Zvi9od-aZ2wEe-wOHMyf,
 .VIpgJd-yAWNEb-VIpgJd-fmcmS-sn54Q,
 .VIpgJd-yAWNEb-hvhgNd,
-#goog-gt-tt {
+#goog-gt-tt,
+#goog-gt-tt *,
+#goog-gt-vt,
+#goog-gt-vt * {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
+  opacity: 0 !important;
+}
+
+/* ── Prevent Google Translate hover highlight flickering / fluctuation on translated text ── */
+.goog-text-highlight {
+  background-color: transparent !important;
+  box-shadow: none !important;
+  border: none !important;
+  outline: none !important;
+  text-shadow: none !important;
+}
+
+font[style*="vertical-align: inherit"] {
+  vertical-align: inherit;
 }
 
 /* Custom scrollbar */
