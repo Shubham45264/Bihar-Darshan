@@ -29,6 +29,8 @@ const app: Application = express();
 app.use(helmet());
 const allowedOrigins = [
   'https://bihar-darshan.vercel.app',
+  "https://bihardarshan.in",
+  "https://www.bihardarshan.in",
   'http://localhost:5173',
   'http://localhost:3000',
   ...(env.CORS_ORIGIN !== '*' ? env.CORS_ORIGIN.split(',').map(o => o.trim()) : []),
