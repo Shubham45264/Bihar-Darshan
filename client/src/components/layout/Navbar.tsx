@@ -34,6 +34,7 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     const match = document.cookie.match(/googtrans=\/en\/([a-z]{2})/);
     if (match && match[1]) {
       if (match[1] === "hi") return "Hindi";
+      if (match[1] === "en") return "English";
     }
     return "English";
   };
@@ -61,6 +62,23 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     return () => unsubscribe();
   }, []);
 
+  const clearGoogleTransCookies = () => {
+    const hostname = window.location.hostname;
+    const domains = [
+      '',
+      hostname,
+      `.${hostname}`,
+      hostname.replace(/^www\./, ''),
+      `.${hostname.replace(/^www\./, '')}`
+    ];
+
+    domains.forEach((d) => {
+      const domainAttr = d ? `; domain=${d}` : '';
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/${domainAttr}`;
+      document.cookie = `googtrans=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=;${domainAttr}`;
+    });
+  };
+
   const handleLanguageChange = (l: string) => {
     setLang(l);
     setLangOpen(false);
@@ -71,13 +89,39 @@ const Navbar = ({ forceDarkText = false, forceWhiteText = false, fullTransparent
     };
     const langCode = langMap[l] || "en";
 
-    // Set the cookie used by Google Translate
-    const cookieVal = langCode === "en" ? "/en/en" : `/en/${langCode}`;
-    document.cookie = `googtrans=${cookieVal}; path=/`;
-    document.cookie = `googtrans=${cookieVal}; domain=.${window.location.host}; path=/`;
+    // 1. Trigger Google Translate combo element if rendered in DOM
+    const combo = document.querySelector('.goog-te-combo') as HTMLSelectElement | null;
 
-    // Reload the page to apply the translation natively
-    window.location.reload();
+    if (langCode === "en") {
+      // Clear all googtrans cookies
+      clearGoogleTransCookies();
+      // Set explicit English cookie
+      document.cookie = "googtrans=/en/en; path=/";
+      
+      if (combo) {
+        combo.value = "en";
+        combo.dispatchEvent(new Event("change"));
+      }
+    } else {
+      const cookieVal = `/en/${langCode}`;
+      clearGoogleTransCookies();
+      document.cookie = `googtrans=${cookieVal}; path=/`;
+
+      const hostname = window.location.hostname;
+      if (hostname && hostname !== "localhost" && hostname !== "127.0.0.1" && !hostname.includes(":")) {
+        document.cookie = `googtrans=${cookieVal}; domain=.${hostname.replace(/^www\./, '')}; path=/`;
+      }
+
+      if (combo) {
+        combo.value = langCode;
+        combo.dispatchEvent(new Event("change"));
+      }
+    }
+
+    // Reload the page to apply translation / restore state cleanly
+    setTimeout(() => {
+      window.location.reload();
+    }, 100);
   };
 
   useEffect(() => {
