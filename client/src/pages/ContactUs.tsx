@@ -6,16 +6,10 @@ import {
   User,
   AtSign,
   Phone,
-  MapPin,
-  Clock,
-  Mail,
-  MessageSquare,
   Sparkles,
   CheckCircle2,
   HelpCircle,
   ChevronDown,
-  Globe,
-  Heart
 } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import Footer from "../components/layout/Footer";
@@ -53,22 +47,53 @@ const ContactPage = () => {
 
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
-      setIsSubmitted(true);
-      setFormData({
-        name: "",
-        email: "",
-        phone: "",
-        subject: "General Inquiry",
-        message: ""
+    setErrorMessage("");
+
+    try {
+      const response = await fetch("https://formsubmit.co/ajax/bihardarshanofficial@gmail.com", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          Name: formData.name,
+          Email: formData.email,
+          Phone: formData.phone || "Not provided",
+          Subject: formData.subject,
+          Message: formData.message,
+          _subject: `New Contact Message [${formData.subject}] from ${formData.name} - Bihar Darshan`,
+          _replyto: formData.email,
+          _template: "table"
+        })
       });
-      setTimeout(() => setIsSubmitted(false), 6000);
-    }, 800);
+
+      const data = await response.json();
+
+      if (response.ok || data.success === "true" || data.success === true) {
+        setIsSubmitted(true);
+        setFormData({
+          name: "",
+          email: "",
+          phone: "",
+          subject: "General Inquiry",
+          message: ""
+        });
+        setTimeout(() => setIsSubmitted(false), 7000);
+      } else {
+        setErrorMessage("Failed to send message. Please try again or email us directly at bihardarshanofficial@gmail.com.");
+      }
+    } catch (error) {
+      console.error("Contact form error:", error);
+      setErrorMessage("Network error. Please try again or email us directly at bihardarshanofficial@gmail.com.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -100,51 +125,6 @@ const ContactPage = () => {
             <span style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, #D4A017, transparent)' }} />
             <span style={{ color: '#D4A017', fontSize: '14px' }}>✦</span>
             <span style={{ flex: 1, height: '1px', background: 'linear-gradient(90deg, transparent, #D4A017, transparent)' }} />
-          </div>
-        </div>
-      </section>
-
-      {/* 2. CONTACT INFO CARDS GRID */}
-      <section className="contact-cards-section">
-        <div className="contact-cards-grid">
-          {/* Location */}
-          <div className="contact-info-card">
-            <div className="contact-icon-wrapper">
-              <MapPin size={24} />
-            </div>
-            <h3 className="contact-card-title">Headquarters</h3>
-            <p className="contact-card-value">Patna, Bihar, India</p>
-            <p className="contact-card-sub">Culture & Tourism Information Hub</p>
-          </div>
-
-          {/* Email Support */}
-          <div className="contact-info-card">
-            <div className="contact-icon-wrapper">
-              <Mail size={24} />
-            </div>
-            <h3 className="contact-card-title">Email Us</h3>
-            <p className="contact-card-value">support@bihardarshan.in</p>
-            <p className="contact-card-sub">Quick responses within 24 hours</p>
-          </div>
-
-          {/* Helpline */}
-          <div className="contact-info-card">
-            <div className="contact-icon-wrapper">
-              <Phone size={24} />
-            </div>
-            <h3 className="contact-card-title">Helpline</h3>
-            <p className="contact-card-value">+91 612 250 0000</p>
-            <p className="contact-card-sub">Mon - Sat: 9:00 AM - 6:00 PM IST</p>
-          </div>
-
-          {/* Collaborations */}
-          <div className="contact-info-card">
-            <div className="contact-icon-wrapper">
-              <Globe size={24} />
-            </div>
-            <h3 className="contact-card-title">Community</h3>
-            <p className="contact-card-value">connect@bihardarshan.in</p>
-            <p className="contact-card-sub">For story submissions & press</p>
           </div>
         </div>
       </section>
@@ -199,7 +179,13 @@ const ContactPage = () => {
             {isSubmitted && (
               <div className="contact-success-msg">
                 <CheckCircle2 size={22} className="text-[#D4A017]" />
-                <span>Thank you! Your message has been sent successfully. We will contact you soon.</span>
+                <span>Thank you! Your message has been sent to bihardarshanofficial@gmail.com. We will respond to you shortly!</span>
+              </div>
+            )}
+
+            {errorMessage && (
+              <div className="p-4 mb-4 text-sm text-red-700 bg-red-100 rounded-xl border border-red-200 flex items-center gap-2">
+                <span>{errorMessage}</span>
               </div>
             )}
 
