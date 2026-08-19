@@ -305,14 +305,13 @@ const DistrictsPageMap = ({
             transform: "translate(-50%, -100%)",
           }}
         >
-          <div className="bg-white rounded-xl shadow-lg border border-gray-100 px-4 py-2.5 text-center">
-            <div className="flex items-center gap-2 mb-0.5">
+          <div className="bg-white rounded-xl shadow-lg border border-gray-100 px-4 py-2 text-center">
+            <div className="flex items-center gap-2">
               <div className="w-2.5 h-2.5 rounded-full bg-gold" />
               <span className="text-sm font-bold text-gray-900">
                 {activeHover}
               </span>
             </div>
-            <p className="text-[11px] text-gray-400">Click to view details</p>
           </div>
           <div className="w-0 h-0 mx-auto border-l-[7px] border-l-transparent border-r-[7px] border-r-transparent border-t-[7px] border-t-white" />
         </div>

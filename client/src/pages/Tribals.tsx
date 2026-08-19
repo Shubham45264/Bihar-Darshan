@@ -150,7 +150,7 @@ export const Tribals = () => {
                   <div className="w-8 h-8 border-4 border-[#D4A017] border-t-transparent rounded-full animate-spin"></div>
                 </div>
               ) : filteredTribes.length > 0 ? (
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 lg:gap-8">
+            <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-3 sm:gap-6 lg:gap-8">
               {filteredTribes.map((tribe, index) => (
                 <motion.div
                   key={tribe.id}
@@ -160,13 +160,13 @@ export const Tribals = () => {
                   transition={{ delay: (index % 4) * 0.05, duration: 0.4 }}
                 >
                   <Link to={`/tribals/${tribe.id}`} className="block group h-full">
-                    <div className="h-full bg-[#FFFBEB]/90 rounded-3xl overflow-hidden border border-[#D4A017]/25 group-hover:border-[#D4A017] transition-all duration-500 backdrop-blur-md flex flex-col group-hover:-translate-y-2 group-hover:shadow-[0_10px_40px_-10px_rgba(212,160,23,0.3)] relative">
+                    <div className="h-full bg-[#FFFBEB]/90 rounded-2xl sm:rounded-3xl overflow-hidden border border-[#D4A017]/25 group-hover:border-[#D4A017] transition-all duration-500 backdrop-blur-md flex flex-col group-hover:-translate-y-2 group-hover:shadow-[0_10px_40px_-10px_rgba(212,160,23,0.3)] relative">
 
                       {/* Glow effect on hover */}
                       <div className="absolute inset-0 bg-gradient-to-b from-[#FEF3C7]/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none" />
 
                       {/* Image Container */}
-                      <div className="relative h-48 sm:h-56 w-full overflow-hidden flex items-center justify-center p-4 sm:p-6 bg-[#FEF3C7]/40">
+                      <div className="relative h-32 sm:h-56 w-full overflow-hidden flex items-center justify-center p-3 sm:p-6 bg-[#FEF3C7]/40">
                         <div className="absolute inset-0 bg-[#EAB308]/20 blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-full scale-50" />
 
                         <img
@@ -180,16 +180,16 @@ export const Tribals = () => {
                       </div>
 
                       {/* Content Container */}
-                      <div className="p-4 sm:p-6 flex-grow flex flex-col relative z-20 bg-gradient-to-t from-[#FFFBEB] via-[#FFFBEB] to-transparent pt-6 sm:pt-8 -mt-6 sm:-mt-8">
-                        <div className="flex justify-between items-start gap-2 mb-2">
-                          <h2 className="text-lg sm:text-xl font-serif font-bold text-[#451A03] group-hover:text-[#D4A017] transition-colors">{tribe.englishName}</h2>
-                          <span className="text-lg sm:text-xl font-signature font-bold text-[#B45309] shrink-0">{tribe.hindiName}</span>
+                      <div className="p-3 sm:p-6 flex-grow flex flex-col relative z-20 bg-gradient-to-t from-[#FFFBEB] via-[#FFFBEB] to-transparent pt-4 sm:pt-8 -mt-4 sm:-mt-8">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1 mb-1.5">
+                          <h2 className="text-sm sm:text-xl font-serif font-bold text-[#451A03] group-hover:text-[#D4A017] transition-colors leading-tight">{tribe.englishName}</h2>
+                          <span className="text-xs sm:text-xl font-signature font-bold text-[#B45309] shrink-0">{tribe.hindiName}</span>
                         </div>
-                        <p className="text-xs sm:text-sm text-[#582C12] line-clamp-3 mb-4 sm:mb-6 flex-grow italic font-medium">
+                        <p className="text-[11px] sm:text-sm text-[#582C12] line-clamp-2 sm:line-clamp-3 mb-3 sm:mb-6 flex-grow italic font-medium">
                           {tribe.shortDesc}
                         </p>
-                        <div className="flex items-center text-[#B45309] text-xs sm:text-sm font-bold uppercase tracking-wider group-hover:tracking-widest transition-all mt-auto group-hover:text-[#D4A017]">
-                          Explore <ChevronRight className="w-4 h-4 ml-1 group-hover:translate-x-1 transition-transform" />
+                        <div className="flex items-center text-[#B45309] text-[10px] sm:text-sm font-bold uppercase tracking-wider group-hover:tracking-widest transition-all mt-auto group-hover:text-[#D4A017]">
+                          Explore <ChevronRight className="w-3 h-3 sm:w-4 sm:h-4 ml-1 group-hover:translate-x-1 transition-transform" />
                         </div>
                       </div>
 

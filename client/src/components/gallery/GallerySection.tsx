@@ -87,11 +87,8 @@ const GallerySection = () => {
           </Link>
         </div>
 
-        {/* ── Mosaic Grid ── */}
-        <div
-          className="grid gap-3"
-          style={{ gridTemplateColumns: "repeat(4, 1fr)", gridAutoRows: "220px" }}
-        >
+        {/* ── 2-Frame Grid Mobile Responsive Mosaic ── */}
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 auto-rows-[170px] sm:auto-rows-[220px]">
           {galleryItems.map((item, index) => {
             const cfg = CFG[index] ?? { col: "col-span-1", showOverlay: false };
             const isVideo = item.mediaType === "video" || (item.image && (item.image.includes('/video/upload/') || item.image.endsWith('.mp4')));

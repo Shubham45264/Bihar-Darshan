@@ -86,11 +86,11 @@ const GalleryGrid = ({ items, onItemClick }: GalleryGridProps) => {
       <div className="max-w-[1400px] mx-auto">
         {/* Dynamic Grid Wrapper */}
         <div
-          className={`grid gap-4 grid-flow-dense
-            ${visibleItems.length === 1 ? "grid-cols-1 auto-rows-[400px]" : ""}
-            ${visibleItems.length === 2 ? "grid-cols-1 sm:grid-cols-2 auto-rows-[350px]" : ""}
-            ${visibleItems.length === 3 ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[300px]" : ""}
-            ${visibleItems.length >= 4 ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 auto-rows-[250px]" : ""}
+          className={`grid gap-3 sm:gap-4 grid-flow-dense
+            ${visibleItems.length === 1 ? "grid-cols-1 auto-rows-[350px]" : ""}
+            ${visibleItems.length === 2 ? "grid-cols-2 auto-rows-[250px] sm:auto-rows-[350px]" : ""}
+            ${visibleItems.length === 3 ? "grid-cols-2 md:grid-cols-3 auto-rows-[200px] sm:auto-rows-[300px]" : ""}
+            ${visibleItems.length >= 4 ? "grid-cols-2 md:grid-cols-3 xl:grid-cols-4 auto-rows-[180px] sm:auto-rows-[250px]" : ""}
           `}
         >
           {visibleItems.map((item, i) => {

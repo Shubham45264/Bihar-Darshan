@@ -12,13 +12,49 @@ const DistrictsDetails = () => {
   const { name } = useParams();
   const rawName = name ? name : 'Patna';
   const formattedName = rawName.charAt(0).toUpperCase() + rawName.slice(1);
-  const { districts } = useAdminData();
+  const { districts, popularPlaces } = useAdminData();
   
   // Find from context, fallback to allDistricts/static if missing
   const matchedDistrict = districts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase())
     || allDistricts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase());
 
   const d = matchedDistrict || getDistrictDetail(formattedName);
+
+  // Combine topAttractions from district data and matching popularPlaces
+  const baseAttractions = (d as any)?.topAttractions || [];
+  const currentSlug = rawName.toLowerCase().replace(/district/i, '').trim();
+
+  const matchingPopularPlaces = popularPlaces.filter(p => {
+    if (!p) return false;
+    const pSlug = (p.districtSlug || p.district.replace(/district/i, '').trim()).toLowerCase();
+    return pSlug === currentSlug || p.district.toLowerCase().includes(currentSlug);
+  });
+
+  const combinedMap = new Map();
+
+  baseAttractions.forEach((att: any) => {
+    if (att && att.name) {
+      combinedMap.set(att.name.toLowerCase().trim(), {
+        name: att.name,
+        image: att.image,
+        description: att.description || att.shortDescription || '',
+        district: att.district || d.name
+      });
+    }
+  });
+
+  matchingPopularPlaces.forEach((p: any) => {
+    if (p && p.name) {
+      combinedMap.set(p.name.toLowerCase().trim(), {
+        name: p.name,
+        image: p.image,
+        description: p.description,
+        district: p.district
+      });
+    }
+  });
+
+  const allDistrictAttractions = Array.from(combinedMap.values());
 
   const rawImage = matchedDistrict?.image || (d as any).image || allDistricts.find(dist => dist.name.toLowerCase() === formattedName.toLowerCase())?.image || '';
   const heroBgImage = resolveDistrictImage(rawImage);
@@ -177,40 +213,49 @@ const DistrictsDetails = () => {
               <SectionLabel text="Top Attractions" />
 
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {d.topAttractions.map((attraction, idx) => (
-                  <div
-                    key={idx}
-                    className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-900 group shadow-md hover:shadow-xl border border-gray-200/50 hover:border-[#D4A017]/50 transition-all duration-300"
-                  >
-                    {/* Image */}
-                    <img
-                      src={attraction.image}
-                      alt={attraction.name}
-                      className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
+                {allDistrictAttractions.map((attraction: any, idx: number) => {
+                  const attractionSlug = attraction.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+                  return (
+                    <Link
+                      key={idx}
+                      to={`/places/${attractionSlug}`}
+                      className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-900 group shadow-md hover:shadow-2xl border border-gray-200/50 hover:border-[#D4A017] transition-all duration-300 block cursor-pointer"
+                    >
+                      {/* Image */}
+                      <img
+                        src={attraction.image}
+                        alt={attraction.name}
+                        className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                      />
 
-                    {/* Rich Gradient Overlay for high text contrast */}
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 group-hover:via-black/70 transition-all duration-300" />
+                      {/* Rich Gradient Overlay for high text contrast */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 group-hover:via-black/70 transition-all duration-300" />
 
-                    {/* Content Container — positioned properly without bottom clipping */}
-                    <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
-                      {/* Tag/Metadata */}
-                      <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017] block mb-1 drop-shadow">
-                        {attraction.district}
-                      </span>
+                      {/* Content Container — positioned properly without bottom clipping */}
+                      <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
+                        {/* Tag/Metadata */}
+                        <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017] block mb-1 drop-shadow">
+                          {attraction.district || d.name}
+                        </span>
 
-                      {/* Title — always fully visible */}
-                      <h3 className="text-lg font-serif font-bold text-white leading-snug drop-shadow-md">
-                        {attraction.name}
-                      </h3>
+                        {/* Title — always fully visible */}
+                        <h3 className="text-lg font-serif font-bold text-white leading-snug drop-shadow-md group-hover:text-[#D4A017] transition-colors">
+                          {attraction.name}
+                        </h3>
 
-                      {/* Description — expands smoothly on hover */}
-                      <p className="text-xs text-white/90 leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-28 group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 ease-out line-clamp-4">
-                        {attraction.description || attraction.shortDescription}
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                        {/* Description — expands smoothly on hover */}
+                        <p className="text-xs text-white/90 leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-28 group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 ease-out line-clamp-4">
+                          {attraction.description || attraction.shortDescription}
+                        </p>
+
+                        <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017]">
+                          <span>Explore Details</span>
+                          <span>→</span>
+                        </div>
+                      </div>
+                    </Link>
+                  );
+                })}
               </div>
             </div>
           </Container>

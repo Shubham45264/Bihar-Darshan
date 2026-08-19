@@ -17,6 +17,7 @@ import MarketPlace from './pages/MarketPlace';
 import AddProduct from './pages/AddProduct';
 import ScrollToTop from "./components/ScrollToTop";
 import ProductDetails from './pages/ProductDetails';
+import PlaceDetails from './pages/PlaceDetails';
 import CultureDetails from './pages/CultureDetails';
 import ShareStory from './pages/ShareStory';
 import AboutUs from './pages/AboutUs';
@@ -108,7 +109,8 @@ function App() {
           <Route path="/forgot-password" element={<PageTransition><ForgotPasswordPage /></PageTransition>} />
           <Route path="/profile" element={<PageTransition><Profile /></PageTransition>} />
           <Route path="/profile/:userId" element={<PageTransition><Profile /></PageTransition>} />
-          <Route path="/marketplace/:id" element={<PageTransition><ProductDetails /></PageTransition>} />
+          <Route path="/places/:id" element={<PageTransition><PlaceDetails /></PageTransition>} />
+          <Route path="/attractions/:id" element={<PageTransition><PlaceDetails /></PageTransition>} />
           <Route path="/about-us" element={<PageTransition><AboutUs /></PageTransition>} />
           <Route path="/contact" element={<PageTransition><ContactUs /></PageTransition>} />
           <Route path="/contact-us" element={<PageTransition><ContactUs /></PageTransition>} />

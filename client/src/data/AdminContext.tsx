@@ -661,6 +661,49 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
   const updatePopularPlaces = useCallback(async (data: PopularPlaceItem[]) => {
     setPopularPlaces(data);
     saveToStorage(KEYS.popularPlaces, data);
+
+    // Auto-sync popular places into districtDetails state
+    setDistrictDetails(prevDetails => {
+      const updatedDetails = { ...prevDetails };
+      let hasChanges = false;
+
+      data.forEach(place => {
+        if (!place || !place.name) return;
+        const distSlug = (place.districtSlug || place.district.replace(/district/i, '').trim()).toLowerCase();
+        if (distSlug && updatedDetails[distSlug]) {
+          const currentAttractions = [...(updatedDetails[distSlug].topAttractions || [])];
+          const existingIdx = currentAttractions.findIndex(att => att.name.toLowerCase().trim() === place.name.toLowerCase().trim());
+
+          const attractionObj = {
+            name: place.name,
+            district: place.district,
+            image: place.image,
+            shortDescription: place.description,
+            description: place.overview || place.description,
+            bestTime: place.bestTimeToVisit || 'October to March',
+            rating: place.rating || 4.8
+          };
+
+          if (existingIdx >= 0) {
+            currentAttractions[existingIdx] = { ...currentAttractions[existingIdx], ...attractionObj };
+          } else {
+            currentAttractions.push(attractionObj);
+          }
+
+          updatedDetails[distSlug] = {
+            ...updatedDetails[distSlug],
+            topAttractions: currentAttractions
+          };
+          hasChanges = true;
+        }
+      });
+
+      if (hasChanges) {
+        saveToStorage(KEYS.districtDetails, updatedDetails);
+      }
+      return updatedDetails;
+    });
+
     try {
       const user = auth.currentUser;
       const headers: any = { 'Content-Type': 'application/json' };

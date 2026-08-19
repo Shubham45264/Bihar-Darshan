@@ -25,19 +25,22 @@ const AdminDistricts = () => {
     districts,
     createDistrictDetail,
     updateDistrictDetail,
-    deleteDistrictDetail
+    deleteDistrictDetail,
+    popularPlaces,
+    updatePopularPlaces
   } = useAdminData();
   const [searchTerm, setSearchTerm] = useState('');
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const [editingItem, setEditingItem] = useState<District | null>(null);
+  const [editingItem, setEditingItem] = useState<any | null>(null);
   const [formData, setFormData] = useState<Partial<District>>(emptyForm);
-  const [itemToDelete, setItemToDelete] = useState<District | null>(null);
+  const [itemToDelete, setItemToDelete] = useState<any | null>(null);
 
   const [activeTab, setActiveTab] = useState<'basic' | 'content' | 'transport' | 'seasons' | 'attractions'>('basic');
 
   const filteredData = districts.filter(item =>
-    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+    item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    (item.tagline && item.tagline.toLowerCase().includes(searchTerm.toLowerCase()))
   );
 
   const handleAdd = () => {
@@ -47,14 +50,19 @@ const AdminDistricts = () => {
     setIsModalOpen(true);
   };
 
-  const handleEdit = (item: District) => {
+  const handleEdit = (item: any) => {
     setEditingItem(item);
-    setFormData(JSON.parse(JSON.stringify(item))); // Deep copy
+    setFormData({
+      ...item,
+      whyInTouristList: item.whyInTouristList?.length ? item.whyInTouristList : [''],
+      topAttractions: item.topAttractions || [],
+      seasonalVisit: item.seasonalVisit || []
+    });
     setActiveTab('basic');
     setIsModalOpen(true);
   };
 
-  const handleDeleteClick = (item: District) => {
+  const handleDeleteClick = (item: any) => {
     setItemToDelete(item);
     setIsDeleteOpen(true);
   };
@@ -79,6 +87,53 @@ const AdminDistricts = () => {
       } else {
         await createDistrictDetail(formData);
       }
+
+      // Sync topAttractions to popularPlaces
+      if (formData.topAttractions && formData.topAttractions.length > 0) {
+        const distName = formData.name || 'Bihar';
+        const distSlug = distName.toLowerCase().replace(/district/i, '').trim();
+
+        const updatedPlaces = [...popularPlaces];
+        let hasChanges = false;
+
+        formData.topAttractions.forEach((att: any) => {
+          if (!att || !att.name) return;
+          const normName = att.name.toLowerCase().trim();
+          const existingIdx = updatedPlaces.findIndex(p => p.name.toLowerCase().trim() === normName);
+
+          if (existingIdx >= 0) {
+            updatedPlaces[existingIdx] = {
+              ...updatedPlaces[existingIdx],
+              image: att.image || updatedPlaces[existingIdx].image,
+              description: att.description || updatedPlaces[existingIdx].description,
+              district: updatedPlaces[existingIdx].district || `${distName} District`,
+              districtSlug: updatedPlaces[existingIdx].districtSlug || distSlug,
+            };
+            hasChanges = true;
+          } else {
+            const newSlug = att.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+            updatedPlaces.push({
+              id: newSlug,
+              name: att.name,
+              district: `${distName.replace(/district/i, '').trim()} District`,
+              districtSlug: distSlug,
+              image: att.image || '/src/assets/bihar-heritage.png',
+              images: [att.image || '/src/assets/bihar-heritage.png'],
+              description: att.description || '',
+              overview: att.description || '',
+              bestTimeToVisit: 'October to March',
+              rating: 4.8,
+              category: 'District Attraction'
+            });
+            hasChanges = true;
+          }
+        });
+
+        if (hasChanges) {
+          await updatePopularPlaces(updatedPlaces);
+        }
+      }
+
       setIsModalOpen(false);
     } catch (err) {
       alert(err instanceof Error ? err.message : 'Failed to save district.');
