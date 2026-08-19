@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { getBadgeFromPoints } from '../utils/badgeUtils';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Share2, FileText, Clock, Edit3, X, LogOut, Eye, Trash2, XCircle, Shield, Award, Trophy, ChevronRight } from 'lucide-react';
 import { Link, Navigate, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -19,8 +20,11 @@ interface UserPostItem {
   status: 'published' | 'pending' | 'rejected';
   image: string;
   videoUrl?: string;
-  type: 'story' | 'journey' | 'gallery' | 'culture' | 'tribe_video' | 'article' | 'community_post';
+  type: 'story' | 'journey' | 'gallery' | 'culture' | 'tribe_video' | 'article' | 'community_post' | 'marketplace';
   rejectionReason?: string;
+  freeDisplayStartDate?: string;
+  freeDisplayEndDate?: string;
+  approvedAt?: string;
 }
 
 const PREDEFINED_AVATARS = [
@@ -134,11 +138,12 @@ const Profile = () => {
       setIsAdmin(isUserAdmin);
 
       // Fetch all post collections concurrently
-      const [storiesData, discoverData, videoData, articlesData] = await Promise.all([
+      const [storiesData, discoverData, videoData, articlesData, marketplaceData] = await Promise.all([
         fetch(`${API_BASE_URL}/stories?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/discover?status=all`).then(r => r.json()).catch(() => null),
         fetch(`${API_BASE_URL}/tribes/videos/all`).then(r => r.json()).catch(() => null),
-        fetch(`${API_BASE_URL}/tribes/articles?status=all`).then(r => r.json()).catch(() => null)
+        fetch(`${API_BASE_URL}/tribes/articles?status=all`).then(r => r.json()).catch(() => null),
+        fetch(`${API_BASE_URL}/marketplace?status=all`).then(r => r.json()).catch(() => null)
       ]);
 
       const matchUser = (authorNameOrEmail: string | null | undefined, authorId?: string | null) => {
@@ -201,7 +206,7 @@ const Profile = () => {
         }));
       }
 
-      // 5. Tribal Articles
+      // 4. Tribal Articles
       let tribalArticles: UserPostItem[] = [];
       if (articlesData?.success && Array.isArray(articlesData.data?.articles)) {
         const matchedArticles = articlesData.data.articles.filter((art: any) => matchUser(art.author));
@@ -218,10 +223,33 @@ const Profile = () => {
         }));
       }
 
+      // 5. Marketplace Products
+      let marketplacePosts: UserPostItem[] = [];
+      if (marketplaceData?.success && Array.isArray(marketplaceData.data?.products)) {
+        const matchedProducts = marketplaceData.data.products.filter((p: any) =>
+          matchUser(p.businessName, p.userId) || (p.email && userEmail && p.email.toLowerCase().trim() === userEmail)
+        );
+        marketplacePosts = matchedProducts.map((p: any) => ({
+          id: p.id,
+          title: p.productName ? `${p.productName} (${p.businessName})` : p.businessName,
+          date: new Date(p.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `Marketplace Product`,
+          category: p.category || "Handicrafts",
+          status: p.status === "APPROVED" ? "published" : p.status === "REJECTED" ? "rejected" : "pending",
+          image: p.image || p.images?.[0] || "/images/culture/hero-artwork.png",
+          type: "marketplace",
+          rejectionReason: p.rejectionReason || "",
+          approvedAt: p.approvedAt,
+          freeDisplayStartDate: p.approvedAt || p.createdAt,
+          freeDisplayEndDate: p.approvedAt ? new Date(new Date(p.approvedAt).getTime() + 10 * 24 * 60 * 60 * 1000).toISOString() : undefined,
+        }));
+      }
+
       // 6. Direct User Relations from DB Profile
       const journeys = dbUser?.journeys || [];
       const galleryItems = dbUser?.galleryItems || [];
       const userCategoryStories = dbUser?.categoryStories || [];
+      const userMarketplaceProducts = dbUser?.marketplaceProducts || [];
 
       const mappedJourneys: UserPostItem[] = journeys.map((j: any) => ({
         id: j.id,
@@ -232,7 +260,10 @@ const Profile = () => {
         status: j.status === "APPROVED" ? "published" : j.status === "REJECTED" ? "rejected" : "pending",
         image: j.image || "/images/culture/hero-artwork.png",
         type: "journey",
-        rejectionReason: j.rejectionReason
+        rejectionReason: j.rejectionReason,
+        freeDisplayStartDate: j.freeDisplayStartDate,
+        freeDisplayEndDate: j.freeDisplayEndDate,
+        approvedAt: j.approvedAt,
       }));
 
       const mappedGallery: UserPostItem[] = galleryItems.map((g: any) => ({
@@ -247,8 +278,6 @@ const Profile = () => {
         rejectionReason: g.rejectionReason
       }));
 
-
-
       const mappedUserCategoryStories: UserPostItem[] = userCategoryStories.map((cs: any) => ({
         id: cs.id,
         title: cs.title,
@@ -259,6 +288,21 @@ const Profile = () => {
         image: cs.mediaUrl || (Array.isArray(cs.mediaFiles) && cs.mediaFiles[0]?.url) || "/images/culture/hero-artwork.png",
         type: "story",
         rejectionReason: cs.rejectionReason
+      }));
+
+      const mappedUserMarketplace: UserPostItem[] = userMarketplaceProducts.map((p: any) => ({
+        id: p.id,
+        title: p.productName ? `${p.productName} (${p.businessName})` : p.businessName,
+        date: new Date(p.createdAt || Date.now()).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+        views: `Marketplace Product`,
+        category: p.category || "Handicrafts",
+        status: p.status === "APPROVED" ? "published" : p.status === "REJECTED" ? "rejected" : "pending",
+        image: p.image || p.images?.[0] || "/images/culture/hero-artwork.png",
+        type: "marketplace",
+        rejectionReason: p.rejectionReason || "",
+        approvedAt: p.approvedAt,
+        freeDisplayStartDate: p.approvedAt || p.createdAt,
+        freeDisplayEndDate: p.approvedAt ? new Date(new Date(p.approvedAt).getTime() + 10 * 24 * 60 * 60 * 1000).toISOString() : undefined,
       }));
 
       // 7. Check Local Storage Submissions as backup
@@ -295,6 +339,8 @@ const Profile = () => {
         ...culturePosts,
         ...videoPosts,
         ...tribalArticles,
+        ...marketplacePosts,
+        ...mappedUserMarketplace,
         ...localPosts
       ];
 
@@ -524,6 +570,8 @@ const Profile = () => {
         await fetch(`${API_BASE_URL}/tourism/${stringId}`, { method: 'DELETE', headers });
       } else if (type === 'gallery') {
         await fetch(`${API_BASE_URL}/gallery/${stringId}`, { method: 'DELETE', headers });
+      } else if (type === 'marketplace') {
+        await fetch(`${API_BASE_URL}/marketplace/${stringId}`, { method: 'DELETE', headers });
       }
 
       // Clean local storage submissions if present
@@ -543,6 +591,26 @@ const Profile = () => {
     }
   };
 
+  const getTrialDaysRemaining = (post: UserPostItem) => {
+    if ((post.type !== 'journey' && post.type !== 'marketplace') || post.status !== 'published') return null;
+
+    let endDate: Date;
+    if (post.freeDisplayEndDate) {
+      endDate = new Date(post.freeDisplayEndDate);
+    } else if (post.freeDisplayStartDate || post.approvedAt || post.date) {
+      const start = new Date(post.freeDisplayStartDate || post.approvedAt || post.date);
+      endDate = new Date(start.getTime() + 10 * 24 * 60 * 60 * 1000);
+    } else {
+      return null;
+    }
+
+    const now = new Date();
+    const diffMs = endDate.getTime() - now.getTime();
+    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+    return diffDays;
+  };
+
   const activePosts = userPosts.filter(post => !isOwnProfile ? post.status === 'published' : post.status === activeTab);
 
   return (
@@ -552,7 +620,7 @@ const Profile = () => {
       <div className="pt-24 pb-12">
         <Container>
           {/* Top Banner */}
-          <div className="bg-[#FFF6E9] rounded-2xl p-8 border border-[#F4A261]/30 relative overflow-hidden mb-6">
+          <div className="bg-[#FFF6E9] rounded-2xl p-4 sm:p-6 lg:p-8 border border-[#F4A261]/30 relative overflow-hidden mb-6">
             {/* Background pattern overlay */}
             <div
               className="absolute inset-0 opacity-15 pointer-events-none"
@@ -564,57 +632,91 @@ const Profile = () => {
               }}
             ></div>
 
-            <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-start gap-8">
+            <div className="relative z-10 flex flex-col lg:flex-row items-center lg:items-start text-center lg:text-left gap-6 lg:gap-8">
               {/* Avatar */}
-              <div className="w-32 h-32 lg:w-40 lg:h-40 rounded-full border-4 border-white shadow-lg overflow-hidden shrink-0 ring-2 ring-[#F4A261]/30 bg-white">
+              <div className="w-28 h-28 sm:w-32 sm:h-32 lg:w-40 lg:h-40 rounded-full border-4 border-white shadow-lg overflow-hidden shrink-0 ring-2 ring-[#F4A261]/30 bg-white">
                 <img src={profile.avatar} alt={profile.name} className="w-full h-full object-cover" />
               </div>
 
               {/* User Info */}
-              <div className="flex-1 text-center lg:text-left pt-2">
-                <h1 className="font-display font-bold text-4xl lg:text-5xl text-[#8B3E2F] flex items-center justify-center lg:justify-start gap-3 mb-2">
-                  <span className="text-[#F4A261] text-3xl">★</span> {profile.name} <span className="text-[#F4A261] text-3xl">★</span>
+              <div className="flex-1 text-center lg:text-left w-full">
+                <h1 className="font-display font-bold text-2xl sm:text-4xl lg:text-5xl text-[#8B3E2F] flex flex-wrap items-center justify-center lg:justify-start gap-1.5 sm:gap-2 mb-2">
+                  <span className="text-[#F4A261] text-xl sm:text-3xl">★</span> <span>{profile.name}</span> <span className="text-[#F4A261] text-xl sm:text-3xl">★</span>
                 </h1>
-                <p className="text-[#F4A261] uppercase tracking-[0.15em] font-bold text-sm mb-4">{profile.title}</p>
-                <p className="text-gray-700 text-sm mb-6 max-w-xl">{profile.bio}</p>
 
-                <div className="flex flex-wrap justify-center lg:justify-start gap-4">
+                {/* ── PROMINENT CURRENT BADGE COMPONENT ── */}
+                {(() => {
+                  const userBadge = getBadgeFromPoints(profile.rewardPoints);
+                  return (
+                    <div className="my-3 flex flex-col items-center lg:items-start gap-2 w-full">
+                      <div className="group relative inline-flex items-center justify-center gap-2 px-3.5 sm:px-4 py-2 rounded-2xl bg-gradient-to-r from-[#FFF6E9] via-[#FEFCBF] to-[#FFF6E9] border-2 border-[#D4A017] shadow-md hover:shadow-lg transition-all duration-300 transform hover:-translate-y-0.5 max-w-full">
+                        <span className="text-xl sm:text-2xl leading-none group-hover:scale-110 transition-transform duration-200">{userBadge.icon}</span>
+                        <span className="font-display font-extrabold text-sm sm:text-base text-[#744210] tracking-wide truncate">{userBadge.name}</span>
+                        <span className="text-[9px] sm:text-[10px] font-black uppercase tracking-wider px-2 py-0.5 rounded-full bg-[#744210] text-[#D4A017] shadow-xs shrink-0">
+                          Current Badge
+                        </span>
+                      </div>
+
+                      {/* Badge Progress Indicator */}
+                      <div className="w-full max-w-sm bg-white/80 border border-[#F4A261]/30 rounded-xl p-2.5 shadow-xs text-left">
+                        <div className="flex justify-between items-center text-[11px] sm:text-xs font-bold text-gray-700 mb-1 gap-1">
+                          <span>{profile.rewardPoints} / {userBadge.nextMilestone ?? profile.rewardPoints} pts</span>
+                          <span className="text-[#8B3E2F] text-[10px] sm:text-[11px] font-extrabold truncate">
+                            {userBadge.nextMilestone !== null
+                              ? `${userBadge.pointsNeeded} pts to ${userBadge.nextBadgeName}`
+                              : 'Highest achievement reached!'}
+                          </span>
+                        </div>
+                        <div className="w-full bg-gray-200/80 rounded-full h-2 overflow-hidden">
+                          <div
+                            className="bg-gradient-to-r from-amber-500 to-[#8B3E2F] h-full rounded-full transition-all duration-500"
+                            style={{ width: `${userBadge.progressPercent}%` }}
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })()}
+
+                <p className="text-gray-700 text-xs sm:text-sm mb-4 max-w-xl mx-auto lg:mx-0">{profile.bio}</p>
+
+                <div className="flex flex-wrap justify-center lg:justify-start gap-2.5 sm:gap-4">
                   {!isAdmin && (
-                    <div className="flex items-center gap-2 bg-white/70 border border-[#F4A261]/30 px-4 py-2 rounded-lg text-sm text-[#8B3E2F] font-bold shadow-sm">
+                    <div className="flex items-center gap-1.5 sm:gap-2 bg-white/70 border border-[#F4A261]/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm text-[#8B3E2F] font-bold shadow-sm">
                       <Award className="w-4 h-4 text-[#D97706]" /> {profile.rewardPoints} Points
                     </div>
                   )}
-                  <div className="flex items-center gap-2 bg-white/70 border border-[#F4A261]/30 px-4 py-2 rounded-lg text-sm text-[#8B3E2F] font-bold shadow-sm">
+                  <div className="flex items-center gap-1.5 sm:gap-2 bg-white/70 border border-[#F4A261]/30 px-3 sm:px-4 py-1.5 sm:py-2 rounded-lg text-xs sm:text-sm text-[#8B3E2F] font-bold shadow-sm">
                     <FileText className="w-4 h-4 text-[#8B3E2F]" /> {profile.totalPosts} Posts
                   </div>
                 </div>
               </div>
 
               {/* Action Buttons */}
-              <div className="flex flex-wrap justify-center gap-3 mt-4 lg:mt-0">
+              <div className="flex flex-wrap justify-center gap-2 sm:gap-3 mt-4 lg:mt-0 w-full sm:w-auto">
                 {isOwnProfile && isAdmin && (
                   <button
                     onClick={() => navigate('/admin')}
-                    className="px-5 py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-[#7a3528] transition shadow-sm border border-[#F4A261]/40 cursor-pointer"
+                    className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs sm:text-sm hover:bg-[#7a3528] transition shadow-sm border border-[#F4A261]/40 cursor-pointer flex-1 sm:flex-none"
                   >
                     <Shield className="w-4 h-4 text-[#F4A261]" /> Admin Dashboard
                   </button>
                 )}
                 {isOwnProfile && (
-                  <button onClick={openEditModal} className="px-5 py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-gray-50 transition shadow-sm">
+                  <button onClick={openEditModal} className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs sm:text-sm hover:bg-gray-50 transition shadow-sm flex-1 sm:flex-none">
                     <Edit3 className="w-4 h-4" /> Edit Profile
                   </button>
                 )}
-                <button onClick={handleShare} className="px-5 py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-[#7a3528] transition shadow-sm">
+                <button onClick={handleShare} className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-[#8B3E2F] text-white rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs sm:text-sm hover:bg-[#7a3528] transition shadow-sm flex-1 sm:flex-none">
                   <Share2 className="w-4 h-4" /> Share Profile
                 </button>
                 {isOwnProfile ? (
-                  <button onClick={handleLogout} className="px-5 py-2.5 bg-white border border-red-200 text-red-600 rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-red-50 transition shadow-sm">
+                  <button onClick={handleLogout} className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-white border border-red-200 text-red-600 rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs sm:text-sm hover:bg-red-50 transition shadow-sm flex-1 sm:flex-none">
                     <LogOut className="w-4 h-4" /> Logout
                   </button>
                 ) : (
                   currentUser && (
-                    <button onClick={() => navigate('/profile')} className="px-5 py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center gap-2 font-bold text-sm hover:bg-gray-50 transition shadow-sm">
+                    <button onClick={() => navigate('/profile')} className="px-3.5 sm:px-5 py-2 sm:py-2.5 bg-white border border-[#8B3E2F]/20 text-[#8B3E2F] rounded-xl flex items-center justify-center gap-1.5 font-bold text-xs sm:text-sm hover:bg-gray-50 transition shadow-sm flex-1 sm:flex-none">
                       My Profile
                     </button>
                   )
@@ -624,63 +726,63 @@ const Profile = () => {
           </div>
 
           {/* Stats Row */}
-          <div className={`grid grid-cols-2 ${isOwnProfile && !isAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-3 sm:gap-4 mb-8`}>
+          <div className={`grid grid-cols-2 ${isOwnProfile && !isAdmin ? 'sm:grid-cols-3' : 'sm:grid-cols-2'} gap-2.5 sm:gap-4 mb-6 sm:mb-8`}>
             {[
-              ...(!isAdmin ? [{ icon: <Award className="w-5 h-5 sm:w-6 sm:h-6 text-[#D97706]" />, label: 'Contribution Points', value: profile.rewardPoints, bg: 'bg-[#FEF3C7]' }] : []),
-              { icon: <FileText className="w-5 h-5 sm:w-6 sm:h-6 text-[#8B3E2F]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FFF3E5]' },
-              ...(isOwnProfile ? [{ icon: <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' }] : []),
+              ...(!isAdmin ? [{ icon: <Award className="w-4 h-4 sm:w-6 sm:h-6 text-[#D97706]" />, label: 'Contribution Points', value: profile.rewardPoints, bg: 'bg-[#FEF3C7]' }] : []),
+              { icon: <FileText className="w-4 h-4 sm:w-6 sm:h-6 text-[#8B3E2F]" />, label: 'Published Posts', value: profile.totalPosts, bg: 'bg-[#FFF3E5]' },
+              ...(isOwnProfile ? [{ icon: <Clock className="w-4 h-4 sm:w-6 sm:h-6 text-[#B45309]" />, label: 'Pending Posts', value: profile.pendingPosts, bg: 'bg-[#FFEDD5]' }] : []),
             ].map((stat, idx) => (
-              <div key={idx} className="bg-white rounded-2xl p-4 sm:p-5 border border-gray-100 shadow-sm flex items-center gap-3 sm:gap-4 hover:shadow-md transition">
-                <div className={`w-10 h-10 sm:w-12 sm:h-12 rounded-full ${stat.bg} flex items-center justify-center shrink-0`}>
+              <div key={idx} className="bg-white rounded-2xl p-3.5 sm:p-5 border border-gray-100 shadow-sm flex items-center gap-2.5 sm:gap-4 hover:shadow-md transition">
+                <div className={`w-9 h-9 sm:w-12 sm:h-12 rounded-full ${stat.bg} flex items-center justify-center shrink-0`}>
                   {stat.icon}
                 </div>
-                <div>
-                  <div className="font-bold text-xl sm:text-2xl text-gray-800">{stat.value}</div>
-                  <div className="text-[11px] sm:text-xs text-gray-500 font-semibold leading-tight mt-0.5">{stat.label.split(' ').map((w, i) => <span key={i} className="block">{w}</span>)}</div>
+                <div className="min-w-0">
+                  <div className="font-bold text-lg sm:text-2xl text-gray-800 leading-tight">{stat.value}</div>
+                  <div className="text-[10px] sm:text-xs text-gray-500 font-semibold leading-tight mt-0.5 truncate">{stat.label}</div>
                 </div>
               </div>
             ))}
           </div>
 
           {/* Leaderboard & Rewards Widget on Profile */}
-          <div className="bg-white border border-gray-200/80 rounded-2xl p-6 text-brand-dark shadow-sm mb-8">
-            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-gray-100 pb-4 mb-4">
+          <div className="bg-white border border-gray-200/80 rounded-2xl p-4 sm:p-6 text-brand-dark shadow-sm mb-6 sm:mb-8">
+            <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 sm:gap-4 border-b border-gray-100 pb-3 sm:pb-4 mb-3 sm:mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-brand-gold/10 text-amber-900 border border-brand-gold/30 flex items-center justify-center shrink-0">
-                  <Trophy size={20} className="text-brand-gold" />
+                <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-xl bg-brand-gold/10 text-amber-900 border border-brand-gold/30 flex items-center justify-center shrink-0">
+                  <Trophy size={18} className="text-brand-gold" />
                 </div>
                 <div>
-                  <h3 className="font-display font-bold text-xl text-brand-dark flex items-center gap-2">
-                    Bihar Cultural Leaderboard
+                  <h3 className="font-display font-bold text-lg sm:text-xl text-brand-dark flex flex-wrap items-center gap-1.5 sm:gap-2">
+                    <span>Bihar Cultural Leaderboard</span>
                     {userRank && (
-                      <span className="text-xs bg-brand-gold/15 border border-brand-gold/30 text-amber-900 px-2.5 py-0.5 rounded-full font-extrabold">
-                        Your Rank: #{userRank}
+                      <span className="text-[10px] sm:text-xs bg-brand-gold/15 border border-brand-gold/30 text-amber-900 px-2 py-0.5 rounded-full font-extrabold">
+                        Rank #{userRank}
                       </span>
                     )}
                   </h3>
-                  <p className="text-xs text-gray-500 font-normal">Top community guardians preserving Bihar's heritage and stories.</p>
+                  <p className="text-[11px] sm:text-xs text-gray-500 font-normal">Top community guardians preserving Bihar's heritage.</p>
                 </div>
               </div>
 
               <Link
                 to="/leaderboard"
-                className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-extrabold text-xs uppercase tracking-wider transition-all shadow-sm shrink-0 hover:scale-105"
+                className="inline-flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-brand-gold hover:bg-brand-gold/90 text-brand-dark font-extrabold text-xs uppercase tracking-wider transition-all shadow-sm shrink-0"
               >
-                View Full Leaderboard <ChevronRight size={14} />
+                View Leaderboard <ChevronRight size={14} />
               </Link>
             </div>
 
             {leaderboardPreview.length > 0 && (
-              <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
+              <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 sm:gap-3">
                 {leaderboardPreview.map((u) => (
-                  <div key={u.id} className="bg-[#FDFBF7] border border-gray-200/80 rounded-xl p-3.5 text-center relative hover:border-brand-gold/50 hover:shadow-md transition-all">
+                  <div key={u.id} className="bg-[#FDFBF7] border border-gray-200/80 rounded-xl p-2.5 sm:p-3.5 text-center relative hover:border-brand-gold/50 hover:shadow-md transition-all">
                     <span className="absolute top-1.5 left-1.5 text-[9px] font-black text-amber-900 bg-brand-gold/15 border border-brand-gold/30 px-1.5 py-0.5 rounded-full">
                       #{u.rank}
                     </span>
                     <img
                       src={u.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(u.name)}`}
                       alt={u.name}
-                      className="w-12 h-12 rounded-full object-cover border-2 border-brand-gold/50 mx-auto mb-2 mt-1 shadow-sm"
+                      className="w-10 h-10 sm:w-12 sm:h-12 rounded-full object-cover border-2 border-brand-gold/50 mx-auto mb-1.5 mt-1 shadow-sm"
                     />
                     <p className="font-display font-bold text-xs text-brand-dark truncate">{u.name}</p>
                     <p className="text-brand-gold text-xs font-black mt-0.5">{u.rewardPoints} Pts</p>
@@ -696,47 +798,47 @@ const Profile = () => {
             <div className="space-y-6">
 
               {/* Tabs */}
-              <div className="flex flex-wrap border-b border-gray-200">
+              <div className="flex flex-wrap sm:flex-nowrap border-b border-gray-200 gap-1">
                 <button
                   onClick={() => setActiveTab('published')}
-                  className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'published' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
+                  className={`flex-1 min-w-[110px] sm:min-w-[150px] py-3 sm:py-4 px-2 text-xs sm:text-sm font-bold flex justify-center items-center gap-1.5 transition ${activeTab === 'published' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
                 >
-                  <FileText className="w-4 h-4" /> Published Posts
+                  <FileText className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Published Posts
                 </button>
                 {isOwnProfile && (
                   <>
                     <button
                       onClick={() => setActiveTab('pending')}
-                      className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'pending' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
+                      className={`flex-1 min-w-[110px] sm:min-w-[150px] py-3 sm:py-4 px-2 text-xs sm:text-sm font-bold flex justify-center items-center gap-1.5 transition ${activeTab === 'pending' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
                     >
-                      <Clock className="w-4 h-4" /> Pending Review
+                      <Clock className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Pending Review
                     </button>
                     <button
                       onClick={() => setActiveTab('rejected')}
-                      className={`flex-1 min-w-[150px] py-4 flex justify-center items-center gap-2 font-bold text-sm transition ${activeTab === 'rejected' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
+                      className={`flex-1 min-w-[110px] sm:min-w-[150px] py-3 sm:py-4 px-2 text-xs sm:text-sm font-bold flex justify-center items-center gap-1.5 transition ${activeTab === 'rejected' ? 'border-b-2 border-[#8B3E2F] text-[#8B3E2F]' : 'text-gray-500 hover:bg-gray-50'}`}
                     >
-                      <XCircle className="w-4 h-4" /> Rejected Posts
+                      <XCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4" /> Rejected Posts
                     </button>
                   </>
                 )}
               </div>
 
-              <h2 className="text-xl font-bold text-gray-800 pt-2">
+              <h2 className="text-lg sm:text-xl font-bold text-gray-800 pt-2">
                 {activeTab === 'published' && 'Published Posts'}
                 {activeTab === 'pending' && 'Pending Posts'}
                 {activeTab === 'rejected' && 'Rejected Posts'}
               </h2>
 
               {activePosts.length > 0 ? (
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 sm:gap-6">
                   {activePosts.map((post) => (
                     <div key={post.id} className="bg-white rounded-2xl overflow-hidden shadow-sm border border-gray-100 flex flex-col group hover:shadow-md transition">
-                      <div className="h-44 relative overflow-hidden">
+                      <div className="h-40 sm:h-44 relative overflow-hidden">
                         <img src={post.image} alt={post.title} className="w-full h-full object-cover group-hover:scale-105 transition duration-500" />
-                        <div className="absolute bottom-3 left-3 bg-[#FFF6E9] text-[#8B3E2F] text-[10px] font-bold px-2 py-1 rounded-md shadow-sm">
+                        <div className="absolute bottom-2.5 left-2.5 bg-[#FFF6E9] text-[#8B3E2F] text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:py-1 rounded-md shadow-sm">
                           {post.category}
                         </div>
-                        <div className={`absolute top-3 right-3 text-[10px] font-bold px-2.5 py-1 rounded-full border shadow-sm ${post.status === 'published'
+                        <div className={`absolute top-2.5 right-2.5 text-[9px] sm:text-[10px] font-bold px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border shadow-sm ${post.status === 'published'
                             ? 'bg-green-50 text-green-700 border-green-200'
                             : post.status === 'pending'
                               ? 'bg-amber-50 text-amber-700 border-amber-250'
@@ -744,9 +846,52 @@ const Profile = () => {
                           }`}>
                           {post.status.toUpperCase()}
                         </div>
+
+                        {/* Dynamic Free Trial Badge on Top-Left of Card Image */}
+                        {(post.type === 'journey' || post.type === 'marketplace') && post.status === 'published' && (() => {
+                          const remainingDays = getTrialDaysRemaining(post);
+                          if (remainingDays === null) return null;
+                          return (
+                            <div className={`absolute top-2.5 left-2.5 text-[9px] sm:text-[10px] font-black px-2 py-0.5 sm:px-2.5 sm:py-1 rounded-full border shadow-md flex items-center gap-1 z-10 ${
+                              remainingDays > 3
+                                ? 'bg-gradient-to-r from-amber-500 to-amber-600 text-white border-amber-400'
+                                : remainingDays > 0
+                                  ? 'bg-gradient-to-r from-red-600 to-orange-600 text-white border-red-400 animate-pulse'
+                                  : 'bg-gray-800 text-gray-300 border-gray-700'
+                            }`}>
+                              <span>{remainingDays > 3 ? '⏳' : remainingDays > 0 ? '⚡' : '🚫'}</span>
+                              <span>{remainingDays > 0 ? `${remainingDays}d Free Left` : 'Trial Expired'}</span>
+                            </div>
+                          );
+                        })()}
                       </div>
-                      <div className="p-5 flex-1 flex flex-col">
-                        <h3 className="font-bold text-gray-900 text-[15px] mb-2 leading-snug">{post.title}</h3>
+                      <div className="p-4 sm:p-5 flex-1 flex flex-col">
+                        <h3 className="font-bold text-gray-900 text-sm sm:text-[15px] mb-2 leading-snug">{post.title}</h3>
+
+                        {/* Dynamic Free Trial Reminder Banner in Card Body */}
+                        {(post.type === 'journey' || post.type === 'marketplace') && post.status === 'published' && (() => {
+                          const remainingDays = getTrialDaysRemaining(post);
+                          if (remainingDays === null) return null;
+                          return (
+                            <div className={`my-2 p-2 sm:p-2.5 rounded-xl text-[11px] sm:text-xs font-semibold flex items-center justify-between border ${
+                              remainingDays > 3
+                                ? 'bg-[#FFF6E9] border-[#F4A261]/40 text-[#8B3E2F]'
+                                : remainingDays > 0
+                                  ? 'bg-red-50 border-red-300 text-red-700 animate-pulse'
+                                  : 'bg-gray-100 border-gray-300 text-gray-700'
+                            }`}>
+                              <span className="flex items-center gap-1 sm:gap-1.5 font-bold truncate">
+                                {remainingDays > 3 ? '⏳' : remainingDays > 0 ? '⚡' : '🚫'}
+                                {remainingDays > 0
+                                  ? `${remainingDays} Day${remainingDays > 1 ? 's' : ''} Left Free`
+                                  : 'Trial Expired'}
+                              </span>
+                              <span className="text-[9px] sm:text-[10px] font-extrabold uppercase tracking-wider px-1.5 sm:px-2 py-0.5 rounded bg-white/80 border border-current shrink-0">
+                                {remainingDays > 0 ? '10-Day Free' : 'Renew'}
+                              </span>
+                            </div>
+                          );
+                        })()}
 
                         {post.status === 'rejected' && (
                           <div className="mb-3 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-start gap-2 font-medium">
@@ -775,6 +920,8 @@ const Profile = () => {
                                 navigate('/discover');
                               } else if (post.type === 'tribe_video') {
                                 navigate('/tribals');
+                              } else if (post.type === 'marketplace') {
+                                navigate('/marketplace');
                               } else {
                                 navigate('/discover');
                               }

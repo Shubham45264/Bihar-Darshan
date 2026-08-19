@@ -207,80 +207,73 @@ const AdminLeaderboard: React.FC = () => {
           <div className="overflow-x-auto">
             <table className="w-full text-left text-sm text-white/70">
               <thead className="bg-[#0a0a0f] text-white/40 text-xs uppercase tracking-wider border-b border-white/[0.08]">
-                <tr>
-                  <th className="py-3.5 px-4 font-semibold">Rank</th>
-                  <th className="py-3.5 px-4 font-semibold">User</th>
-                  <th className="py-3.5 px-4 font-semibold">Tier Title</th>
-                  <th className="py-3.5 px-4 font-semibold text-center">Contributions</th>
-                  <th className="py-3.5 px-4 font-semibold text-center">Badges</th>
-                  <th className="py-3.5 px-4 font-semibold text-right">Points</th>
-                  <th className="py-3.5 px-4 font-semibold text-center">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-white/[0.06]">
-                {filteredUsers.map((user) => {
-                  const rankColor =
-                    user.rank === 1
-                      ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
-                      : user.rank === 2
-                      ? 'bg-zinc-300/20 text-zinc-200 border-zinc-300/30'
-                      : user.rank === 3
-                      ? 'bg-amber-700/20 text-amber-500 border-amber-700/30'
-                      : 'bg-white/5 text-white/50 border-white/10';
+                  <tr>
+                    <th className="py-3.5 px-4 font-semibold">Rank</th>
+                    <th className="py-3.5 px-4 font-semibold">User</th>
+                    <th className="py-3.5 px-4 font-semibold text-center">Contributions</th>
+                    <th className="py-3.5 px-4 font-semibold text-center">Current Badge</th>
+                    <th className="py-3.5 px-4 font-semibold text-right">Points</th>
+                    <th className="py-3.5 px-4 font-semibold text-center">Actions</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-white/[0.06]">
+                  {filteredUsers.map((user) => {
+                    const rankColor =
+                      user.rank === 1
+                        ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                        : user.rank === 2
+                        ? 'bg-zinc-300/20 text-zinc-200 border-zinc-300/30'
+                        : user.rank === 3
+                        ? 'bg-amber-700/20 text-amber-500 border-amber-700/30'
+                        : 'bg-white/5 text-white/50 border-white/10';
 
-                  return (
-                    <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
-                      {/* Rank */}
-                      <td className="py-4 px-4">
-                        <span
-                          className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border ${rankColor}`}
-                        >
-                          {user.rank === 1 ? '🥇' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : `#${user.rank}`}
-                        </span>
-                      </td>
+                    const currentBadgeStr = (user as any).currentBadge || (user as any).badge?.fullName || '📜 Vedic Scholar';
 
-                      {/* User Info */}
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`}
-                            alt={user.name}
-                            className="w-10 h-10 rounded-full object-cover border border-white/10"
-                          />
-                          <div>
-                            <p className="text-white font-semibold flex items-center gap-1.5">
-                              {user.name}
-                              {user.role === 'ADMIN' && (
-                                <span className="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold uppercase">
-                                  Admin
-                                </span>
-                              )}
-                            </p>
-                            <p className="text-white/40 text-xs">{user.email || 'No email registered'}</p>
+                    return (
+                      <tr key={user.id} className="hover:bg-white/[0.02] transition-colors">
+                        {/* Rank */}
+                        <td className="py-4 px-4">
+                          <span
+                            className={`inline-flex items-center justify-center w-8 h-8 rounded-full font-bold text-xs border ${rankColor}`}
+                          >
+                            {user.rank === 1 ? '🥇' : user.rank === 2 ? '🥈' : user.rank === 3 ? '🥉' : `#${user.rank}`}
+                          </span>
+                        </td>
+
+                        {/* User Info */}
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`}
+                              alt={user.name}
+                              className="w-10 h-10 rounded-full object-cover border border-white/10"
+                            />
+                            <div>
+                              <p className="text-white font-semibold flex items-center gap-1.5">
+                                {user.name}
+                                {user.role === 'ADMIN' && (
+                                  <span className="text-[10px] bg-amber-500/20 text-amber-400 px-1.5 py-0.5 rounded font-bold uppercase">
+                                    Admin
+                                  </span>
+                                )}
+                              </p>
+                              <p className="text-white/40 text-xs">{user.email || 'No email registered'}</p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
+                        </td>
 
-                      {/* Tier Title */}
-                      <td className="py-4 px-4">
-                        <span className="inline-block px-2.5 py-1 rounded-lg text-xs font-semibold bg-white/5 border border-white/10 text-amber-300/90">
-                          {user.tier}
-                        </span>
-                      </td>
+                        {/* Contributions */}
+                        <td className="py-4 px-4 text-center">
+                          <span className="font-semibold text-white/90">{user.totalContributions}</span>
+                          <span className="text-white/30 text-xs block">items</span>
+                        </td>
 
-                      {/* Contributions */}
-                      <td className="py-4 px-4 text-center">
-                        <span className="font-semibold text-white/90">{user.totalContributions}</span>
-                        <span className="text-white/30 text-xs block">items</span>
-                      </td>
-
-                      {/* Badges */}
-                      <td className="py-4 px-4 text-center">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-300 font-semibold text-xs">
-                          <Award size={13} />
-                          {user.badges}
-                        </span>
-                      </td>
+                        {/* Current Badge */}
+                        <td className="py-4 px-4 text-center">
+                          <span className="inline-flex items-center gap-1 px-3 py-1 rounded-full bg-amber-500/10 border border-amber-500/20 text-amber-300 font-extrabold text-xs">
+                            {currentBadgeStr}
+                          </span>
+                        </td>
 
                       {/* Reward Points */}
                       <td className="py-4 px-4 text-right">

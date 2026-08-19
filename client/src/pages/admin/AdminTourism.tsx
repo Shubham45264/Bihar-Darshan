@@ -4,7 +4,7 @@ import { AdminTable } from '../../components/admin/AdminTable';
 import { AdminModal } from '../../components/admin/AdminModal';
 import { AdminInput, AdminTextarea, AdminImagePreview, AdminSelect, AdminImageUpload } from '../../components/admin/AdminFormField';
 import { AdminDeleteConfirm } from '../../components/admin/AdminDeleteConfirm';
-import { Plus, Trash2, Info, LayoutList, Phone, Map, Image as ImageIcon, Clock, CheckCircle, XCircle, Tag, Building2, Star, MapPin, ListChecks } from 'lucide-react';
+import { Plus, Trash2, Info, LayoutList, Phone, Map, Image as ImageIcon, Clock, CheckCircle, XCircle, Tag, Building2, Star, MapPin, ListChecks, Eye, ExternalLink, Mail, User, Quote, Check } from 'lucide-react';
 import type { TourTrip } from '../../data/tourismData';
 import { auth } from '../../lib/firebase';
 import { API_BASE_URL } from '../../config/api';
@@ -97,6 +97,70 @@ const GoldBtn = ({ onClick, children }: { onClick: () => void; children: React.R
   </button>
 );
 
+const getParsedJourneyDetails = (j: any) => {
+  if (!j) return j;
+  let description = j.description || j.overviewText || '';
+  let image = j.image || '';
+  let guide = j.guide || {
+    name: j.guideName || '',
+    image: j.guideImage || '',
+    experience: j.guideExperience || '',
+    languages: j.guideLanguages || [],
+    intro: j.guideIntro || '',
+    phone: j.guidePhone || '',
+    email: j.guideEmail || '',
+    whatsapp: j.guideWhatsapp || ''
+  };
+  let timeline = j.timeline || [];
+  let galleryImages = j.galleryImages || [];
+  let quote = j.quote || '';
+  let category = j.category || '';
+  let companyName = j.companyName || j.author?.name || '';
+  let tripDuration = j.duration || j.tripDuration || '';
+  let highlights = j.highlights || [];
+  let includedServices = j.includedServices || [];
+  let excludedServices = j.excludedServices || [];
+  let googleMapsLink = j.googleMapsLink || '';
+
+  if (j.description && typeof j.description === 'string' && j.description.startsWith('{"__isImmersivePackage"')) {
+    try {
+      const parsed = JSON.parse(j.description);
+      if (parsed.__isImmersivePackage) {
+        description = parsed.realDescription || description;
+        if (parsed.image) image = parsed.image;
+        if (parsed.guide) guide = parsed.guide;
+        if (parsed.timeline) timeline = parsed.timeline;
+        if (parsed.galleryImages) galleryImages = parsed.galleryImages;
+        if (parsed.quote) quote = parsed.quote;
+        if (parsed.category) category = parsed.category;
+        if (parsed.companyName) companyName = parsed.companyName;
+        if (parsed.tripDuration) tripDuration = parsed.tripDuration;
+        if (parsed.highlights) highlights = parsed.highlights;
+        if (parsed.includedServices) includedServices = parsed.includedServices;
+        if (parsed.excludedServices) excludedServices = parsed.excludedServices;
+        if (parsed.googleMapsLink) googleMapsLink = parsed.googleMapsLink;
+      }
+    } catch (_) {}
+  }
+
+  return {
+    ...j,
+    description,
+    image,
+    guide,
+    timeline,
+    galleryImages,
+    quote,
+    category,
+    companyName,
+    tripDuration,
+    highlights,
+    includedServices,
+    excludedServices,
+    googleMapsLink,
+  };
+};
+
 const AdminTourism = () => {
   const { tourism, updateTourism } = useAdminData();
   const [searchTerm, setSearchTerm] = useState('');
@@ -112,6 +176,11 @@ const AdminTourism = () => {
   const [journeys, setJourneys] = useState<any[]>([]);
   const [journeysSearch, setJourneysSearch] = useState('');
   const [journeysTab, setJourneysTab] = useState<JourneyTab>('PENDING');
+
+  // Journey detailed view modal state
+  const [viewingJourney, setViewingJourney] = useState<any | null>(null);
+  const [isViewModalOpen, setIsViewModalOpen] = useState(false);
+  const [viewModalTab, setViewModalTab] = useState<'overview' | 'guide' | 'timeline' | 'gallery' | 'author'>('overview');
 
 
 
@@ -129,15 +198,50 @@ const AdminTourism = () => {
 
   useEffect(() => { fetchJourneys(); }, []);
 
+  const [approvingId, setApprovingId] = useState<string | null>(null);
+  const [approvalFeedback, setApprovalFeedback] = useState<{ id: string; message: string; type: 'success' | 'warning' | 'error' } | null>(null);
+
   const handleApproveJourney = async (id: string) => {
+    setApprovingId(id);
+    setApprovalFeedback(null);
     try {
       const user = auth.currentUser;
       const token = user ? await user.getIdToken() : '';
       const res = await fetch(`${API_BASE_URL}/journeys/${id}/approve`, {
-        method: 'PATCH', headers: { Authorization: `Bearer ${token}` }
+        method: 'PATCH',
+        headers: { Authorization: `Bearer ${token}` }
       });
-      if (res.ok) setJourneys(prev => prev.map(j => j.id === id ? { ...j, status: 'APPROVED' } : j));
-    } catch (e) { console.error(e); }
+      const data = await res.json();
+      if (res.ok) {
+        const isEmailSent = data.data?.emailStatus === 'SENT' || data.data?.emailStatus === 'ALREADY_SENT';
+        setJourneys(prev => prev.map(j => j.id === id ? {
+          ...j,
+          status: 'APPROVED',
+          approvalEmailSent: isEmailSent,
+          approvalEmailSentAt: data.data?.journey?.approvalEmailSentAt || new Date().toISOString()
+        } : j));
+        setApprovalFeedback({
+          id,
+          message: data.message || 'Journey approved successfully',
+          type: isEmailSent ? 'success' : 'warning',
+        });
+      } else {
+        setApprovalFeedback({
+          id,
+          message: data.message || 'Failed to approve journey',
+          type: 'error',
+        });
+      }
+    } catch (e: any) {
+      console.error(e);
+      setApprovalFeedback({
+        id,
+        message: 'Network error during approval',
+        type: 'error',
+      });
+    } finally {
+      setApprovingId(null);
+    }
   };
 
   const handleRejectJourney = async (id: string) => {
@@ -157,7 +261,16 @@ const AdminTourism = () => {
     .map(j => {
       let description = j.description || '';
       let image = j.image || "https://images.unsplash.com/photo-1625505826533-5c80aca7d157?q=80&w=2000&auto=format&fit=crop";
-      let guide = j.guide || {
+      let guide = j.guide || (j.guideName ? {
+        name: j.guideName || '',
+        image: j.guideImage || '',
+        experience: j.guideExperience || '',
+        languages: j.guideLanguages || [],
+        intro: j.guideIntro || '',
+        phone: j.guidePhone || '',
+        email: j.guideEmail || '',
+        whatsapp: j.guideWhatsapp || ''
+      } : {
         name: "Ramesh Kumar",
         image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=500&auto=format&fit=crop",
         experience: "10+ Years",
@@ -166,7 +279,7 @@ const AdminTourism = () => {
         phone: "+919876543210",
         email: "guide@example.com",
         whatsapp: "+919876543210"
-      };
+      });
       let timeline = j.timeline || [];
       let galleryImages = j.galleryImages || [];
       let quote = j.quote || "Not just a holiday, but a journey aligned with the rich soil, spiritual structures, and legends.";
@@ -344,6 +457,15 @@ const AdminTourism = () => {
       highlights: formData.highlights.filter(h => h.trim()),
       includedServices: formData.includedServices.filter(s => s.trim()),
       excludedServices: formData.excludedServices.filter(s => s.trim()),
+      // Flatten guide object to flat fields for API
+      guideName: formData.guide.name,
+      guideImage: formData.guide.image,
+      guideExperience: formData.guide.experience,
+      guideLanguages: formData.guide.languages,
+      guideIntro: formData.guide.intro,
+      guidePhone: formData.guide.phone,
+      guideEmail: formData.guide.email,
+      guideWhatsapp: formData.guide.whatsapp,
     } as unknown as TourTrip;
 
     if (editingItem && (editingItem as any)._isApprovedJourney) {
@@ -620,6 +742,9 @@ const AdminTourism = () => {
                             onChange={(e: any) => setFormData({ ...formData, guide: { ...formData.guide, whatsapp: e.target.value } })}
                             placeholder="+919876543210" />
                         </div>
+                        <InputField label="Guide Email" value={formData.guide.email}
+                          onChange={(e: any) => setFormData({ ...formData, guide: { ...formData.guide, email: e.target.value } })}
+                          placeholder="guide@example.com" type="email" required />
                       </div>
 
                       {/* Ratings */}
@@ -892,35 +1017,71 @@ const AdminTourism = () => {
                         {journey.author && <span>By: <strong className="text-white/80">{journey.author.name}</strong></span>}
                         {journey.budget && <span>Budget: <strong className="text-white/80">{journey.budget}</strong></span>}
                         {journey.district && <span>District: <strong className="text-white/80">{journey.district}</strong></span>}
+                        {journey.status === 'APPROVED' && (
+                          <span className={`text-[10px] font-sans font-bold px-2 py-0.5 rounded border ${
+                            journey.approvalEmailSent
+                              ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                              : 'bg-yellow-500/10 text-yellow-400 border-yellow-500/20'
+                          }`}>
+                            {journey.approvalEmailSent ? '✉️ Email Sent' : '⚠️ Email Not Sent'}
+                          </span>
+                        )}
                       </div>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex gap-2 flex-wrap">
+                      <button onClick={() => { setViewingJourney(journey); setViewModalTab('overview'); setIsViewModalOpen(true); }}
+                        className="bg-white/10 border border-white/15 text-white px-3.5 py-2.5 rounded-xl hover:bg-white/20 transition-all flex items-center gap-2 text-sm font-semibold">
+                        <Eye size={16} /> View Details
+                      </button>
                       {journeysTab === 'PENDING' && (
                         <>
-                          <button onClick={() => handleRejectJourney(journey.id)}
-                            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2.5 rounded-xl hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm font-semibold">
+                          <button onClick={() => handleRejectJourney(journey.id)} disabled={approvingId === journey.id}
+                            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2.5 rounded-xl hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm font-semibold disabled:opacity-50">
                             <XCircle size={16} /> Reject
                           </button>
-                          <button onClick={() => handleApproveJourney(journey.id)}
-                            className="bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 px-4 py-2.5 rounded-xl hover:bg-emerald-500/25 transition-all flex items-center gap-2 text-sm font-semibold">
-                            <CheckCircle size={16} /> Approve
+                          <button onClick={() => handleApproveJourney(journey.id)} disabled={approvingId === journey.id}
+                            className="bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 px-4 py-2.5 rounded-xl hover:bg-emerald-500/25 transition-all flex items-center gap-2 text-sm font-semibold disabled:opacity-50">
+                            <CheckCircle size={16} />
+                            {approvingId === journey.id ? 'Approving...' : 'Approve & Send Email'}
                           </button>
                         </>
                       )}
                       {journeysTab === 'APPROVED' && (
-                        <button onClick={() => handleRejectJourney(journey.id)}
-                          className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2.5 rounded-xl hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm font-semibold">
-                          <XCircle size={16} /> Revoke
-                        </button>
+                        <>
+                          {!journey.approvalEmailSent && (
+                            <button onClick={() => handleApproveJourney(journey.id)} disabled={approvingId === journey.id}
+                              className="bg-brand-gold/15 border border-brand-gold/25 text-brand-gold px-3.5 py-2.5 rounded-xl hover:bg-brand-gold/25 transition-all flex items-center gap-2 text-sm font-semibold disabled:opacity-50">
+                              ✉️ {approvingId === journey.id ? 'Sending...' : 'Send Email'}
+                            </button>
+                          )}
+                          <button onClick={() => handleRejectJourney(journey.id)} disabled={approvingId === journey.id}
+                            className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2.5 rounded-xl hover:bg-red-500/20 transition-all flex items-center gap-2 text-sm font-semibold disabled:opacity-50">
+                            <XCircle size={16} /> Revoke
+                          </button>
+                        </>
                       )}
                       {journeysTab === 'REJECTED' && (
-                        <button onClick={() => handleApproveJourney(journey.id)}
-                          className="bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 px-4 py-2.5 rounded-xl hover:bg-emerald-500/25 transition-all flex items-center gap-2 text-sm font-semibold">
-                          <CheckCircle size={16} /> Re-Approve
+                        <button onClick={() => handleApproveJourney(journey.id)} disabled={approvingId === journey.id}
+                          className="bg-emerald-500/15 border border-emerald-500/25 text-emerald-400 px-4 py-2.5 rounded-xl hover:bg-emerald-500/25 transition-all flex items-center gap-2 text-sm font-semibold disabled:opacity-50">
+                          <CheckCircle size={16} />
+                          {approvingId === journey.id ? 'Approving...' : 'Re-Approve'}
                         </button>
                       )}
                     </div>
                   </div>
+
+                  {approvalFeedback && approvalFeedback.id === journey.id && (
+                    <div className={`mt-3 p-3 rounded-xl border text-xs font-semibold flex items-center gap-2 ${
+                      approvalFeedback.type === 'success'
+                        ? 'bg-emerald-500/10 border-emerald-500/20 text-emerald-400'
+                        : approvalFeedback.type === 'warning'
+                        ? 'bg-yellow-500/10 border-yellow-500/20 text-yellow-400'
+                        : 'bg-red-500/10 border-red-500/20 text-red-400'
+                    }`}>
+                      <Info size={14} />
+                      <span>{approvalFeedback.message}</span>
+                    </div>
+                  )}
                 </div>
               ))}
             {journeys.filter(j => j.status === journeysTab && j.title.toLowerCase().includes(journeysSearch.toLowerCase())).length === 0 && (
@@ -931,6 +1092,379 @@ const AdminTourism = () => {
             )}
           </div>
         </div>
+      )}
+
+      {/* ── VIEW JOURNEY DETAILS MODAL ────────────────────────────────────── */}
+      {isViewModalOpen && viewingJourney && (
+        <AdminModal
+          isOpen={isViewModalOpen}
+          onClose={() => { setIsViewModalOpen(false); setViewingJourney(null); }}
+          title={`Review Listing Request: ${viewingJourney.title}`}
+          maxWidth="max-w-5xl"
+        >
+          {(() => {
+            const pj = getParsedJourneyDetails(viewingJourney);
+            const isApproved = pj.status === 'APPROVED';
+            const isPending = pj.status === 'PENDING';
+            const isRejected = pj.status === 'REJECTED';
+
+            return (
+              <div className="space-y-6 max-h-[80vh] overflow-y-auto pr-1">
+                {/* Header Action & Status Bar */}
+                <div className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 flex-wrap">
+                    <span className={`px-3 py-1 rounded-full text-xs font-extrabold uppercase tracking-wider ${
+                      isApproved ? 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30' :
+                      isRejected ? 'bg-red-500/20 text-red-400 border border-red-500/30' :
+                      'bg-yellow-500/20 text-yellow-400 border border-yellow-500/30'
+                    }`}>
+                      {pj.status}
+                    </span>
+                    {isApproved && (
+                      <span className={`px-3 py-1 rounded-full text-xs font-bold ${
+                        pj.approvalEmailSent
+                          ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20'
+                          : 'bg-yellow-500/10 text-yellow-400 border border-yellow-500/20'
+                      }`}>
+                        {pj.approvalEmailSent ? '✉️ Approval Email Sent' : '⚠️ Email Not Sent Yet'}
+                      </span>
+                    )}
+                    <span className="text-white/50 text-xs font-mono">
+                      Submitted: {pj.createdAt ? new Date(pj.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Recently'}
+                    </span>
+                  </div>
+
+                  <div className="flex items-center gap-2 flex-wrap">
+                    {(isPending || isRejected) && (
+                      <>
+                        <button
+                          onClick={() => { handleRejectJourney(pj.id); setIsViewModalOpen(false); }}
+                          disabled={approvingId === pj.id}
+                          className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2 rounded-xl hover:bg-red-500/20 transition-all flex items-center gap-2 text-xs font-semibold disabled:opacity-50"
+                        >
+                          <XCircle size={15} /> Reject
+                        </button>
+                        <button
+                          onClick={() => { handleApproveJourney(pj.id); setIsViewModalOpen(false); }}
+                          disabled={approvingId === pj.id}
+                          className="bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 px-4 py-2 rounded-xl hover:bg-emerald-500/30 transition-all flex items-center gap-2 text-xs font-bold shadow-lg shadow-emerald-500/10 disabled:opacity-50"
+                        >
+                          <CheckCircle size={15} /> Approve & Send Email
+                        </button>
+                      </>
+                    )}
+                    {isApproved && (
+                      <>
+                        {!pj.approvalEmailSent && (
+                          <button
+                            onClick={() => handleApproveJourney(pj.id)}
+                            disabled={approvingId === pj.id}
+                            className="bg-brand-gold/20 border border-brand-gold/30 text-brand-gold px-4 py-2 rounded-xl hover:bg-brand-gold/30 transition-all flex items-center gap-2 text-xs font-bold disabled:opacity-50"
+                          >
+                            ✉️ Send Email
+                          </button>
+                        )}
+                        <button
+                          onClick={() => { handleRejectJourney(pj.id); setIsViewModalOpen(false); }}
+                          disabled={approvingId === pj.id}
+                          className="bg-red-500/10 border border-red-500/20 text-red-400 px-4 py-2 rounded-xl hover:bg-red-500/20 transition-all flex items-center gap-2 text-xs font-semibold disabled:opacity-50"
+                        >
+                          <XCircle size={15} /> Revoke
+                        </button>
+                      </>
+                    )}
+                  </div>
+                </div>
+
+                {/* Hero Banner Preview */}
+                <div className="relative h-56 rounded-2xl overflow-hidden bg-black/40 border border-white/10">
+                  {pj.image ? (
+                    <img src={pj.image} alt={pj.title} className="w-full h-full object-cover" />
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/30 text-sm">No Banner Image</div>
+                  )}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent p-6 flex flex-col justify-end">
+                    <div className="flex items-center gap-2 mb-2 flex-wrap">
+                      {pj.category && (
+                        <span className="text-[10px] font-black uppercase tracking-widest bg-brand-gold/20 text-brand-gold border border-brand-gold/30 px-2.5 py-0.5 rounded-full">
+                          {pj.category}
+                        </span>
+                      )}
+                      {pj.companyName && (
+                        <span className="text-xs text-white/80 font-semibold flex items-center gap-1">
+                          <Building2 size={12} /> {pj.companyName}
+                        </span>
+                      )}
+                    </div>
+                    <h2 className="text-2xl font-bold text-white font-serif">{pj.title}</h2>
+                    <div className="flex items-center gap-4 text-xs text-brand-gold font-semibold mt-1">
+                      <span>⏱ {pj.tripDuration || pj.duration || 'Flexible'}</span>
+                      <span>📍 {pj.district || 'Bihar'}</span>
+                      <span>💰 {pj.price || pj.budget || 'Flexible'}</span>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section Navigation Tabs inside Modal */}
+                <div className="flex gap-2 border-b border-white/10 pb-3 overflow-x-auto">
+                  {[
+                    { id: 'overview', label: 'Overview & Services', icon: LayoutList },
+                    { id: 'guide', label: 'Guide & Contact', icon: Phone },
+                    { id: 'timeline', label: 'Itinerary Timeline', icon: Map },
+                    { id: 'gallery', label: `Gallery (${pj.galleryImages?.length || 0})`, icon: ImageIcon },
+                    { id: 'author', label: 'Submitter Info', icon: User },
+                  ].map(tab => {
+                    const Icon = tab.icon;
+                    return (
+                      <button
+                        key={tab.id}
+                        type="button"
+                        onClick={() => setViewModalTab(tab.id as any)}
+                        className={`px-4 py-2 rounded-xl text-xs font-semibold flex items-center gap-2 transition-all whitespace-nowrap ${
+                          viewModalTab === tab.id
+                            ? 'bg-brand-gold text-black shadow-md shadow-brand-gold/20'
+                            : 'bg-white/5 text-white/60 hover:bg-white/10 hover:text-white'
+                        }`}
+                      >
+                        <Icon size={14} /> {tab.label}
+                      </button>
+                    );
+                  })}
+                </div>
+
+                {/* ── VIEW TAB 1: OVERVIEW & SERVICES ───────────────────────── */}
+                {viewModalTab === 'overview' && (
+                  <div className="space-y-5">
+                    {pj.shortDesc && (
+                      <div className="bg-brand-gold/10 border border-brand-gold/20 rounded-xl p-4">
+                        <span className="text-[10px] font-bold text-brand-gold uppercase tracking-widest block mb-1">Tagline / Hook</span>
+                        <p className="text-white text-sm italic">"{pj.shortDesc}"</p>
+                      </div>
+                    )}
+
+                    {pj.quote && (
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4 flex gap-3">
+                        <Quote size={20} className="text-brand-gold shrink-0 mt-0.5" />
+                        <div>
+                          <span className="text-[10px] font-bold text-white/40 uppercase tracking-widest block mb-1">Quote</span>
+                          <p className="text-white/90 text-sm italic font-serif">"{pj.quote}"</p>
+                        </div>
+                      </div>
+                    )}
+
+                    <div className="bg-white/5 border border-white/10 rounded-xl p-5 space-y-2">
+                      <h4 className="text-xs font-bold text-white/60 uppercase tracking-wider">Full Description / Overview</h4>
+                      <p className="text-white/90 text-sm leading-relaxed whitespace-pre-line">{pj.description || 'No description provided.'}</p>
+                    </div>
+
+                    {/* Key Specs */}
+                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                        <span className="text-white/40 text-xs block mb-1">Best Time to Visit</span>
+                        <span className="text-white font-semibold text-sm">{pj.bestTime || 'Not specified'}</span>
+                      </div>
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                        <span className="text-white/40 text-xs block mb-1">Group Size</span>
+                        <span className="text-white font-semibold text-sm">{pj.groupSize || 'Flexible'}</span>
+                      </div>
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4">
+                        <span className="text-white/40 text-xs block mb-1">Google Maps</span>
+                        {pj.googleMapsLink ? (
+                          <a href={pj.googleMapsLink} target="_blank" rel="noreferrer" className="text-brand-gold hover:underline text-xs flex items-center gap-1">
+                            <ExternalLink size={12} /> Open Map Link
+                          </a>
+                        ) : (
+                          <span className="text-white/30 text-xs">Not provided</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Highlights */}
+                    {pj.highlights && pj.highlights.length > 0 && (
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-5 space-y-3">
+                        <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider flex items-center gap-2">
+                          <span className="w-1.5 h-1.5 bg-brand-gold rounded-full" /> Journey Highlights
+                        </h4>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {pj.highlights.map((h: string, idx: number) => (
+                            <div key={idx} className="flex items-center gap-2 text-xs text-white/90 bg-black/20 p-2.5 rounded-lg border border-white/5">
+                              <span className="text-brand-gold">✦</span> {h}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+
+                    {/* Included & Excluded Services */}
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {/* Included */}
+                      <div className="bg-emerald-500/5 border border-emerald-500/15 rounded-xl p-4 space-y-2">
+                        <h4 className="text-xs font-bold text-emerald-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <CheckCircle size={14} /> Included Services
+                        </h4>
+                        {pj.includedServices && pj.includedServices.length > 0 ? (
+                          <ul className="space-y-1.5">
+                            {pj.includedServices.map((s: string, idx: number) => (
+                              <li key={idx} className="text-xs text-white/80 flex items-center gap-2">
+                                <span className="text-emerald-400">✓</span> {s}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span className="text-white/30 text-xs block">None specified</span>
+                        )}
+                      </div>
+
+                      {/* Excluded */}
+                      <div className="bg-red-500/5 border border-red-500/15 rounded-xl p-4 space-y-2">
+                        <h4 className="text-xs font-bold text-red-400 uppercase tracking-wider flex items-center gap-1.5">
+                          <XCircle size={14} /> Excluded Services
+                        </h4>
+                        {pj.excludedServices && pj.excludedServices.length > 0 ? (
+                          <ul className="space-y-1.5">
+                            {pj.excludedServices.map((s: string, idx: number) => (
+                              <li key={idx} className="text-xs text-white/80 flex items-center gap-2">
+                                <span className="text-red-400">✗</span> {s}
+                              </li>
+                            ))}
+                          </ul>
+                        ) : (
+                          <span className="text-white/30 text-xs block">None specified</span>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── VIEW TAB 2: GUIDE & CONTACT ──────────────────────────── */}
+                {viewModalTab === 'guide' && (
+                  <div className="space-y-5">
+                    {/* Guide Card */}
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6 flex flex-col sm:flex-row items-center sm:items-start gap-6">
+                      <div className="w-24 h-24 rounded-2xl overflow-hidden bg-black/40 border-2 border-brand-gold/30 shrink-0">
+                        {pj.guide?.image ? (
+                          <img src={pj.guide.image} alt={pj.guide.name} className="w-full h-full object-cover" />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-white/20 text-xs">No Photo</div>
+                        )}
+                      </div>
+                      <div className="space-y-2 flex-1 text-center sm:text-left">
+                        <div className="flex items-center gap-2 justify-center sm:justify-start">
+                          <h3 className="text-lg font-bold text-white">{pj.guide?.name || 'Community Guide'}</h3>
+                          <span className="text-[10px] bg-brand-gold/20 text-brand-gold border border-brand-gold/30 px-2 py-0.5 rounded font-bold uppercase">
+                            Verified Guide
+                          </span>
+                        </div>
+                        {pj.guide?.intro && <p className="text-white/70 text-xs italic">{pj.guide.intro}</p>}
+                        <div className="flex flex-wrap items-center gap-4 text-xs text-white/60 pt-2 justify-center sm:justify-start">
+                          <span>Experience: <strong className="text-white">{pj.guide?.experience || 'Not specified'}</strong></span>
+                          <span>Languages: <strong className="text-white">{Array.isArray(pj.guide?.languages) ? pj.guide.languages.join(', ') : (pj.guide?.languages || 'Hindi, English')}</strong></span>
+                          <span>Rating: <strong className="text-brand-gold">★ {pj.rating || 5} / 5</strong></span>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Contact Channels */}
+                    <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-1">
+                        <span className="text-white/40 text-xs flex items-center gap-1"><Phone size={12} /> Call Phone</span>
+                        <span className="text-white font-mono text-sm font-semibold">{pj.phone || pj.guide?.phone || 'Not provided'}</span>
+                      </div>
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-1">
+                        <span className="text-white/40 text-xs flex items-center gap-1"><Phone size={12} /> WhatsApp</span>
+                        <span className="text-emerald-400 font-mono text-sm font-semibold">{pj.whatsapp || pj.guide?.whatsapp || 'Not provided'}</span>
+                      </div>
+                      <div className="bg-white/5 border border-white/10 rounded-xl p-4 space-y-1">
+                        <span className="text-white/40 text-xs flex items-center gap-1"><Mail size={12} /> Guide Email</span>
+                        <span className="text-white font-mono text-xs font-semibold block truncate">{pj.guide?.email || pj.email || 'Not provided'}</span>
+                      </div>
+                    </div>
+                  </div>
+                )}
+
+                {/* ── VIEW TAB 3: TIMELINE ─────────────────────────────────── */}
+                {viewModalTab === 'timeline' && (
+                  <div className="space-y-4">
+                    {pj.timeline && pj.timeline.length > 0 ? (
+                      pj.timeline.map((day: any, idx: number) => (
+                        <div key={idx} className="bg-white/5 border border-white/10 rounded-2xl p-5 space-y-3">
+                          <div className="flex items-center gap-3">
+                            <span className="w-8 h-8 rounded-xl bg-brand-gold text-black font-black text-sm flex items-center justify-center shrink-0">
+                              {day.day || idx + 1}
+                            </span>
+                            <h4 className="text-sm font-bold text-white font-serif">{day.title || `Day ${day.day || idx + 1}`}</h4>
+                          </div>
+                          {day.activities && day.activities.length > 0 && (
+                            <div className="pl-4 border-l-2 border-brand-gold/30 ml-4 space-y-3 pt-1">
+                              {day.activities.map((act: any, aIdx: number) => (
+                                <div key={aIdx} className="bg-black/20 rounded-xl p-3 border border-white/5 space-y-1">
+                                  <div className="flex items-center justify-between text-xs">
+                                    <span className="font-bold text-white">{act.activity || act.title || 'Sightseeing'}</span>
+                                    <span className="text-brand-gold font-mono">{act.time || 'Flexible'}</span>
+                                  </div>
+                                  {act.description && <p className="text-white/70 text-xs leading-relaxed">{act.description}</p>}
+                                </div>
+                              ))}
+                            </div>
+                          )}
+                        </div>
+                      ))
+                    ) : (
+                      <p className="text-white/30 text-sm text-center py-8">No day-by-day itinerary was provided for this journey.</p>
+                    )}
+                  </div>
+                )}
+
+                {/* ── VIEW TAB 4: GALLERY ──────────────────────────────────── */}
+                {viewModalTab === 'gallery' && (
+                  <div className="space-y-4">
+                    {pj.galleryImages && pj.galleryImages.length > 0 ? (
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                        {pj.galleryImages.map((imgUrl: string, idx: number) => (
+                          <div key={idx} className="h-40 rounded-xl overflow-hidden bg-black/40 border border-white/10 group relative">
+                            <img src={imgUrl} alt={`Gallery ${idx + 1}`} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                            <a href={imgUrl} target="_blank" rel="noreferrer" className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/60 text-white opacity-0 group-hover:opacity-100 transition-opacity">
+                              <ExternalLink size={14} />
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    ) : (
+                      <p className="text-white/30 text-sm text-center py-8">No gallery images uploaded for this listing.</p>
+                    )}
+                  </div>
+                )}
+
+                {/* ── VIEW TAB 5: SUBMITTER INFO ───────────────────────────── */}
+                {viewModalTab === 'author' && (
+                  <div className="space-y-4">
+                    <div className="bg-white/5 border border-white/10 rounded-2xl p-6 space-y-4">
+                      <h4 className="text-xs font-bold text-brand-gold uppercase tracking-wider">Contributor / Author Metadata</h4>
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-xs font-mono">
+                        <div className="space-y-1">
+                          <span className="text-white/40 block">Author Name</span>
+                          <span className="text-white font-semibold text-sm">{pj.author?.name || pj.companyName || 'Anonymous'}</span>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-white/40 block">Author Email</span>
+                          <span className="text-emerald-400 font-semibold text-sm">{pj.author?.email || pj.email || 'Not provided'}</span>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-white/40 block">Submission Date</span>
+                          <span className="text-white/80">{pj.createdAt ? new Date(pj.createdAt).toLocaleString() : 'N/A'}</span>
+                        </div>
+                        <div className="space-y-1">
+                          <span className="text-white/40 block">Journey ID</span>
+                          <span className="text-white/60">{pj.id}</span>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+        </AdminModal>
       )}
     </div>
   );

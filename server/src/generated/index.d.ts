@@ -19,6 +19,11 @@ export type PrismaPromise<T> = $Public.PrismaPromise<T>
  */
 export type User = $Result.DefaultSelection<Prisma.$UserPayload>
 /**
+ * Model UserBadgeHistory
+ * 
+ */
+export type UserBadgeHistory = $Result.DefaultSelection<Prisma.$UserBadgeHistoryPayload>
+/**
  * Model Notification
  * 
  */
@@ -306,6 +311,16 @@ export class PrismaClient<
     * ```
     */
   get user(): Prisma.UserDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.userBadgeHistory`: Exposes CRUD operations for the **UserBadgeHistory** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more UserBadgeHistories
+    * const userBadgeHistories = await prisma.userBadgeHistory.findMany()
+    * ```
+    */
+  get userBadgeHistory(): Prisma.UserBadgeHistoryDelegate<ExtArgs, ClientOptions>;
 
   /**
    * `prisma.notification`: Exposes CRUD operations for the **Notification** model.
@@ -911,6 +926,7 @@ export namespace Prisma {
 
   export const ModelName: {
     User: 'User',
+    UserBadgeHistory: 'UserBadgeHistory',
     Notification: 'Notification',
     District: 'District',
     SeasonRow: 'SeasonRow',
@@ -943,7 +959,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "user" | "notification" | "district" | "seasonRow" | "topAttraction" | "discoverItem" | "tribe" | "tribeVideo" | "tribalArticle" | "journey" | "galleryItem" | "marketplaceProduct" | "siteSettings" | "customCategory" | "cardMedia" | "category" | "subCategory" | "categoryStory"
+      modelProps: "user" | "userBadgeHistory" | "notification" | "district" | "seasonRow" | "topAttraction" | "discoverItem" | "tribe" | "tribeVideo" | "tribalArticle" | "journey" | "galleryItem" | "marketplaceProduct" | "siteSettings" | "customCategory" | "cardMedia" | "category" | "subCategory" | "categoryStory"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -1018,6 +1034,80 @@ export namespace Prisma {
           count: {
             args: Prisma.UserCountArgs<ExtArgs>
             result: $Utils.Optional<UserCountAggregateOutputType> | number
+          }
+        }
+      }
+      UserBadgeHistory: {
+        payload: Prisma.$UserBadgeHistoryPayload<ExtArgs>
+        fields: Prisma.UserBadgeHistoryFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.UserBadgeHistoryFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.UserBadgeHistoryFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>
+          }
+          findFirst: {
+            args: Prisma.UserBadgeHistoryFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.UserBadgeHistoryFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>
+          }
+          findMany: {
+            args: Prisma.UserBadgeHistoryFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>[]
+          }
+          create: {
+            args: Prisma.UserBadgeHistoryCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>
+          }
+          createMany: {
+            args: Prisma.UserBadgeHistoryCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.UserBadgeHistoryCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>[]
+          }
+          delete: {
+            args: Prisma.UserBadgeHistoryDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>
+          }
+          update: {
+            args: Prisma.UserBadgeHistoryUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>
+          }
+          deleteMany: {
+            args: Prisma.UserBadgeHistoryDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.UserBadgeHistoryUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.UserBadgeHistoryUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>[]
+          }
+          upsert: {
+            args: Prisma.UserBadgeHistoryUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$UserBadgeHistoryPayload>
+          }
+          aggregate: {
+            args: Prisma.UserBadgeHistoryAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateUserBadgeHistory>
+          }
+          groupBy: {
+            args: Prisma.UserBadgeHistoryGroupByArgs<ExtArgs>
+            result: $Utils.Optional<UserBadgeHistoryGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.UserBadgeHistoryCountArgs<ExtArgs>
+            result: $Utils.Optional<UserBadgeHistoryCountAggregateOutputType> | number
           }
         }
       }
@@ -2388,6 +2478,7 @@ export namespace Prisma {
   }
   export type GlobalOmitConfig = {
     user?: UserOmit
+    userBadgeHistory?: UserBadgeHistoryOmit
     notification?: NotificationOmit
     district?: DistrictOmit
     seasonRow?: SeasonRowOmit
@@ -2487,15 +2578,19 @@ export namespace Prisma {
   export type UserCountOutputType = {
     journeys: number
     galleryItems: number
+    marketplaceProducts: number
     notifications: number
     categoryStories: number
+    badgeHistories: number
   }
 
   export type UserCountOutputTypeSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     journeys?: boolean | UserCountOutputTypeCountJourneysArgs
     galleryItems?: boolean | UserCountOutputTypeCountGalleryItemsArgs
+    marketplaceProducts?: boolean | UserCountOutputTypeCountMarketplaceProductsArgs
     notifications?: boolean | UserCountOutputTypeCountNotificationsArgs
     categoryStories?: boolean | UserCountOutputTypeCountCategoryStoriesArgs
+    badgeHistories?: boolean | UserCountOutputTypeCountBadgeHistoriesArgs
   }
 
   // Custom InputTypes
@@ -2526,6 +2621,13 @@ export namespace Prisma {
   /**
    * UserCountOutputType without action
    */
+  export type UserCountOutputTypeCountMarketplaceProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: MarketplaceProductWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
   export type UserCountOutputTypeCountNotificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: NotificationWhereInput
   }
@@ -2535,6 +2637,13 @@ export namespace Prisma {
    */
   export type UserCountOutputTypeCountCategoryStoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     where?: CategoryStoryWhereInput
+  }
+
+  /**
+   * UserCountOutputType without action
+   */
+  export type UserCountOutputTypeCountBadgeHistoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBadgeHistoryWhereInput
   }
 
 
@@ -2921,8 +3030,10 @@ export namespace Prisma {
     updatedAt?: boolean
     journeys?: boolean | User$journeysArgs<ExtArgs>
     galleryItems?: boolean | User$galleryItemsArgs<ExtArgs>
+    marketplaceProducts?: boolean | User$marketplaceProductsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     categoryStories?: boolean | User$categoryStoriesArgs<ExtArgs>
+    badgeHistories?: boolean | User$badgeHistoriesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }, ExtArgs["result"]["user"]>
 
@@ -2978,8 +3089,10 @@ export namespace Prisma {
   export type UserInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     journeys?: boolean | User$journeysArgs<ExtArgs>
     galleryItems?: boolean | User$galleryItemsArgs<ExtArgs>
+    marketplaceProducts?: boolean | User$marketplaceProductsArgs<ExtArgs>
     notifications?: boolean | User$notificationsArgs<ExtArgs>
     categoryStories?: boolean | User$categoryStoriesArgs<ExtArgs>
+    badgeHistories?: boolean | User$badgeHistoriesArgs<ExtArgs>
     _count?: boolean | UserCountOutputTypeDefaultArgs<ExtArgs>
   }
   export type UserIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {}
@@ -2990,8 +3103,10 @@ export namespace Prisma {
     objects: {
       journeys: Prisma.$JourneyPayload<ExtArgs>[]
       galleryItems: Prisma.$GalleryItemPayload<ExtArgs>[]
+      marketplaceProducts: Prisma.$MarketplaceProductPayload<ExtArgs>[]
       notifications: Prisma.$NotificationPayload<ExtArgs>[]
       categoryStories: Prisma.$CategoryStoryPayload<ExtArgs>[]
+      badgeHistories: Prisma.$UserBadgeHistoryPayload<ExtArgs>[]
     }
     scalars: $Extensions.GetPayloadResult<{
       id: string
@@ -3403,8 +3518,10 @@ export namespace Prisma {
     readonly [Symbol.toStringTag]: "PrismaPromise"
     journeys<T extends User$journeysArgs<ExtArgs> = {}>(args?: Subset<T, User$journeysArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$JourneyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     galleryItems<T extends User$galleryItemsArgs<ExtArgs> = {}>(args?: Subset<T, User$galleryItemsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GalleryItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    marketplaceProducts<T extends User$marketplaceProductsArgs<ExtArgs> = {}>(args?: Subset<T, User$marketplaceProductsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$MarketplaceProductPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     notifications<T extends User$notificationsArgs<ExtArgs> = {}>(args?: Subset<T, User$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     categoryStories<T extends User$categoryStoriesArgs<ExtArgs> = {}>(args?: Subset<T, User$categoryStoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$CategoryStoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+    badgeHistories<T extends User$badgeHistoriesArgs<ExtArgs> = {}>(args?: Subset<T, User$badgeHistoriesArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3888,6 +4005,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.marketplaceProducts
+   */
+  export type User$marketplaceProductsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the MarketplaceProduct
+     */
+    select?: MarketplaceProductSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the MarketplaceProduct
+     */
+    omit?: MarketplaceProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
+    where?: MarketplaceProductWhereInput
+    orderBy?: MarketplaceProductOrderByWithRelationInput | MarketplaceProductOrderByWithRelationInput[]
+    cursor?: MarketplaceProductWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: MarketplaceProductScalarFieldEnum | MarketplaceProductScalarFieldEnum[]
+  }
+
+  /**
    * User.notifications
    */
   export type User$notificationsArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3936,6 +4077,30 @@ export namespace Prisma {
   }
 
   /**
+   * User.badgeHistories
+   */
+  export type User$badgeHistoriesArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    where?: UserBadgeHistoryWhereInput
+    orderBy?: UserBadgeHistoryOrderByWithRelationInput | UserBadgeHistoryOrderByWithRelationInput[]
+    cursor?: UserBadgeHistoryWhereUniqueInput
+    take?: number
+    skip?: number
+    distinct?: UserBadgeHistoryScalarFieldEnum | UserBadgeHistoryScalarFieldEnum[]
+  }
+
+  /**
    * User without action
    */
   export type UserDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -3951,6 +4116,1129 @@ export namespace Prisma {
      * Choose, which related nodes to fetch as well
      */
     include?: UserInclude<ExtArgs> | null
+  }
+
+
+  /**
+   * Model UserBadgeHistory
+   */
+
+  export type AggregateUserBadgeHistory = {
+    _count: UserBadgeHistoryCountAggregateOutputType | null
+    _avg: UserBadgeHistoryAvgAggregateOutputType | null
+    _sum: UserBadgeHistorySumAggregateOutputType | null
+    _min: UserBadgeHistoryMinAggregateOutputType | null
+    _max: UserBadgeHistoryMaxAggregateOutputType | null
+  }
+
+  export type UserBadgeHistoryAvgAggregateOutputType = {
+    milestonePoints: number | null
+  }
+
+  export type UserBadgeHistorySumAggregateOutputType = {
+    milestonePoints: number | null
+  }
+
+  export type UserBadgeHistoryMinAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    milestonePoints: number | null
+    badgeName: string | null
+    emailSent: boolean | null
+    emailSentAt: Date | null
+    achievedAt: Date | null
+  }
+
+  export type UserBadgeHistoryMaxAggregateOutputType = {
+    id: string | null
+    userId: string | null
+    milestonePoints: number | null
+    badgeName: string | null
+    emailSent: boolean | null
+    emailSentAt: Date | null
+    achievedAt: Date | null
+  }
+
+  export type UserBadgeHistoryCountAggregateOutputType = {
+    id: number
+    userId: number
+    milestonePoints: number
+    badgeName: number
+    emailSent: number
+    emailSentAt: number
+    achievedAt: number
+    _all: number
+  }
+
+
+  export type UserBadgeHistoryAvgAggregateInputType = {
+    milestonePoints?: true
+  }
+
+  export type UserBadgeHistorySumAggregateInputType = {
+    milestonePoints?: true
+  }
+
+  export type UserBadgeHistoryMinAggregateInputType = {
+    id?: true
+    userId?: true
+    milestonePoints?: true
+    badgeName?: true
+    emailSent?: true
+    emailSentAt?: true
+    achievedAt?: true
+  }
+
+  export type UserBadgeHistoryMaxAggregateInputType = {
+    id?: true
+    userId?: true
+    milestonePoints?: true
+    badgeName?: true
+    emailSent?: true
+    emailSentAt?: true
+    achievedAt?: true
+  }
+
+  export type UserBadgeHistoryCountAggregateInputType = {
+    id?: true
+    userId?: true
+    milestonePoints?: true
+    badgeName?: true
+    emailSent?: true
+    emailSentAt?: true
+    achievedAt?: true
+    _all?: true
+  }
+
+  export type UserBadgeHistoryAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBadgeHistory to aggregate.
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBadgeHistories to fetch.
+     */
+    orderBy?: UserBadgeHistoryOrderByWithRelationInput | UserBadgeHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: UserBadgeHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBadgeHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBadgeHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned UserBadgeHistories
+    **/
+    _count?: true | UserBadgeHistoryCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to average
+    **/
+    _avg?: UserBadgeHistoryAvgAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to sum
+    **/
+    _sum?: UserBadgeHistorySumAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: UserBadgeHistoryMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: UserBadgeHistoryMaxAggregateInputType
+  }
+
+  export type GetUserBadgeHistoryAggregateType<T extends UserBadgeHistoryAggregateArgs> = {
+        [P in keyof T & keyof AggregateUserBadgeHistory]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateUserBadgeHistory[P]>
+      : GetScalarType<T[P], AggregateUserBadgeHistory[P]>
+  }
+
+
+
+
+  export type UserBadgeHistoryGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: UserBadgeHistoryWhereInput
+    orderBy?: UserBadgeHistoryOrderByWithAggregationInput | UserBadgeHistoryOrderByWithAggregationInput[]
+    by: UserBadgeHistoryScalarFieldEnum[] | UserBadgeHistoryScalarFieldEnum
+    having?: UserBadgeHistoryScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: UserBadgeHistoryCountAggregateInputType | true
+    _avg?: UserBadgeHistoryAvgAggregateInputType
+    _sum?: UserBadgeHistorySumAggregateInputType
+    _min?: UserBadgeHistoryMinAggregateInputType
+    _max?: UserBadgeHistoryMaxAggregateInputType
+  }
+
+  export type UserBadgeHistoryGroupByOutputType = {
+    id: string
+    userId: string
+    milestonePoints: number
+    badgeName: string
+    emailSent: boolean
+    emailSentAt: Date | null
+    achievedAt: Date
+    _count: UserBadgeHistoryCountAggregateOutputType | null
+    _avg: UserBadgeHistoryAvgAggregateOutputType | null
+    _sum: UserBadgeHistorySumAggregateOutputType | null
+    _min: UserBadgeHistoryMinAggregateOutputType | null
+    _max: UserBadgeHistoryMaxAggregateOutputType | null
+  }
+
+  type GetUserBadgeHistoryGroupByPayload<T extends UserBadgeHistoryGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<UserBadgeHistoryGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof UserBadgeHistoryGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], UserBadgeHistoryGroupByOutputType[P]>
+            : GetScalarType<T[P], UserBadgeHistoryGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type UserBadgeHistorySelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    milestonePoints?: boolean
+    badgeName?: boolean
+    emailSent?: boolean
+    emailSentAt?: boolean
+    achievedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBadgeHistory"]>
+
+  export type UserBadgeHistorySelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    milestonePoints?: boolean
+    badgeName?: boolean
+    emailSent?: boolean
+    emailSentAt?: boolean
+    achievedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBadgeHistory"]>
+
+  export type UserBadgeHistorySelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    userId?: boolean
+    milestonePoints?: boolean
+    badgeName?: boolean
+    emailSent?: boolean
+    emailSentAt?: boolean
+    achievedAt?: boolean
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }, ExtArgs["result"]["userBadgeHistory"]>
+
+  export type UserBadgeHistorySelectScalar = {
+    id?: boolean
+    userId?: boolean
+    milestonePoints?: boolean
+    badgeName?: boolean
+    emailSent?: boolean
+    emailSentAt?: boolean
+    achievedAt?: boolean
+  }
+
+  export type UserBadgeHistoryOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "userId" | "milestonePoints" | "badgeName" | "emailSent" | "emailSentAt" | "achievedAt", ExtArgs["result"]["userBadgeHistory"]>
+  export type UserBadgeHistoryInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserBadgeHistoryIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+  export type UserBadgeHistoryIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | UserDefaultArgs<ExtArgs>
+  }
+
+  export type $UserBadgeHistoryPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "UserBadgeHistory"
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs>
+    }
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      userId: string
+      milestonePoints: number
+      badgeName: string
+      emailSent: boolean
+      emailSentAt: Date | null
+      achievedAt: Date
+    }, ExtArgs["result"]["userBadgeHistory"]>
+    composites: {}
+  }
+
+  type UserBadgeHistoryGetPayload<S extends boolean | null | undefined | UserBadgeHistoryDefaultArgs> = $Result.GetResult<Prisma.$UserBadgeHistoryPayload, S>
+
+  type UserBadgeHistoryCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<UserBadgeHistoryFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: UserBadgeHistoryCountAggregateInputType | true
+    }
+
+  export interface UserBadgeHistoryDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['UserBadgeHistory'], meta: { name: 'UserBadgeHistory' } }
+    /**
+     * Find zero or one UserBadgeHistory that matches the filter.
+     * @param {UserBadgeHistoryFindUniqueArgs} args - Arguments to find a UserBadgeHistory
+     * @example
+     * // Get one UserBadgeHistory
+     * const userBadgeHistory = await prisma.userBadgeHistory.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends UserBadgeHistoryFindUniqueArgs>(args: SelectSubset<T, UserBadgeHistoryFindUniqueArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one UserBadgeHistory that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {UserBadgeHistoryFindUniqueOrThrowArgs} args - Arguments to find a UserBadgeHistory
+     * @example
+     * // Get one UserBadgeHistory
+     * const userBadgeHistory = await prisma.userBadgeHistory.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends UserBadgeHistoryFindUniqueOrThrowArgs>(args: SelectSubset<T, UserBadgeHistoryFindUniqueOrThrowArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBadgeHistory that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryFindFirstArgs} args - Arguments to find a UserBadgeHistory
+     * @example
+     * // Get one UserBadgeHistory
+     * const userBadgeHistory = await prisma.userBadgeHistory.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends UserBadgeHistoryFindFirstArgs>(args?: SelectSubset<T, UserBadgeHistoryFindFirstArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first UserBadgeHistory that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryFindFirstOrThrowArgs} args - Arguments to find a UserBadgeHistory
+     * @example
+     * // Get one UserBadgeHistory
+     * const userBadgeHistory = await prisma.userBadgeHistory.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends UserBadgeHistoryFindFirstOrThrowArgs>(args?: SelectSubset<T, UserBadgeHistoryFindFirstOrThrowArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more UserBadgeHistories that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all UserBadgeHistories
+     * const userBadgeHistories = await prisma.userBadgeHistory.findMany()
+     * 
+     * // Get first 10 UserBadgeHistories
+     * const userBadgeHistories = await prisma.userBadgeHistory.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const userBadgeHistoryWithIdOnly = await prisma.userBadgeHistory.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends UserBadgeHistoryFindManyArgs>(args?: SelectSubset<T, UserBadgeHistoryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a UserBadgeHistory.
+     * @param {UserBadgeHistoryCreateArgs} args - Arguments to create a UserBadgeHistory.
+     * @example
+     * // Create one UserBadgeHistory
+     * const UserBadgeHistory = await prisma.userBadgeHistory.create({
+     *   data: {
+     *     // ... data to create a UserBadgeHistory
+     *   }
+     * })
+     * 
+     */
+    create<T extends UserBadgeHistoryCreateArgs>(args: SelectSubset<T, UserBadgeHistoryCreateArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many UserBadgeHistories.
+     * @param {UserBadgeHistoryCreateManyArgs} args - Arguments to create many UserBadgeHistories.
+     * @example
+     * // Create many UserBadgeHistories
+     * const userBadgeHistory = await prisma.userBadgeHistory.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends UserBadgeHistoryCreateManyArgs>(args?: SelectSubset<T, UserBadgeHistoryCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many UserBadgeHistories and returns the data saved in the database.
+     * @param {UserBadgeHistoryCreateManyAndReturnArgs} args - Arguments to create many UserBadgeHistories.
+     * @example
+     * // Create many UserBadgeHistories
+     * const userBadgeHistory = await prisma.userBadgeHistory.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many UserBadgeHistories and only return the `id`
+     * const userBadgeHistoryWithIdOnly = await prisma.userBadgeHistory.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends UserBadgeHistoryCreateManyAndReturnArgs>(args?: SelectSubset<T, UserBadgeHistoryCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a UserBadgeHistory.
+     * @param {UserBadgeHistoryDeleteArgs} args - Arguments to delete one UserBadgeHistory.
+     * @example
+     * // Delete one UserBadgeHistory
+     * const UserBadgeHistory = await prisma.userBadgeHistory.delete({
+     *   where: {
+     *     // ... filter to delete one UserBadgeHistory
+     *   }
+     * })
+     * 
+     */
+    delete<T extends UserBadgeHistoryDeleteArgs>(args: SelectSubset<T, UserBadgeHistoryDeleteArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one UserBadgeHistory.
+     * @param {UserBadgeHistoryUpdateArgs} args - Arguments to update one UserBadgeHistory.
+     * @example
+     * // Update one UserBadgeHistory
+     * const userBadgeHistory = await prisma.userBadgeHistory.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends UserBadgeHistoryUpdateArgs>(args: SelectSubset<T, UserBadgeHistoryUpdateArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more UserBadgeHistories.
+     * @param {UserBadgeHistoryDeleteManyArgs} args - Arguments to filter UserBadgeHistories to delete.
+     * @example
+     * // Delete a few UserBadgeHistories
+     * const { count } = await prisma.userBadgeHistory.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends UserBadgeHistoryDeleteManyArgs>(args?: SelectSubset<T, UserBadgeHistoryDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBadgeHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many UserBadgeHistories
+     * const userBadgeHistory = await prisma.userBadgeHistory.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends UserBadgeHistoryUpdateManyArgs>(args: SelectSubset<T, UserBadgeHistoryUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more UserBadgeHistories and returns the data updated in the database.
+     * @param {UserBadgeHistoryUpdateManyAndReturnArgs} args - Arguments to update many UserBadgeHistories.
+     * @example
+     * // Update many UserBadgeHistories
+     * const userBadgeHistory = await prisma.userBadgeHistory.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more UserBadgeHistories and only return the `id`
+     * const userBadgeHistoryWithIdOnly = await prisma.userBadgeHistory.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends UserBadgeHistoryUpdateManyAndReturnArgs>(args: SelectSubset<T, UserBadgeHistoryUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one UserBadgeHistory.
+     * @param {UserBadgeHistoryUpsertArgs} args - Arguments to update or create a UserBadgeHistory.
+     * @example
+     * // Update or create a UserBadgeHistory
+     * const userBadgeHistory = await prisma.userBadgeHistory.upsert({
+     *   create: {
+     *     // ... data to create a UserBadgeHistory
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the UserBadgeHistory we want to update
+     *   }
+     * })
+     */
+    upsert<T extends UserBadgeHistoryUpsertArgs>(args: SelectSubset<T, UserBadgeHistoryUpsertArgs<ExtArgs>>): Prisma__UserBadgeHistoryClient<$Result.GetResult<Prisma.$UserBadgeHistoryPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of UserBadgeHistories.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryCountArgs} args - Arguments to filter UserBadgeHistories to count.
+     * @example
+     * // Count the number of UserBadgeHistories
+     * const count = await prisma.userBadgeHistory.count({
+     *   where: {
+     *     // ... the filter for the UserBadgeHistories we want to count
+     *   }
+     * })
+    **/
+    count<T extends UserBadgeHistoryCountArgs>(
+      args?: Subset<T, UserBadgeHistoryCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], UserBadgeHistoryCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a UserBadgeHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends UserBadgeHistoryAggregateArgs>(args: Subset<T, UserBadgeHistoryAggregateArgs>): Prisma.PrismaPromise<GetUserBadgeHistoryAggregateType<T>>
+
+    /**
+     * Group by UserBadgeHistory.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {UserBadgeHistoryGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends UserBadgeHistoryGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: UserBadgeHistoryGroupByArgs['orderBy'] }
+        : { orderBy?: UserBadgeHistoryGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, UserBadgeHistoryGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetUserBadgeHistoryGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the UserBadgeHistory model
+   */
+  readonly fields: UserBadgeHistoryFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for UserBadgeHistory.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__UserBadgeHistoryClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends UserDefaultArgs<ExtArgs> = {}>(args?: Subset<T, UserDefaultArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the UserBadgeHistory model
+   */
+  interface UserBadgeHistoryFieldRefs {
+    readonly id: FieldRef<"UserBadgeHistory", 'String'>
+    readonly userId: FieldRef<"UserBadgeHistory", 'String'>
+    readonly milestonePoints: FieldRef<"UserBadgeHistory", 'Int'>
+    readonly badgeName: FieldRef<"UserBadgeHistory", 'String'>
+    readonly emailSent: FieldRef<"UserBadgeHistory", 'Boolean'>
+    readonly emailSentAt: FieldRef<"UserBadgeHistory", 'DateTime'>
+    readonly achievedAt: FieldRef<"UserBadgeHistory", 'DateTime'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * UserBadgeHistory findUnique
+   */
+  export type UserBadgeHistoryFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBadgeHistory to fetch.
+     */
+    where: UserBadgeHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserBadgeHistory findUniqueOrThrow
+   */
+  export type UserBadgeHistoryFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBadgeHistory to fetch.
+     */
+    where: UserBadgeHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserBadgeHistory findFirst
+   */
+  export type UserBadgeHistoryFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBadgeHistory to fetch.
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBadgeHistories to fetch.
+     */
+    orderBy?: UserBadgeHistoryOrderByWithRelationInput | UserBadgeHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBadgeHistories.
+     */
+    cursor?: UserBadgeHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBadgeHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBadgeHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBadgeHistories.
+     */
+    distinct?: UserBadgeHistoryScalarFieldEnum | UserBadgeHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * UserBadgeHistory findFirstOrThrow
+   */
+  export type UserBadgeHistoryFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBadgeHistory to fetch.
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBadgeHistories to fetch.
+     */
+    orderBy?: UserBadgeHistoryOrderByWithRelationInput | UserBadgeHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for UserBadgeHistories.
+     */
+    cursor?: UserBadgeHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBadgeHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBadgeHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBadgeHistories.
+     */
+    distinct?: UserBadgeHistoryScalarFieldEnum | UserBadgeHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * UserBadgeHistory findMany
+   */
+  export type UserBadgeHistoryFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * Filter, which UserBadgeHistories to fetch.
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of UserBadgeHistories to fetch.
+     */
+    orderBy?: UserBadgeHistoryOrderByWithRelationInput | UserBadgeHistoryOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing UserBadgeHistories.
+     */
+    cursor?: UserBadgeHistoryWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` UserBadgeHistories from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` UserBadgeHistories.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of UserBadgeHistories.
+     */
+    distinct?: UserBadgeHistoryScalarFieldEnum | UserBadgeHistoryScalarFieldEnum[]
+  }
+
+  /**
+   * UserBadgeHistory create
+   */
+  export type UserBadgeHistoryCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to create a UserBadgeHistory.
+     */
+    data: XOR<UserBadgeHistoryCreateInput, UserBadgeHistoryUncheckedCreateInput>
+  }
+
+  /**
+   * UserBadgeHistory createMany
+   */
+  export type UserBadgeHistoryCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many UserBadgeHistories.
+     */
+    data: UserBadgeHistoryCreateManyInput | UserBadgeHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * UserBadgeHistory createManyAndReturn
+   */
+  export type UserBadgeHistoryCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to create many UserBadgeHistories.
+     */
+    data: UserBadgeHistoryCreateManyInput | UserBadgeHistoryCreateManyInput[]
+    skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryIncludeCreateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserBadgeHistory update
+   */
+  export type UserBadgeHistoryUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * The data needed to update a UserBadgeHistory.
+     */
+    data: XOR<UserBadgeHistoryUpdateInput, UserBadgeHistoryUncheckedUpdateInput>
+    /**
+     * Choose, which UserBadgeHistory to update.
+     */
+    where: UserBadgeHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserBadgeHistory updateMany
+   */
+  export type UserBadgeHistoryUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update UserBadgeHistories.
+     */
+    data: XOR<UserBadgeHistoryUpdateManyMutationInput, UserBadgeHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBadgeHistories to update
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * Limit how many UserBadgeHistories to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBadgeHistory updateManyAndReturn
+   */
+  export type UserBadgeHistoryUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * The data used to update UserBadgeHistories.
+     */
+    data: XOR<UserBadgeHistoryUpdateManyMutationInput, UserBadgeHistoryUncheckedUpdateManyInput>
+    /**
+     * Filter which UserBadgeHistories to update
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * Limit how many UserBadgeHistories to update.
+     */
+    limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryIncludeUpdateManyAndReturn<ExtArgs> | null
+  }
+
+  /**
+   * UserBadgeHistory upsert
+   */
+  export type UserBadgeHistoryUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * The filter to search for the UserBadgeHistory to update in case it exists.
+     */
+    where: UserBadgeHistoryWhereUniqueInput
+    /**
+     * In case the UserBadgeHistory found by the `where` argument doesn't exist, create a new UserBadgeHistory with this data.
+     */
+    create: XOR<UserBadgeHistoryCreateInput, UserBadgeHistoryUncheckedCreateInput>
+    /**
+     * In case the UserBadgeHistory was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<UserBadgeHistoryUpdateInput, UserBadgeHistoryUncheckedUpdateInput>
+  }
+
+  /**
+   * UserBadgeHistory delete
+   */
+  export type UserBadgeHistoryDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
+    /**
+     * Filter which UserBadgeHistory to delete.
+     */
+    where: UserBadgeHistoryWhereUniqueInput
+  }
+
+  /**
+   * UserBadgeHistory deleteMany
+   */
+  export type UserBadgeHistoryDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which UserBadgeHistories to delete
+     */
+    where?: UserBadgeHistoryWhereInput
+    /**
+     * Limit how many UserBadgeHistories to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * UserBadgeHistory without action
+   */
+  export type UserBadgeHistoryDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the UserBadgeHistory
+     */
+    select?: UserBadgeHistorySelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the UserBadgeHistory
+     */
+    omit?: UserBadgeHistoryOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserBadgeHistoryInclude<ExtArgs> | null
   }
 
 
@@ -13091,6 +14379,11 @@ export namespace Prisma {
     authorId: string | null
     status: $Enums.ApprovalStatus | null
     publicId: string | null
+    approvedAt: Date | null
+    freeDisplayStartDate: Date | null
+    freeDisplayEndDate: Date | null
+    approvalEmailSent: boolean | null
+    approvalEmailSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -13133,6 +14426,11 @@ export namespace Prisma {
     authorId: string | null
     status: $Enums.ApprovalStatus | null
     publicId: string | null
+    approvedAt: Date | null
+    freeDisplayStartDate: Date | null
+    freeDisplayEndDate: Date | null
+    approvalEmailSent: boolean | null
+    approvalEmailSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -13182,6 +14480,11 @@ export namespace Prisma {
     authorId: number
     status: number
     publicId: number
+    approvedAt: number
+    freeDisplayStartDate: number
+    freeDisplayEndDate: number
+    approvalEmailSent: number
+    approvalEmailSentAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -13236,6 +14539,11 @@ export namespace Prisma {
     authorId?: true
     status?: true
     publicId?: true
+    approvedAt?: true
+    freeDisplayStartDate?: true
+    freeDisplayEndDate?: true
+    approvalEmailSent?: true
+    approvalEmailSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -13278,6 +14586,11 @@ export namespace Prisma {
     authorId?: true
     status?: true
     publicId?: true
+    approvedAt?: true
+    freeDisplayStartDate?: true
+    freeDisplayEndDate?: true
+    approvalEmailSent?: true
+    approvalEmailSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -13327,6 +14640,11 @@ export namespace Prisma {
     authorId?: true
     status?: true
     publicId?: true
+    approvedAt?: true
+    freeDisplayStartDate?: true
+    freeDisplayEndDate?: true
+    approvalEmailSent?: true
+    approvalEmailSentAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -13463,6 +14781,11 @@ export namespace Prisma {
     authorId: string
     status: $Enums.ApprovalStatus
     publicId: string | null
+    approvedAt: Date | null
+    freeDisplayStartDate: Date | null
+    freeDisplayEndDate: Date | null
+    approvalEmailSent: boolean
+    approvalEmailSentAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: JourneyCountAggregateOutputType | null
@@ -13531,6 +14854,11 @@ export namespace Prisma {
     authorId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    freeDisplayStartDate?: boolean
+    freeDisplayEndDate?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -13581,6 +14909,11 @@ export namespace Prisma {
     authorId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    freeDisplayStartDate?: boolean
+    freeDisplayEndDate?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -13631,6 +14964,11 @@ export namespace Prisma {
     authorId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    freeDisplayStartDate?: boolean
+    freeDisplayEndDate?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
     author?: boolean | UserDefaultArgs<ExtArgs>
@@ -13681,11 +15019,16 @@ export namespace Prisma {
     authorId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    freeDisplayStartDate?: boolean
+    freeDisplayEndDate?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type JourneyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "shortDesc" | "description" | "overviewText" | "image" | "duration" | "tripDuration" | "budget" | "price" | "district" | "stops" | "phone" | "whatsapp" | "difficulty" | "bestTime" | "groupSize" | "transportation" | "startPoint" | "endPoint" | "emergencyContact" | "email" | "quote" | "galleryImages" | "timeline" | "category" | "companyName" | "rating" | "userRating" | "highlights" | "includedServices" | "excludedServices" | "googleMapsLink" | "guideName" | "guideImage" | "guideExperience" | "guideLanguages" | "guideIntro" | "guidePhone" | "guideEmail" | "guideWhatsapp" | "authorId" | "status" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["journey"]>
+  export type JourneyOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "title" | "shortDesc" | "description" | "overviewText" | "image" | "duration" | "tripDuration" | "budget" | "price" | "district" | "stops" | "phone" | "whatsapp" | "difficulty" | "bestTime" | "groupSize" | "transportation" | "startPoint" | "endPoint" | "emergencyContact" | "email" | "quote" | "galleryImages" | "timeline" | "category" | "companyName" | "rating" | "userRating" | "highlights" | "includedServices" | "excludedServices" | "googleMapsLink" | "guideName" | "guideImage" | "guideExperience" | "guideLanguages" | "guideIntro" | "guidePhone" | "guideEmail" | "guideWhatsapp" | "authorId" | "status" | "publicId" | "approvedAt" | "freeDisplayStartDate" | "freeDisplayEndDate" | "approvalEmailSent" | "approvalEmailSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["journey"]>
   export type JourneyInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     author?: boolean | UserDefaultArgs<ExtArgs>
   }
@@ -13746,6 +15089,11 @@ export namespace Prisma {
       authorId: string
       status: $Enums.ApprovalStatus
       publicId: string | null
+      approvedAt: Date | null
+      freeDisplayStartDate: Date | null
+      freeDisplayEndDate: Date | null
+      approvalEmailSent: boolean
+      approvalEmailSentAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["journey"]>
@@ -14216,6 +15564,11 @@ export namespace Prisma {
     readonly authorId: FieldRef<"Journey", 'String'>
     readonly status: FieldRef<"Journey", 'ApprovalStatus'>
     readonly publicId: FieldRef<"Journey", 'String'>
+    readonly approvedAt: FieldRef<"Journey", 'DateTime'>
+    readonly freeDisplayStartDate: FieldRef<"Journey", 'DateTime'>
+    readonly freeDisplayEndDate: FieldRef<"Journey", 'DateTime'>
+    readonly approvalEmailSent: FieldRef<"Journey", 'Boolean'>
+    readonly approvalEmailSentAt: FieldRef<"Journey", 'DateTime'>
     readonly createdAt: FieldRef<"Journey", 'DateTime'>
     readonly updatedAt: FieldRef<"Journey", 'DateTime'>
   }
@@ -15851,8 +17204,12 @@ export namespace Prisma {
     mapLink: string | null
     contact: string | null
     email: string | null
+    userId: string | null
     status: $Enums.ApprovalStatus | null
     publicId: string | null
+    approvedAt: Date | null
+    approvalEmailSent: boolean | null
+    approvalEmailSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15869,8 +17226,12 @@ export namespace Prisma {
     mapLink: string | null
     contact: string | null
     email: string | null
+    userId: string | null
     status: $Enums.ApprovalStatus | null
     publicId: string | null
+    approvedAt: Date | null
+    approvalEmailSent: boolean | null
+    approvalEmailSentAt: Date | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -15888,8 +17249,12 @@ export namespace Prisma {
     mapLink: number
     contact: number
     email: number
+    userId: number
     status: number
     publicId: number
+    approvedAt: number
+    approvalEmailSent: number
+    approvalEmailSentAt: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -15908,8 +17273,12 @@ export namespace Prisma {
     mapLink?: true
     contact?: true
     email?: true
+    userId?: true
     status?: true
     publicId?: true
+    approvedAt?: true
+    approvalEmailSent?: true
+    approvalEmailSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15926,8 +17295,12 @@ export namespace Prisma {
     mapLink?: true
     contact?: true
     email?: true
+    userId?: true
     status?: true
     publicId?: true
+    approvedAt?: true
+    approvalEmailSent?: true
+    approvalEmailSentAt?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -15945,8 +17318,12 @@ export namespace Prisma {
     mapLink?: true
     contact?: true
     email?: true
+    userId?: true
     status?: true
     publicId?: true
+    approvedAt?: true
+    approvalEmailSent?: true
+    approvalEmailSentAt?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -16037,8 +17414,12 @@ export namespace Prisma {
     mapLink: string | null
     contact: string | null
     email: string | null
+    userId: string | null
     status: $Enums.ApprovalStatus
     publicId: string | null
+    approvedAt: Date | null
+    approvalEmailSent: boolean
+    approvalEmailSentAt: Date | null
     createdAt: Date
     updatedAt: Date
     _count: MarketplaceProductCountAggregateOutputType | null
@@ -16073,10 +17454,15 @@ export namespace Prisma {
     mapLink?: boolean
     contact?: boolean
     email?: boolean
+    userId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | MarketplaceProduct$userArgs<ExtArgs>
   }, ExtArgs["result"]["marketplaceProduct"]>
 
   export type MarketplaceProductSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16092,10 +17478,15 @@ export namespace Prisma {
     mapLink?: boolean
     contact?: boolean
     email?: boolean
+    userId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | MarketplaceProduct$userArgs<ExtArgs>
   }, ExtArgs["result"]["marketplaceProduct"]>
 
   export type MarketplaceProductSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
@@ -16111,10 +17502,15 @@ export namespace Prisma {
     mapLink?: boolean
     contact?: boolean
     email?: boolean
+    userId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
+    user?: boolean | MarketplaceProduct$userArgs<ExtArgs>
   }, ExtArgs["result"]["marketplaceProduct"]>
 
   export type MarketplaceProductSelectScalar = {
@@ -16130,17 +17526,32 @@ export namespace Prisma {
     mapLink?: boolean
     contact?: boolean
     email?: boolean
+    userId?: boolean
     status?: boolean
     publicId?: boolean
+    approvedAt?: boolean
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type MarketplaceProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessName" | "productName" | "category" | "image" | "images" | "description" | "address" | "website" | "mapLink" | "contact" | "email" | "status" | "publicId" | "createdAt" | "updatedAt", ExtArgs["result"]["marketplaceProduct"]>
+  export type MarketplaceProductOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "businessName" | "productName" | "category" | "image" | "images" | "description" | "address" | "website" | "mapLink" | "contact" | "email" | "userId" | "status" | "publicId" | "approvedAt" | "approvalEmailSent" | "approvalEmailSentAt" | "createdAt" | "updatedAt", ExtArgs["result"]["marketplaceProduct"]>
+  export type MarketplaceProductInclude<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | MarketplaceProduct$userArgs<ExtArgs>
+  }
+  export type MarketplaceProductIncludeCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | MarketplaceProduct$userArgs<ExtArgs>
+  }
+  export type MarketplaceProductIncludeUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    user?: boolean | MarketplaceProduct$userArgs<ExtArgs>
+  }
 
   export type $MarketplaceProductPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "MarketplaceProduct"
-    objects: {}
+    objects: {
+      user: Prisma.$UserPayload<ExtArgs> | null
+    }
     scalars: $Extensions.GetPayloadResult<{
       id: string
       businessName: string
@@ -16154,8 +17565,12 @@ export namespace Prisma {
       mapLink: string | null
       contact: string | null
       email: string | null
+      userId: string | null
       status: $Enums.ApprovalStatus
       publicId: string | null
+      approvedAt: Date | null
+      approvalEmailSent: boolean
+      approvalEmailSentAt: Date | null
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["marketplaceProduct"]>
@@ -16552,6 +17967,7 @@ export namespace Prisma {
    */
   export interface Prisma__MarketplaceProductClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
     readonly [Symbol.toStringTag]: "PrismaPromise"
+    user<T extends MarketplaceProduct$userArgs<ExtArgs> = {}>(args?: Subset<T, MarketplaceProduct$userArgs<ExtArgs>>): Prisma__UserClient<$Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
     /**
      * Attaches callbacks for the resolution and/or rejection of the Promise.
      * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -16593,8 +18009,12 @@ export namespace Prisma {
     readonly mapLink: FieldRef<"MarketplaceProduct", 'String'>
     readonly contact: FieldRef<"MarketplaceProduct", 'String'>
     readonly email: FieldRef<"MarketplaceProduct", 'String'>
+    readonly userId: FieldRef<"MarketplaceProduct", 'String'>
     readonly status: FieldRef<"MarketplaceProduct", 'ApprovalStatus'>
     readonly publicId: FieldRef<"MarketplaceProduct", 'String'>
+    readonly approvedAt: FieldRef<"MarketplaceProduct", 'DateTime'>
+    readonly approvalEmailSent: FieldRef<"MarketplaceProduct", 'Boolean'>
+    readonly approvalEmailSentAt: FieldRef<"MarketplaceProduct", 'DateTime'>
     readonly createdAt: FieldRef<"MarketplaceProduct", 'DateTime'>
     readonly updatedAt: FieldRef<"MarketplaceProduct", 'DateTime'>
   }
@@ -16614,6 +18034,10 @@ export namespace Prisma {
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
+    /**
      * Filter, which MarketplaceProduct to fetch.
      */
     where: MarketplaceProductWhereUniqueInput
@@ -16632,6 +18056,10 @@ export namespace Prisma {
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
+    /**
      * Filter, which MarketplaceProduct to fetch.
      */
     where: MarketplaceProductWhereUniqueInput
@@ -16649,6 +18077,10 @@ export namespace Prisma {
      * Omit specific fields from the MarketplaceProduct
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
     /**
      * Filter, which MarketplaceProduct to fetch.
      */
@@ -16698,6 +18130,10 @@ export namespace Prisma {
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
+    /**
      * Filter, which MarketplaceProduct to fetch.
      */
     where?: MarketplaceProductWhereInput
@@ -16745,6 +18181,10 @@ export namespace Prisma {
      * Omit specific fields from the MarketplaceProduct
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
     /**
      * Filter, which MarketplaceProducts to fetch.
      */
@@ -16794,6 +18234,10 @@ export namespace Prisma {
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
+    /**
      * The data needed to create a MarketplaceProduct.
      */
     data: XOR<MarketplaceProductCreateInput, MarketplaceProductUncheckedCreateInput>
@@ -16827,6 +18271,10 @@ export namespace Prisma {
      */
     data: MarketplaceProductCreateManyInput | MarketplaceProductCreateManyInput[]
     skipDuplicates?: boolean
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductIncludeCreateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16841,6 +18289,10 @@ export namespace Prisma {
      * Omit specific fields from the MarketplaceProduct
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
     /**
      * The data needed to update a MarketplaceProduct.
      */
@@ -16893,6 +18345,10 @@ export namespace Prisma {
      * Limit how many MarketplaceProducts to update.
      */
     limit?: number
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductIncludeUpdateManyAndReturn<ExtArgs> | null
   }
 
   /**
@@ -16907,6 +18363,10 @@ export namespace Prisma {
      * Omit specific fields from the MarketplaceProduct
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
     /**
      * The filter to search for the MarketplaceProduct to update in case it exists.
      */
@@ -16934,6 +18394,10 @@ export namespace Prisma {
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
     /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
+    /**
      * Filter which MarketplaceProduct to delete.
      */
     where: MarketplaceProductWhereUniqueInput
@@ -16954,6 +18418,25 @@ export namespace Prisma {
   }
 
   /**
+   * MarketplaceProduct.user
+   */
+  export type MarketplaceProduct$userArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the User
+     */
+    select?: UserSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the User
+     */
+    omit?: UserOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: UserInclude<ExtArgs> | null
+    where?: UserWhereInput
+  }
+
+  /**
    * MarketplaceProduct without action
    */
   export type MarketplaceProductDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
@@ -16965,6 +18448,10 @@ export namespace Prisma {
      * Omit specific fields from the MarketplaceProduct
      */
     omit?: MarketplaceProductOmit<ExtArgs> | null
+    /**
+     * Choose, which related nodes to fetch as well
+     */
+    include?: MarketplaceProductInclude<ExtArgs> | null
   }
 
 
@@ -24031,6 +25518,19 @@ export namespace Prisma {
   export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
 
 
+  export const UserBadgeHistoryScalarFieldEnum: {
+    id: 'id',
+    userId: 'userId',
+    milestonePoints: 'milestonePoints',
+    badgeName: 'badgeName',
+    emailSent: 'emailSent',
+    emailSentAt: 'emailSentAt',
+    achievedAt: 'achievedAt'
+  };
+
+  export type UserBadgeHistoryScalarFieldEnum = (typeof UserBadgeHistoryScalarFieldEnum)[keyof typeof UserBadgeHistoryScalarFieldEnum]
+
+
   export const NotificationScalarFieldEnum: {
     id: 'id',
     type: 'type',
@@ -24221,6 +25721,11 @@ export namespace Prisma {
     authorId: 'authorId',
     status: 'status',
     publicId: 'publicId',
+    approvedAt: 'approvedAt',
+    freeDisplayStartDate: 'freeDisplayStartDate',
+    freeDisplayEndDate: 'freeDisplayEndDate',
+    approvalEmailSent: 'approvalEmailSent',
+    approvalEmailSentAt: 'approvalEmailSentAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -24259,8 +25764,12 @@ export namespace Prisma {
     mapLink: 'mapLink',
     contact: 'contact',
     email: 'email',
+    userId: 'userId',
     status: 'status',
     publicId: 'publicId',
+    approvedAt: 'approvedAt',
+    approvalEmailSent: 'approvalEmailSent',
+    approvalEmailSentAt: 'approvalEmailSentAt',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -24487,6 +25996,13 @@ export namespace Prisma {
 
 
   /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
+    
+
+
+  /**
    * Reference to a field of type 'NotificationType'
    */
   export type EnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType'>
@@ -24497,13 +26013,6 @@ export namespace Prisma {
    * Reference to a field of type 'NotificationType[]'
    */
   export type ListEnumNotificationTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'NotificationType[]'>
-    
-
-
-  /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -24599,8 +26108,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     journeys?: JourneyListRelationFilter
     galleryItems?: GalleryItemListRelationFilter
+    marketplaceProducts?: MarketplaceProductListRelationFilter
     notifications?: NotificationListRelationFilter
     categoryStories?: CategoryStoryListRelationFilter
+    badgeHistories?: UserBadgeHistoryListRelationFilter
   }
 
   export type UserOrderByWithRelationInput = {
@@ -24619,8 +26130,10 @@ export namespace Prisma {
     updatedAt?: SortOrder
     journeys?: JourneyOrderByRelationAggregateInput
     galleryItems?: GalleryItemOrderByRelationAggregateInput
+    marketplaceProducts?: MarketplaceProductOrderByRelationAggregateInput
     notifications?: NotificationOrderByRelationAggregateInput
     categoryStories?: CategoryStoryOrderByRelationAggregateInput
+    badgeHistories?: UserBadgeHistoryOrderByRelationAggregateInput
   }
 
   export type UserWhereUniqueInput = Prisma.AtLeast<{
@@ -24642,8 +26155,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"User"> | Date | string
     journeys?: JourneyListRelationFilter
     galleryItems?: GalleryItemListRelationFilter
+    marketplaceProducts?: MarketplaceProductListRelationFilter
     notifications?: NotificationListRelationFilter
     categoryStories?: CategoryStoryListRelationFilter
+    badgeHistories?: UserBadgeHistoryListRelationFilter
   }, "id" | "firebaseUid" | "email">
 
   export type UserOrderByWithAggregationInput = {
@@ -24684,6 +26199,74 @@ export namespace Prisma {
     role?: EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
     createdAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"User"> | Date | string
+  }
+
+  export type UserBadgeHistoryWhereInput = {
+    AND?: UserBadgeHistoryWhereInput | UserBadgeHistoryWhereInput[]
+    OR?: UserBadgeHistoryWhereInput[]
+    NOT?: UserBadgeHistoryWhereInput | UserBadgeHistoryWhereInput[]
+    id?: StringFilter<"UserBadgeHistory"> | string
+    userId?: StringFilter<"UserBadgeHistory"> | string
+    milestonePoints?: IntFilter<"UserBadgeHistory"> | number
+    badgeName?: StringFilter<"UserBadgeHistory"> | string
+    emailSent?: BoolFilter<"UserBadgeHistory"> | boolean
+    emailSentAt?: DateTimeNullableFilter<"UserBadgeHistory"> | Date | string | null
+    achievedAt?: DateTimeFilter<"UserBadgeHistory"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }
+
+  export type UserBadgeHistoryOrderByWithRelationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    milestonePoints?: SortOrder
+    badgeName?: SortOrder
+    emailSent?: SortOrder
+    emailSentAt?: SortOrderInput | SortOrder
+    achievedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
+  }
+
+  export type UserBadgeHistoryWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    userId_milestonePoints?: UserBadgeHistoryUserIdMilestonePointsCompoundUniqueInput
+    AND?: UserBadgeHistoryWhereInput | UserBadgeHistoryWhereInput[]
+    OR?: UserBadgeHistoryWhereInput[]
+    NOT?: UserBadgeHistoryWhereInput | UserBadgeHistoryWhereInput[]
+    userId?: StringFilter<"UserBadgeHistory"> | string
+    milestonePoints?: IntFilter<"UserBadgeHistory"> | number
+    badgeName?: StringFilter<"UserBadgeHistory"> | string
+    emailSent?: BoolFilter<"UserBadgeHistory"> | boolean
+    emailSentAt?: DateTimeNullableFilter<"UserBadgeHistory"> | Date | string | null
+    achievedAt?: DateTimeFilter<"UserBadgeHistory"> | Date | string
+    user?: XOR<UserScalarRelationFilter, UserWhereInput>
+  }, "id" | "userId_milestonePoints">
+
+  export type UserBadgeHistoryOrderByWithAggregationInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    milestonePoints?: SortOrder
+    badgeName?: SortOrder
+    emailSent?: SortOrder
+    emailSentAt?: SortOrderInput | SortOrder
+    achievedAt?: SortOrder
+    _count?: UserBadgeHistoryCountOrderByAggregateInput
+    _avg?: UserBadgeHistoryAvgOrderByAggregateInput
+    _max?: UserBadgeHistoryMaxOrderByAggregateInput
+    _min?: UserBadgeHistoryMinOrderByAggregateInput
+    _sum?: UserBadgeHistorySumOrderByAggregateInput
+  }
+
+  export type UserBadgeHistoryScalarWhereWithAggregatesInput = {
+    AND?: UserBadgeHistoryScalarWhereWithAggregatesInput | UserBadgeHistoryScalarWhereWithAggregatesInput[]
+    OR?: UserBadgeHistoryScalarWhereWithAggregatesInput[]
+    NOT?: UserBadgeHistoryScalarWhereWithAggregatesInput | UserBadgeHistoryScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"UserBadgeHistory"> | string
+    userId?: StringWithAggregatesFilter<"UserBadgeHistory"> | string
+    milestonePoints?: IntWithAggregatesFilter<"UserBadgeHistory"> | number
+    badgeName?: StringWithAggregatesFilter<"UserBadgeHistory"> | string
+    emailSent?: BoolWithAggregatesFilter<"UserBadgeHistory"> | boolean
+    emailSentAt?: DateTimeNullableWithAggregatesFilter<"UserBadgeHistory"> | Date | string | null
+    achievedAt?: DateTimeWithAggregatesFilter<"UserBadgeHistory"> | Date | string
   }
 
   export type NotificationWhereInput = {
@@ -25454,6 +27037,11 @@ export namespace Prisma {
     authorId?: StringFilter<"Journey"> | string
     status?: EnumApprovalStatusFilter<"Journey"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"Journey"> | string | null
+    approvedAt?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    freeDisplayStartDate?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    freeDisplayEndDate?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    approvalEmailSent?: BoolFilter<"Journey"> | boolean
+    approvalEmailSentAt?: DateTimeNullableFilter<"Journey"> | Date | string | null
     createdAt?: DateTimeFilter<"Journey"> | Date | string
     updatedAt?: DateTimeFilter<"Journey"> | Date | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -25504,6 +27092,11 @@ export namespace Prisma {
     authorId?: SortOrder
     status?: SortOrder
     publicId?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    freeDisplayStartDate?: SortOrderInput | SortOrder
+    freeDisplayEndDate?: SortOrderInput | SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     author?: UserOrderByWithRelationInput
@@ -25557,6 +27150,11 @@ export namespace Prisma {
     authorId?: StringFilter<"Journey"> | string
     status?: EnumApprovalStatusFilter<"Journey"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"Journey"> | string | null
+    approvedAt?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    freeDisplayStartDate?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    freeDisplayEndDate?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    approvalEmailSent?: BoolFilter<"Journey"> | boolean
+    approvalEmailSentAt?: DateTimeNullableFilter<"Journey"> | Date | string | null
     createdAt?: DateTimeFilter<"Journey"> | Date | string
     updatedAt?: DateTimeFilter<"Journey"> | Date | string
     author?: XOR<UserScalarRelationFilter, UserWhereInput>
@@ -25607,6 +27205,11 @@ export namespace Prisma {
     authorId?: SortOrder
     status?: SortOrder
     publicId?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    freeDisplayStartDate?: SortOrderInput | SortOrder
+    freeDisplayEndDate?: SortOrderInput | SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: JourneyCountOrderByAggregateInput
@@ -25664,6 +27267,11 @@ export namespace Prisma {
     authorId?: StringWithAggregatesFilter<"Journey"> | string
     status?: EnumApprovalStatusWithAggregatesFilter<"Journey"> | $Enums.ApprovalStatus
     publicId?: StringNullableWithAggregatesFilter<"Journey"> | string | null
+    approvedAt?: DateTimeNullableWithAggregatesFilter<"Journey"> | Date | string | null
+    freeDisplayStartDate?: DateTimeNullableWithAggregatesFilter<"Journey"> | Date | string | null
+    freeDisplayEndDate?: DateTimeNullableWithAggregatesFilter<"Journey"> | Date | string | null
+    approvalEmailSent?: BoolWithAggregatesFilter<"Journey"> | boolean
+    approvalEmailSentAt?: DateTimeNullableWithAggregatesFilter<"Journey"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"Journey"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Journey"> | Date | string
   }
@@ -25776,10 +27384,15 @@ export namespace Prisma {
     mapLink?: StringNullableFilter<"MarketplaceProduct"> | string | null
     contact?: StringNullableFilter<"MarketplaceProduct"> | string | null
     email?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    userId?: StringNullableFilter<"MarketplaceProduct"> | string | null
     status?: EnumApprovalStatusFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    approvedAt?: DateTimeNullableFilter<"MarketplaceProduct"> | Date | string | null
+    approvalEmailSent?: BoolFilter<"MarketplaceProduct"> | boolean
+    approvalEmailSentAt?: DateTimeNullableFilter<"MarketplaceProduct"> | Date | string | null
     createdAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }
 
   export type MarketplaceProductOrderByWithRelationInput = {
@@ -25795,10 +27408,15 @@ export namespace Prisma {
     mapLink?: SortOrderInput | SortOrder
     contact?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     status?: SortOrder
     publicId?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
+    user?: UserOrderByWithRelationInput
   }
 
   export type MarketplaceProductWhereUniqueInput = Prisma.AtLeast<{
@@ -25817,10 +27435,15 @@ export namespace Prisma {
     mapLink?: StringNullableFilter<"MarketplaceProduct"> | string | null
     contact?: StringNullableFilter<"MarketplaceProduct"> | string | null
     email?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    userId?: StringNullableFilter<"MarketplaceProduct"> | string | null
     status?: EnumApprovalStatusFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    approvedAt?: DateTimeNullableFilter<"MarketplaceProduct"> | Date | string | null
+    approvalEmailSent?: BoolFilter<"MarketplaceProduct"> | boolean
+    approvalEmailSentAt?: DateTimeNullableFilter<"MarketplaceProduct"> | Date | string | null
     createdAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
     updatedAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
+    user?: XOR<UserNullableScalarRelationFilter, UserWhereInput> | null
   }, "id">
 
   export type MarketplaceProductOrderByWithAggregationInput = {
@@ -25836,8 +27459,12 @@ export namespace Prisma {
     mapLink?: SortOrderInput | SortOrder
     contact?: SortOrderInput | SortOrder
     email?: SortOrderInput | SortOrder
+    userId?: SortOrderInput | SortOrder
     status?: SortOrder
     publicId?: SortOrderInput | SortOrder
+    approvedAt?: SortOrderInput | SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrderInput | SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: MarketplaceProductCountOrderByAggregateInput
@@ -25861,8 +27488,12 @@ export namespace Prisma {
     mapLink?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
     contact?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
     email?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
+    userId?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
     status?: EnumApprovalStatusWithAggregatesFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
     publicId?: StringNullableWithAggregatesFilter<"MarketplaceProduct"> | string | null
+    approvedAt?: DateTimeNullableWithAggregatesFilter<"MarketplaceProduct"> | Date | string | null
+    approvalEmailSent?: BoolWithAggregatesFilter<"MarketplaceProduct"> | boolean
+    approvalEmailSentAt?: DateTimeNullableWithAggregatesFilter<"MarketplaceProduct"> | Date | string | null
     createdAt?: DateTimeWithAggregatesFilter<"MarketplaceProduct"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"MarketplaceProduct"> | Date | string
   }
@@ -26473,8 +28104,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     journeys?: JourneyCreateNestedManyWithoutAuthorInput
     galleryItems?: GalleryItemCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateInput = {
@@ -26493,8 +28126,10 @@ export namespace Prisma {
     updatedAt?: Date | string
     journeys?: JourneyUncheckedCreateNestedManyWithoutAuthorInput
     galleryItems?: GalleryItemUncheckedCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryUncheckedCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserUpdateInput = {
@@ -26513,8 +28148,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUpdateManyWithoutAuthorNestedInput
     galleryItems?: GalleryItemUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateInput = {
@@ -26533,8 +28170,10 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUncheckedUpdateManyWithoutAuthorNestedInput
     galleryItems?: GalleryItemUncheckedUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUncheckedUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateManyInput = {
@@ -26583,6 +28222,75 @@ export namespace Prisma {
     role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBadgeHistoryCreateInput = {
+    id?: string
+    milestonePoints: number
+    badgeName: string
+    emailSent?: boolean
+    emailSentAt?: Date | string | null
+    achievedAt?: Date | string
+    user: UserCreateNestedOneWithoutBadgeHistoriesInput
+  }
+
+  export type UserBadgeHistoryUncheckedCreateInput = {
+    id?: string
+    userId: string
+    milestonePoints: number
+    badgeName: string
+    emailSent?: boolean
+    emailSentAt?: Date | string | null
+    achievedAt?: Date | string
+  }
+
+  export type UserBadgeHistoryUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneRequiredWithoutBadgeHistoriesNestedInput
+  }
+
+  export type UserBadgeHistoryUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBadgeHistoryCreateManyInput = {
+    id?: string
+    userId: string
+    milestonePoints: number
+    badgeName: string
+    emailSent?: boolean
+    emailSentAt?: Date | string | null
+    achievedAt?: Date | string
+  }
+
+  export type UserBadgeHistoryUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBadgeHistoryUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type NotificationCreateInput = {
@@ -27481,6 +29189,11 @@ export namespace Prisma {
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    freeDisplayStartDate?: Date | string | null
+    freeDisplayEndDate?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
     author: UserCreateNestedOneWithoutJourneysInput
@@ -27531,6 +29244,11 @@ export namespace Prisma {
     authorId: string
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    freeDisplayStartDate?: Date | string | null
+    freeDisplayEndDate?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27579,6 +29297,11 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     author?: UserUpdateOneRequiredWithoutJourneysNestedInput
@@ -27629,6 +29352,11 @@ export namespace Prisma {
     authorId?: StringFieldUpdateOperationsInput | string
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27678,6 +29406,11 @@ export namespace Prisma {
     authorId: string
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    freeDisplayStartDate?: Date | string | null
+    freeDisplayEndDate?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27726,6 +29459,11 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27775,6 +29513,11 @@ export namespace Prisma {
     authorId?: StringFieldUpdateOperationsInput | string
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27898,8 +29641,12 @@ export namespace Prisma {
     email?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
+    user?: UserCreateNestedOneWithoutMarketplaceProductsInput
   }
 
   export type MarketplaceProductUncheckedCreateInput = {
@@ -27915,8 +29662,12 @@ export namespace Prisma {
     mapLink?: string | null
     contact?: string | null
     email?: string | null
+    userId?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27936,8 +29687,12 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    user?: UserUpdateOneWithoutMarketplaceProductsNestedInput
   }
 
   export type MarketplaceProductUncheckedUpdateInput = {
@@ -27953,8 +29708,12 @@ export namespace Prisma {
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -27972,8 +29731,12 @@ export namespace Prisma {
     mapLink?: string | null
     contact?: string | null
     email?: string | null
+    userId?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -27993,6 +29756,9 @@ export namespace Prisma {
     email?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28010,8 +29776,12 @@ export namespace Prisma {
     mapLink?: NullableStringFieldUpdateOperationsInput | string | null
     contact?: NullableStringFieldUpdateOperationsInput | string | null
     email?: NullableStringFieldUpdateOperationsInput | string | null
+    userId?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -28781,6 +30551,12 @@ export namespace Prisma {
     none?: GalleryItemWhereInput
   }
 
+  export type MarketplaceProductListRelationFilter = {
+    every?: MarketplaceProductWhereInput
+    some?: MarketplaceProductWhereInput
+    none?: MarketplaceProductWhereInput
+  }
+
   export type NotificationListRelationFilter = {
     every?: NotificationWhereInput
     some?: NotificationWhereInput
@@ -28791,6 +30567,12 @@ export namespace Prisma {
     every?: CategoryStoryWhereInput
     some?: CategoryStoryWhereInput
     none?: CategoryStoryWhereInput
+  }
+
+  export type UserBadgeHistoryListRelationFilter = {
+    every?: UserBadgeHistoryWhereInput
+    some?: UserBadgeHistoryWhereInput
+    none?: UserBadgeHistoryWhereInput
   }
 
   export type SortOrderInput = {
@@ -28806,11 +30588,19 @@ export namespace Prisma {
     _count?: SortOrder
   }
 
+  export type MarketplaceProductOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
   export type NotificationOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
   export type CategoryStoryOrderByRelationAggregateInput = {
+    _count?: SortOrder
+  }
+
+  export type UserBadgeHistoryOrderByRelationAggregateInput = {
     _count?: SortOrder
   }
 
@@ -28948,21 +30738,97 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
-  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
-    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
-    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
-    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
-    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
-  }
-
   export type BoolFilter<$PrismaModel = never> = {
     equals?: boolean | BooleanFieldRefInput<$PrismaModel>
     not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
+  export type DateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
   export type UserScalarRelationFilter = {
     is?: UserWhereInput
     isNot?: UserWhereInput
+  }
+
+  export type UserBadgeHistoryUserIdMilestonePointsCompoundUniqueInput = {
+    userId: string
+    milestonePoints: number
+  }
+
+  export type UserBadgeHistoryCountOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    milestonePoints?: SortOrder
+    badgeName?: SortOrder
+    emailSent?: SortOrder
+    emailSentAt?: SortOrder
+    achievedAt?: SortOrder
+  }
+
+  export type UserBadgeHistoryAvgOrderByAggregateInput = {
+    milestonePoints?: SortOrder
+  }
+
+  export type UserBadgeHistoryMaxOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    milestonePoints?: SortOrder
+    badgeName?: SortOrder
+    emailSent?: SortOrder
+    emailSentAt?: SortOrder
+    achievedAt?: SortOrder
+  }
+
+  export type UserBadgeHistoryMinOrderByAggregateInput = {
+    id?: SortOrder
+    userId?: SortOrder
+    milestonePoints?: SortOrder
+    badgeName?: SortOrder
+    emailSent?: SortOrder
+    emailSentAt?: SortOrder
+    achievedAt?: SortOrder
+  }
+
+  export type UserBadgeHistorySumOrderByAggregateInput = {
+    milestonePoints?: SortOrder
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type DateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
+  export type EnumNotificationTypeFilter<$PrismaModel = never> = {
+    equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
+    in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
+    not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
   }
 
   export type NotificationCountOrderByAggregateInput = {
@@ -29006,14 +30872,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
     _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
-  }
-
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type StringNullableListFilter<$PrismaModel = never> = {
@@ -29565,6 +31423,11 @@ export namespace Prisma {
     authorId?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
+    approvedAt?: SortOrder
+    freeDisplayStartDate?: SortOrder
+    freeDisplayEndDate?: SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29612,6 +31475,11 @@ export namespace Prisma {
     authorId?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
+    approvedAt?: SortOrder
+    freeDisplayStartDate?: SortOrder
+    freeDisplayEndDate?: SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29654,6 +31522,11 @@ export namespace Prisma {
     authorId?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
+    approvedAt?: SortOrder
+    freeDisplayStartDate?: SortOrder
+    freeDisplayEndDate?: SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29718,6 +31591,11 @@ export namespace Prisma {
     views?: SortOrder
   }
 
+  export type UserNullableScalarRelationFilter = {
+    is?: UserWhereInput | null
+    isNot?: UserWhereInput | null
+  }
+
   export type MarketplaceProductCountOrderByAggregateInput = {
     id?: SortOrder
     businessName?: SortOrder
@@ -29731,8 +31609,12 @@ export namespace Prisma {
     mapLink?: SortOrder
     contact?: SortOrder
     email?: SortOrder
+    userId?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
+    approvedAt?: SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29749,8 +31631,12 @@ export namespace Prisma {
     mapLink?: SortOrder
     contact?: SortOrder
     email?: SortOrder
+    userId?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
+    approvedAt?: SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -29767,8 +31653,12 @@ export namespace Prisma {
     mapLink?: SortOrder
     contact?: SortOrder
     email?: SortOrder
+    userId?: SortOrder
     status?: SortOrder
     publicId?: SortOrder
+    approvedAt?: SortOrder
+    approvalEmailSent?: SortOrder
+    approvalEmailSentAt?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -30035,11 +31925,6 @@ export namespace Prisma {
     updatedAt?: SortOrder
   }
 
-  export type UserNullableScalarRelationFilter = {
-    is?: UserWhereInput | null
-    isNot?: UserWhereInput | null
-  }
-
   export type SubCategoryScalarRelationFilter = {
     is?: SubCategoryWhereInput
     isNot?: SubCategoryWhereInput
@@ -30144,6 +32029,13 @@ export namespace Prisma {
     connect?: GalleryItemWhereUniqueInput | GalleryItemWhereUniqueInput[]
   }
 
+  export type MarketplaceProductCreateNestedManyWithoutUserInput = {
+    create?: XOR<MarketplaceProductCreateWithoutUserInput, MarketplaceProductUncheckedCreateWithoutUserInput> | MarketplaceProductCreateWithoutUserInput[] | MarketplaceProductUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketplaceProductCreateOrConnectWithoutUserInput | MarketplaceProductCreateOrConnectWithoutUserInput[]
+    createMany?: MarketplaceProductCreateManyUserInputEnvelope
+    connect?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+  }
+
   export type NotificationCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -30156,6 +32048,13 @@ export namespace Prisma {
     connectOrCreate?: CategoryStoryCreateOrConnectWithoutAuthorInput | CategoryStoryCreateOrConnectWithoutAuthorInput[]
     createMany?: CategoryStoryCreateManyAuthorInputEnvelope
     connect?: CategoryStoryWhereUniqueInput | CategoryStoryWhereUniqueInput[]
+  }
+
+  export type UserBadgeHistoryCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserBadgeHistoryCreateWithoutUserInput, UserBadgeHistoryUncheckedCreateWithoutUserInput> | UserBadgeHistoryCreateWithoutUserInput[] | UserBadgeHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBadgeHistoryCreateOrConnectWithoutUserInput | UserBadgeHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: UserBadgeHistoryCreateManyUserInputEnvelope
+    connect?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
   }
 
   export type JourneyUncheckedCreateNestedManyWithoutAuthorInput = {
@@ -30172,6 +32071,13 @@ export namespace Prisma {
     connect?: GalleryItemWhereUniqueInput | GalleryItemWhereUniqueInput[]
   }
 
+  export type MarketplaceProductUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<MarketplaceProductCreateWithoutUserInput, MarketplaceProductUncheckedCreateWithoutUserInput> | MarketplaceProductCreateWithoutUserInput[] | MarketplaceProductUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketplaceProductCreateOrConnectWithoutUserInput | MarketplaceProductCreateOrConnectWithoutUserInput[]
+    createMany?: MarketplaceProductCreateManyUserInputEnvelope
+    connect?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+  }
+
   export type NotificationUncheckedCreateNestedManyWithoutUserInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -30184,6 +32090,13 @@ export namespace Prisma {
     connectOrCreate?: CategoryStoryCreateOrConnectWithoutAuthorInput | CategoryStoryCreateOrConnectWithoutAuthorInput[]
     createMany?: CategoryStoryCreateManyAuthorInputEnvelope
     connect?: CategoryStoryWhereUniqueInput | CategoryStoryWhereUniqueInput[]
+  }
+
+  export type UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput = {
+    create?: XOR<UserBadgeHistoryCreateWithoutUserInput, UserBadgeHistoryUncheckedCreateWithoutUserInput> | UserBadgeHistoryCreateWithoutUserInput[] | UserBadgeHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBadgeHistoryCreateOrConnectWithoutUserInput | UserBadgeHistoryCreateOrConnectWithoutUserInput[]
+    createMany?: UserBadgeHistoryCreateManyUserInputEnvelope
+    connect?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
   }
 
   export type StringFieldUpdateOperationsInput = {
@@ -30238,6 +32151,20 @@ export namespace Prisma {
     deleteMany?: GalleryItemScalarWhereInput | GalleryItemScalarWhereInput[]
   }
 
+  export type MarketplaceProductUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MarketplaceProductCreateWithoutUserInput, MarketplaceProductUncheckedCreateWithoutUserInput> | MarketplaceProductCreateWithoutUserInput[] | MarketplaceProductUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketplaceProductCreateOrConnectWithoutUserInput | MarketplaceProductCreateOrConnectWithoutUserInput[]
+    upsert?: MarketplaceProductUpsertWithWhereUniqueWithoutUserInput | MarketplaceProductUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MarketplaceProductCreateManyUserInputEnvelope
+    set?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    disconnect?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    delete?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    connect?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    update?: MarketplaceProductUpdateWithWhereUniqueWithoutUserInput | MarketplaceProductUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MarketplaceProductUpdateManyWithWhereWithoutUserInput | MarketplaceProductUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MarketplaceProductScalarWhereInput | MarketplaceProductScalarWhereInput[]
+  }
+
   export type NotificationUpdateManyWithoutUserNestedInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -30264,6 +32191,20 @@ export namespace Prisma {
     update?: CategoryStoryUpdateWithWhereUniqueWithoutAuthorInput | CategoryStoryUpdateWithWhereUniqueWithoutAuthorInput[]
     updateMany?: CategoryStoryUpdateManyWithWhereWithoutAuthorInput | CategoryStoryUpdateManyWithWhereWithoutAuthorInput[]
     deleteMany?: CategoryStoryScalarWhereInput | CategoryStoryScalarWhereInput[]
+  }
+
+  export type UserBadgeHistoryUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserBadgeHistoryCreateWithoutUserInput, UserBadgeHistoryUncheckedCreateWithoutUserInput> | UserBadgeHistoryCreateWithoutUserInput[] | UserBadgeHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBadgeHistoryCreateOrConnectWithoutUserInput | UserBadgeHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: UserBadgeHistoryUpsertWithWhereUniqueWithoutUserInput | UserBadgeHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserBadgeHistoryCreateManyUserInputEnvelope
+    set?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    disconnect?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    delete?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    connect?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    update?: UserBadgeHistoryUpdateWithWhereUniqueWithoutUserInput | UserBadgeHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserBadgeHistoryUpdateManyWithWhereWithoutUserInput | UserBadgeHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserBadgeHistoryScalarWhereInput | UserBadgeHistoryScalarWhereInput[]
   }
 
   export type JourneyUncheckedUpdateManyWithoutAuthorNestedInput = {
@@ -30294,6 +32235,20 @@ export namespace Prisma {
     deleteMany?: GalleryItemScalarWhereInput | GalleryItemScalarWhereInput[]
   }
 
+  export type MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<MarketplaceProductCreateWithoutUserInput, MarketplaceProductUncheckedCreateWithoutUserInput> | MarketplaceProductCreateWithoutUserInput[] | MarketplaceProductUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: MarketplaceProductCreateOrConnectWithoutUserInput | MarketplaceProductCreateOrConnectWithoutUserInput[]
+    upsert?: MarketplaceProductUpsertWithWhereUniqueWithoutUserInput | MarketplaceProductUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: MarketplaceProductCreateManyUserInputEnvelope
+    set?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    disconnect?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    delete?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    connect?: MarketplaceProductWhereUniqueInput | MarketplaceProductWhereUniqueInput[]
+    update?: MarketplaceProductUpdateWithWhereUniqueWithoutUserInput | MarketplaceProductUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: MarketplaceProductUpdateManyWithWhereWithoutUserInput | MarketplaceProductUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: MarketplaceProductScalarWhereInput | MarketplaceProductScalarWhereInput[]
+  }
+
   export type NotificationUncheckedUpdateManyWithoutUserNestedInput = {
     create?: XOR<NotificationCreateWithoutUserInput, NotificationUncheckedCreateWithoutUserInput> | NotificationCreateWithoutUserInput[] | NotificationUncheckedCreateWithoutUserInput[]
     connectOrCreate?: NotificationCreateOrConnectWithoutUserInput | NotificationCreateOrConnectWithoutUserInput[]
@@ -30322,6 +32277,42 @@ export namespace Prisma {
     deleteMany?: CategoryStoryScalarWhereInput | CategoryStoryScalarWhereInput[]
   }
 
+  export type UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput = {
+    create?: XOR<UserBadgeHistoryCreateWithoutUserInput, UserBadgeHistoryUncheckedCreateWithoutUserInput> | UserBadgeHistoryCreateWithoutUserInput[] | UserBadgeHistoryUncheckedCreateWithoutUserInput[]
+    connectOrCreate?: UserBadgeHistoryCreateOrConnectWithoutUserInput | UserBadgeHistoryCreateOrConnectWithoutUserInput[]
+    upsert?: UserBadgeHistoryUpsertWithWhereUniqueWithoutUserInput | UserBadgeHistoryUpsertWithWhereUniqueWithoutUserInput[]
+    createMany?: UserBadgeHistoryCreateManyUserInputEnvelope
+    set?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    disconnect?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    delete?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    connect?: UserBadgeHistoryWhereUniqueInput | UserBadgeHistoryWhereUniqueInput[]
+    update?: UserBadgeHistoryUpdateWithWhereUniqueWithoutUserInput | UserBadgeHistoryUpdateWithWhereUniqueWithoutUserInput[]
+    updateMany?: UserBadgeHistoryUpdateManyWithWhereWithoutUserInput | UserBadgeHistoryUpdateManyWithWhereWithoutUserInput[]
+    deleteMany?: UserBadgeHistoryScalarWhereInput | UserBadgeHistoryScalarWhereInput[]
+  }
+
+  export type UserCreateNestedOneWithoutBadgeHistoriesInput = {
+    create?: XOR<UserCreateWithoutBadgeHistoriesInput, UserUncheckedCreateWithoutBadgeHistoriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBadgeHistoriesInput
+    connect?: UserWhereUniqueInput
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
+  }
+
+  export type NullableDateTimeFieldUpdateOperationsInput = {
+    set?: Date | string | null
+  }
+
+  export type UserUpdateOneRequiredWithoutBadgeHistoriesNestedInput = {
+    create?: XOR<UserCreateWithoutBadgeHistoriesInput, UserUncheckedCreateWithoutBadgeHistoriesInput>
+    connectOrCreate?: UserCreateOrConnectWithoutBadgeHistoriesInput
+    upsert?: UserUpsertWithoutBadgeHistoriesInput
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutBadgeHistoriesInput, UserUpdateWithoutBadgeHistoriesInput>, UserUncheckedUpdateWithoutBadgeHistoriesInput>
+  }
+
   export type UserCreateNestedOneWithoutNotificationsInput = {
     create?: XOR<UserCreateWithoutNotificationsInput, UserUncheckedCreateWithoutNotificationsInput>
     connectOrCreate?: UserCreateOrConnectWithoutNotificationsInput
@@ -30330,10 +32321,6 @@ export namespace Prisma {
 
   export type EnumNotificationTypeFieldUpdateOperationsInput = {
     set?: $Enums.NotificationType
-  }
-
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
   }
 
   export type UserUpdateOneRequiredWithoutNotificationsNestedInput = {
@@ -30611,9 +32598,25 @@ export namespace Prisma {
     set: string[]
   }
 
+  export type UserCreateNestedOneWithoutMarketplaceProductsInput = {
+    create?: XOR<UserCreateWithoutMarketplaceProductsInput, UserUncheckedCreateWithoutMarketplaceProductsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMarketplaceProductsInput
+    connect?: UserWhereUniqueInput
+  }
+
   export type MarketplaceProductUpdateimagesInput = {
     set?: string[]
     push?: string | string[]
+  }
+
+  export type UserUpdateOneWithoutMarketplaceProductsNestedInput = {
+    create?: XOR<UserCreateWithoutMarketplaceProductsInput, UserUncheckedCreateWithoutMarketplaceProductsInput>
+    connectOrCreate?: UserCreateOrConnectWithoutMarketplaceProductsInput
+    upsert?: UserUpsertWithoutMarketplaceProductsInput
+    disconnect?: UserWhereInput | boolean
+    delete?: UserWhereInput | boolean
+    connect?: UserWhereUniqueInput
+    update?: XOR<XOR<UserUpdateToOneWithWhereWithoutMarketplaceProductsInput, UserUpdateWithoutMarketplaceProductsInput>, UserUncheckedUpdateWithoutMarketplaceProductsInput>
   }
 
   export type CardMediaCreatelikedByInput = {
@@ -31011,16 +33014,49 @@ export namespace Prisma {
     _max?: NestedDateTimeFilter<$PrismaModel>
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
+  export type NestedDateTimeNullableFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableFilter<$PrismaModel> | Date | string | null
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
+  }
+
+  export type NestedDateTimeNullableWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: Date | string | DateTimeFieldRefInput<$PrismaModel> | null
+    in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    notIn?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel> | null
+    lt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    lte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gt?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    gte?: Date | string | DateTimeFieldRefInput<$PrismaModel>
+    not?: NestedDateTimeNullableWithAggregatesFilter<$PrismaModel> | Date | string | null
+    _count?: NestedIntNullableFilter<$PrismaModel>
+    _min?: NestedDateTimeNullableFilter<$PrismaModel>
+    _max?: NestedDateTimeNullableFilter<$PrismaModel>
+  }
+
   export type NestedEnumNotificationTypeFilter<$PrismaModel = never> = {
     equals?: $Enums.NotificationType | EnumNotificationTypeFieldRefInput<$PrismaModel>
     in?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
     notIn?: $Enums.NotificationType[] | ListEnumNotificationTypeFieldRefInput<$PrismaModel>
     not?: NestedEnumNotificationTypeFilter<$PrismaModel> | $Enums.NotificationType
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedEnumNotificationTypeWithAggregatesFilter<$PrismaModel = never> = {
@@ -31031,14 +33067,6 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumNotificationTypeFilter<$PrismaModel>
     _max?: NestedEnumNotificationTypeFilter<$PrismaModel>
-  }
-
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedFloatNullableFilter<$PrismaModel = never> = {
@@ -31202,6 +33230,11 @@ export namespace Prisma {
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    freeDisplayStartDate?: Date | string | null
+    freeDisplayEndDate?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31250,6 +33283,11 @@ export namespace Prisma {
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    freeDisplayStartDate?: Date | string | null
+    freeDisplayEndDate?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -31299,6 +33337,60 @@ export namespace Prisma {
 
   export type GalleryItemCreateManyUploaderInputEnvelope = {
     data: GalleryItemCreateManyUploaderInput | GalleryItemCreateManyUploaderInput[]
+    skipDuplicates?: boolean
+  }
+
+  export type MarketplaceProductCreateWithoutUserInput = {
+    id?: string
+    businessName: string
+    productName: string
+    category: string
+    image: string
+    images?: MarketplaceProductCreateimagesInput | string[]
+    description: string
+    address?: string | null
+    website?: string | null
+    mapLink?: string | null
+    contact?: string | null
+    email?: string | null
+    status?: $Enums.ApprovalStatus
+    publicId?: string | null
+    approvedAt?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceProductUncheckedCreateWithoutUserInput = {
+    id?: string
+    businessName: string
+    productName: string
+    category: string
+    image: string
+    images?: MarketplaceProductCreateimagesInput | string[]
+    description: string
+    address?: string | null
+    website?: string | null
+    mapLink?: string | null
+    contact?: string | null
+    email?: string | null
+    status?: $Enums.ApprovalStatus
+    publicId?: string | null
+    approvedAt?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceProductCreateOrConnectWithoutUserInput = {
+    where: MarketplaceProductWhereUniqueInput
+    create: XOR<MarketplaceProductCreateWithoutUserInput, MarketplaceProductUncheckedCreateWithoutUserInput>
+  }
+
+  export type MarketplaceProductCreateManyUserInputEnvelope = {
+    data: MarketplaceProductCreateManyUserInput | MarketplaceProductCreateManyUserInput[]
     skipDuplicates?: boolean
   }
 
@@ -31394,6 +33486,34 @@ export namespace Prisma {
     skipDuplicates?: boolean
   }
 
+  export type UserBadgeHistoryCreateWithoutUserInput = {
+    id?: string
+    milestonePoints: number
+    badgeName: string
+    emailSent?: boolean
+    emailSentAt?: Date | string | null
+    achievedAt?: Date | string
+  }
+
+  export type UserBadgeHistoryUncheckedCreateWithoutUserInput = {
+    id?: string
+    milestonePoints: number
+    badgeName: string
+    emailSent?: boolean
+    emailSentAt?: Date | string | null
+    achievedAt?: Date | string
+  }
+
+  export type UserBadgeHistoryCreateOrConnectWithoutUserInput = {
+    where: UserBadgeHistoryWhereUniqueInput
+    create: XOR<UserBadgeHistoryCreateWithoutUserInput, UserBadgeHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserBadgeHistoryCreateManyUserInputEnvelope = {
+    data: UserBadgeHistoryCreateManyUserInput | UserBadgeHistoryCreateManyUserInput[]
+    skipDuplicates?: boolean
+  }
+
   export type JourneyUpsertWithWhereUniqueWithoutAuthorInput = {
     where: JourneyWhereUniqueInput
     update: XOR<JourneyUpdateWithoutAuthorInput, JourneyUncheckedUpdateWithoutAuthorInput>
@@ -31458,6 +33578,11 @@ export namespace Prisma {
     authorId?: StringFilter<"Journey"> | string
     status?: EnumApprovalStatusFilter<"Journey"> | $Enums.ApprovalStatus
     publicId?: StringNullableFilter<"Journey"> | string | null
+    approvedAt?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    freeDisplayStartDate?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    freeDisplayEndDate?: DateTimeNullableFilter<"Journey"> | Date | string | null
+    approvalEmailSent?: BoolFilter<"Journey"> | boolean
+    approvalEmailSentAt?: DateTimeNullableFilter<"Journey"> | Date | string | null
     createdAt?: DateTimeFilter<"Journey"> | Date | string
     updatedAt?: DateTimeFilter<"Journey"> | Date | string
   }
@@ -31494,6 +33619,48 @@ export namespace Prisma {
     publicId?: StringNullableFilter<"GalleryItem"> | string | null
     createdAt?: DateTimeFilter<"GalleryItem"> | Date | string
     updatedAt?: DateTimeFilter<"GalleryItem"> | Date | string
+  }
+
+  export type MarketplaceProductUpsertWithWhereUniqueWithoutUserInput = {
+    where: MarketplaceProductWhereUniqueInput
+    update: XOR<MarketplaceProductUpdateWithoutUserInput, MarketplaceProductUncheckedUpdateWithoutUserInput>
+    create: XOR<MarketplaceProductCreateWithoutUserInput, MarketplaceProductUncheckedCreateWithoutUserInput>
+  }
+
+  export type MarketplaceProductUpdateWithWhereUniqueWithoutUserInput = {
+    where: MarketplaceProductWhereUniqueInput
+    data: XOR<MarketplaceProductUpdateWithoutUserInput, MarketplaceProductUncheckedUpdateWithoutUserInput>
+  }
+
+  export type MarketplaceProductUpdateManyWithWhereWithoutUserInput = {
+    where: MarketplaceProductScalarWhereInput
+    data: XOR<MarketplaceProductUpdateManyMutationInput, MarketplaceProductUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type MarketplaceProductScalarWhereInput = {
+    AND?: MarketplaceProductScalarWhereInput | MarketplaceProductScalarWhereInput[]
+    OR?: MarketplaceProductScalarWhereInput[]
+    NOT?: MarketplaceProductScalarWhereInput | MarketplaceProductScalarWhereInput[]
+    id?: StringFilter<"MarketplaceProduct"> | string
+    businessName?: StringFilter<"MarketplaceProduct"> | string
+    productName?: StringFilter<"MarketplaceProduct"> | string
+    category?: StringFilter<"MarketplaceProduct"> | string
+    image?: StringFilter<"MarketplaceProduct"> | string
+    images?: StringNullableListFilter<"MarketplaceProduct">
+    description?: StringFilter<"MarketplaceProduct"> | string
+    address?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    website?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    mapLink?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    contact?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    email?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    userId?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    status?: EnumApprovalStatusFilter<"MarketplaceProduct"> | $Enums.ApprovalStatus
+    publicId?: StringNullableFilter<"MarketplaceProduct"> | string | null
+    approvedAt?: DateTimeNullableFilter<"MarketplaceProduct"> | Date | string | null
+    approvalEmailSent?: BoolFilter<"MarketplaceProduct"> | boolean
+    approvalEmailSentAt?: DateTimeNullableFilter<"MarketplaceProduct"> | Date | string | null
+    createdAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
+    updatedAt?: DateTimeFilter<"MarketplaceProduct"> | Date | string
   }
 
   export type NotificationUpsertWithWhereUniqueWithoutUserInput = {
@@ -31572,6 +33739,135 @@ export namespace Prisma {
     updatedAt?: DateTimeFilter<"CategoryStory"> | Date | string
   }
 
+  export type UserBadgeHistoryUpsertWithWhereUniqueWithoutUserInput = {
+    where: UserBadgeHistoryWhereUniqueInput
+    update: XOR<UserBadgeHistoryUpdateWithoutUserInput, UserBadgeHistoryUncheckedUpdateWithoutUserInput>
+    create: XOR<UserBadgeHistoryCreateWithoutUserInput, UserBadgeHistoryUncheckedCreateWithoutUserInput>
+  }
+
+  export type UserBadgeHistoryUpdateWithWhereUniqueWithoutUserInput = {
+    where: UserBadgeHistoryWhereUniqueInput
+    data: XOR<UserBadgeHistoryUpdateWithoutUserInput, UserBadgeHistoryUncheckedUpdateWithoutUserInput>
+  }
+
+  export type UserBadgeHistoryUpdateManyWithWhereWithoutUserInput = {
+    where: UserBadgeHistoryScalarWhereInput
+    data: XOR<UserBadgeHistoryUpdateManyMutationInput, UserBadgeHistoryUncheckedUpdateManyWithoutUserInput>
+  }
+
+  export type UserBadgeHistoryScalarWhereInput = {
+    AND?: UserBadgeHistoryScalarWhereInput | UserBadgeHistoryScalarWhereInput[]
+    OR?: UserBadgeHistoryScalarWhereInput[]
+    NOT?: UserBadgeHistoryScalarWhereInput | UserBadgeHistoryScalarWhereInput[]
+    id?: StringFilter<"UserBadgeHistory"> | string
+    userId?: StringFilter<"UserBadgeHistory"> | string
+    milestonePoints?: IntFilter<"UserBadgeHistory"> | number
+    badgeName?: StringFilter<"UserBadgeHistory"> | string
+    emailSent?: BoolFilter<"UserBadgeHistory"> | boolean
+    emailSentAt?: DateTimeNullableFilter<"UserBadgeHistory"> | Date | string | null
+    achievedAt?: DateTimeFilter<"UserBadgeHistory"> | Date | string
+  }
+
+  export type UserCreateWithoutBadgeHistoriesInput = {
+    id?: string
+    firebaseUid: string
+    email?: string | null
+    name: string
+    avatar?: string | null
+    title?: string | null
+    bio?: string | null
+    background?: string | null
+    rewardPoints?: number
+    badges?: number
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    journeys?: JourneyCreateNestedManyWithoutAuthorInput
+    galleryItems?: GalleryItemCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductCreateNestedManyWithoutUserInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    categoryStories?: CategoryStoryCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserUncheckedCreateWithoutBadgeHistoriesInput = {
+    id?: string
+    firebaseUid: string
+    email?: string | null
+    name: string
+    avatar?: string | null
+    title?: string | null
+    bio?: string | null
+    background?: string | null
+    rewardPoints?: number
+    badges?: number
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    journeys?: JourneyUncheckedCreateNestedManyWithoutAuthorInput
+    galleryItems?: GalleryItemUncheckedCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductUncheckedCreateNestedManyWithoutUserInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    categoryStories?: CategoryStoryUncheckedCreateNestedManyWithoutAuthorInput
+  }
+
+  export type UserCreateOrConnectWithoutBadgeHistoriesInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutBadgeHistoriesInput, UserUncheckedCreateWithoutBadgeHistoriesInput>
+  }
+
+  export type UserUpsertWithoutBadgeHistoriesInput = {
+    update: XOR<UserUpdateWithoutBadgeHistoriesInput, UserUncheckedUpdateWithoutBadgeHistoriesInput>
+    create: XOR<UserCreateWithoutBadgeHistoriesInput, UserUncheckedCreateWithoutBadgeHistoriesInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutBadgeHistoriesInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutBadgeHistoriesInput, UserUncheckedUpdateWithoutBadgeHistoriesInput>
+  }
+
+  export type UserUpdateWithoutBadgeHistoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firebaseUid?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardPoints?: IntFieldUpdateOperationsInput | number
+    badges?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    journeys?: JourneyUpdateManyWithoutAuthorNestedInput
+    galleryItems?: GalleryItemUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    categoryStories?: CategoryStoryUpdateManyWithoutAuthorNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutBadgeHistoriesInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firebaseUid?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardPoints?: IntFieldUpdateOperationsInput | number
+    badges?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    journeys?: JourneyUncheckedUpdateManyWithoutAuthorNestedInput
+    galleryItems?: GalleryItemUncheckedUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    categoryStories?: CategoryStoryUncheckedUpdateManyWithoutAuthorNestedInput
+  }
+
   export type UserCreateWithoutNotificationsInput = {
     id?: string
     firebaseUid: string
@@ -31588,7 +33884,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     journeys?: JourneyCreateNestedManyWithoutAuthorInput
     galleryItems?: GalleryItemCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutNotificationsInput = {
@@ -31607,7 +33905,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     journeys?: JourneyUncheckedCreateNestedManyWithoutAuthorInput
     galleryItems?: GalleryItemUncheckedCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductUncheckedCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryUncheckedCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutNotificationsInput = {
@@ -31642,7 +33942,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUpdateManyWithoutAuthorNestedInput
     galleryItems?: GalleryItemUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutNotificationsInput = {
@@ -31661,7 +33963,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUncheckedUpdateManyWithoutAuthorNestedInput
     galleryItems?: GalleryItemUncheckedUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUncheckedUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SeasonRowCreateWithoutDistrictInput = {
@@ -31969,8 +34273,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     galleryItems?: GalleryItemCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutJourneysInput = {
@@ -31988,8 +34294,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     galleryItems?: GalleryItemUncheckedCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryUncheckedCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutJourneysInput = {
@@ -32023,8 +34331,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     galleryItems?: GalleryItemUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutJourneysInput = {
@@ -32042,8 +34352,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     galleryItems?: GalleryItemUncheckedUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUncheckedUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type UserCreateWithoutGalleryItemsInput = {
@@ -32061,8 +34373,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     journeys?: JourneyCreateNestedManyWithoutAuthorInput
+    marketplaceProducts?: MarketplaceProductCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutGalleryItemsInput = {
@@ -32080,8 +34394,10 @@ export namespace Prisma {
     createdAt?: Date | string
     updatedAt?: Date | string
     journeys?: JourneyUncheckedCreateNestedManyWithoutAuthorInput
+    marketplaceProducts?: MarketplaceProductUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
     categoryStories?: CategoryStoryUncheckedCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutGalleryItemsInput = {
@@ -32115,8 +34431,10 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUpdateManyWithoutAuthorNestedInput
+    marketplaceProducts?: MarketplaceProductUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutGalleryItemsInput = {
@@ -32134,8 +34452,110 @@ export namespace Prisma {
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUncheckedUpdateManyWithoutAuthorNestedInput
+    marketplaceProducts?: MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
     categoryStories?: CategoryStoryUncheckedUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserCreateWithoutMarketplaceProductsInput = {
+    id?: string
+    firebaseUid: string
+    email?: string | null
+    name: string
+    avatar?: string | null
+    title?: string | null
+    bio?: string | null
+    background?: string | null
+    rewardPoints?: number
+    badges?: number
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    journeys?: JourneyCreateNestedManyWithoutAuthorInput
+    galleryItems?: GalleryItemCreateNestedManyWithoutUploaderInput
+    notifications?: NotificationCreateNestedManyWithoutUserInput
+    categoryStories?: CategoryStoryCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryCreateNestedManyWithoutUserInput
+  }
+
+  export type UserUncheckedCreateWithoutMarketplaceProductsInput = {
+    id?: string
+    firebaseUid: string
+    email?: string | null
+    name: string
+    avatar?: string | null
+    title?: string | null
+    bio?: string | null
+    background?: string | null
+    rewardPoints?: number
+    badges?: number
+    role?: $Enums.Role
+    createdAt?: Date | string
+    updatedAt?: Date | string
+    journeys?: JourneyUncheckedCreateNestedManyWithoutAuthorInput
+    galleryItems?: GalleryItemUncheckedCreateNestedManyWithoutUploaderInput
+    notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    categoryStories?: CategoryStoryUncheckedCreateNestedManyWithoutAuthorInput
+    badgeHistories?: UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput
+  }
+
+  export type UserCreateOrConnectWithoutMarketplaceProductsInput = {
+    where: UserWhereUniqueInput
+    create: XOR<UserCreateWithoutMarketplaceProductsInput, UserUncheckedCreateWithoutMarketplaceProductsInput>
+  }
+
+  export type UserUpsertWithoutMarketplaceProductsInput = {
+    update: XOR<UserUpdateWithoutMarketplaceProductsInput, UserUncheckedUpdateWithoutMarketplaceProductsInput>
+    create: XOR<UserCreateWithoutMarketplaceProductsInput, UserUncheckedCreateWithoutMarketplaceProductsInput>
+    where?: UserWhereInput
+  }
+
+  export type UserUpdateToOneWithWhereWithoutMarketplaceProductsInput = {
+    where?: UserWhereInput
+    data: XOR<UserUpdateWithoutMarketplaceProductsInput, UserUncheckedUpdateWithoutMarketplaceProductsInput>
+  }
+
+  export type UserUpdateWithoutMarketplaceProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firebaseUid?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardPoints?: IntFieldUpdateOperationsInput | number
+    badges?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    journeys?: JourneyUpdateManyWithoutAuthorNestedInput
+    galleryItems?: GalleryItemUpdateManyWithoutUploaderNestedInput
+    notifications?: NotificationUpdateManyWithoutUserNestedInput
+    categoryStories?: CategoryStoryUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUpdateManyWithoutUserNestedInput
+  }
+
+  export type UserUncheckedUpdateWithoutMarketplaceProductsInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    firebaseUid?: StringFieldUpdateOperationsInput | string
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    name?: StringFieldUpdateOperationsInput | string
+    avatar?: NullableStringFieldUpdateOperationsInput | string | null
+    title?: NullableStringFieldUpdateOperationsInput | string | null
+    bio?: NullableStringFieldUpdateOperationsInput | string | null
+    background?: NullableStringFieldUpdateOperationsInput | string | null
+    rewardPoints?: IntFieldUpdateOperationsInput | number
+    badges?: IntFieldUpdateOperationsInput | number
+    role?: EnumRoleFieldUpdateOperationsInput | $Enums.Role
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    journeys?: JourneyUncheckedUpdateManyWithoutAuthorNestedInput
+    galleryItems?: GalleryItemUncheckedUpdateManyWithoutUploaderNestedInput
+    notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    categoryStories?: CategoryStoryUncheckedUpdateManyWithoutAuthorNestedInput
+    badgeHistories?: UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type SubCategoryCreateWithoutCategoryInput = {
@@ -32443,7 +34863,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     journeys?: JourneyCreateNestedManyWithoutAuthorInput
     galleryItems?: GalleryItemCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductCreateNestedManyWithoutUserInput
     notifications?: NotificationCreateNestedManyWithoutUserInput
+    badgeHistories?: UserBadgeHistoryCreateNestedManyWithoutUserInput
   }
 
   export type UserUncheckedCreateWithoutCategoryStoriesInput = {
@@ -32462,7 +34884,9 @@ export namespace Prisma {
     updatedAt?: Date | string
     journeys?: JourneyUncheckedCreateNestedManyWithoutAuthorInput
     galleryItems?: GalleryItemUncheckedCreateNestedManyWithoutUploaderInput
+    marketplaceProducts?: MarketplaceProductUncheckedCreateNestedManyWithoutUserInput
     notifications?: NotificationUncheckedCreateNestedManyWithoutUserInput
+    badgeHistories?: UserBadgeHistoryUncheckedCreateNestedManyWithoutUserInput
   }
 
   export type UserCreateOrConnectWithoutCategoryStoriesInput = {
@@ -32557,7 +34981,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUpdateManyWithoutAuthorNestedInput
     galleryItems?: GalleryItemUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUpdateManyWithoutUserNestedInput
     notifications?: NotificationUpdateManyWithoutUserNestedInput
+    badgeHistories?: UserBadgeHistoryUpdateManyWithoutUserNestedInput
   }
 
   export type UserUncheckedUpdateWithoutCategoryStoriesInput = {
@@ -32576,7 +35002,9 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
     journeys?: JourneyUncheckedUpdateManyWithoutAuthorNestedInput
     galleryItems?: GalleryItemUncheckedUpdateManyWithoutUploaderNestedInput
+    marketplaceProducts?: MarketplaceProductUncheckedUpdateManyWithoutUserNestedInput
     notifications?: NotificationUncheckedUpdateManyWithoutUserNestedInput
+    badgeHistories?: UserBadgeHistoryUncheckedUpdateManyWithoutUserNestedInput
   }
 
   export type CategoryUpsertWithoutStoriesInput = {
@@ -32695,6 +35123,11 @@ export namespace Prisma {
     guideWhatsapp?: string | null
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    approvedAt?: Date | string | null
+    freeDisplayStartDate?: Date | string | null
+    freeDisplayEndDate?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32709,6 +35142,28 @@ export namespace Prisma {
     views?: number
     status?: $Enums.ApprovalStatus
     publicId?: string | null
+    createdAt?: Date | string
+    updatedAt?: Date | string
+  }
+
+  export type MarketplaceProductCreateManyUserInput = {
+    id?: string
+    businessName: string
+    productName: string
+    category: string
+    image: string
+    images?: MarketplaceProductCreateimagesInput | string[]
+    description: string
+    address?: string | null
+    website?: string | null
+    mapLink?: string | null
+    contact?: string | null
+    email?: string | null
+    status?: $Enums.ApprovalStatus
+    publicId?: string | null
+    approvedAt?: Date | string | null
+    approvalEmailSent?: boolean
+    approvalEmailSentAt?: Date | string | null
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -32747,6 +35202,15 @@ export namespace Prisma {
     subcategoryId: string
     createdAt?: Date | string
     updatedAt?: Date | string
+  }
+
+  export type UserBadgeHistoryCreateManyUserInput = {
+    id?: string
+    milestonePoints: number
+    badgeName: string
+    emailSent?: boolean
+    emailSentAt?: Date | string | null
+    achievedAt?: Date | string
   }
 
   export type JourneyUpdateWithoutAuthorInput = {
@@ -32793,6 +35257,11 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32841,6 +35310,11 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32889,6 +35363,11 @@ export namespace Prisma {
     guideWhatsapp?: NullableStringFieldUpdateOperationsInput | string | null
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayStartDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    freeDisplayEndDate?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -32931,6 +35410,72 @@ export namespace Prisma {
     views?: IntFieldUpdateOperationsInput | number
     status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
     publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceProductUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    productName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    images?: MarketplaceProductUpdateimagesInput | string[]
+    description?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceProductUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    productName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    images?: MarketplaceProductUpdateimagesInput | string[]
+    description?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
+    updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type MarketplaceProductUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    businessName?: StringFieldUpdateOperationsInput | string
+    productName?: StringFieldUpdateOperationsInput | string
+    category?: StringFieldUpdateOperationsInput | string
+    image?: StringFieldUpdateOperationsInput | string
+    images?: MarketplaceProductUpdateimagesInput | string[]
+    description?: StringFieldUpdateOperationsInput | string
+    address?: NullableStringFieldUpdateOperationsInput | string | null
+    website?: NullableStringFieldUpdateOperationsInput | string | null
+    mapLink?: NullableStringFieldUpdateOperationsInput | string | null
+    contact?: NullableStringFieldUpdateOperationsInput | string | null
+    email?: NullableStringFieldUpdateOperationsInput | string | null
+    status?: EnumApprovalStatusFieldUpdateOperationsInput | $Enums.ApprovalStatus
+    publicId?: NullableStringFieldUpdateOperationsInput | string | null
+    approvedAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    approvalEmailSent?: BoolFieldUpdateOperationsInput | boolean
+    approvalEmailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -33041,6 +35586,33 @@ export namespace Prisma {
     subcategoryId?: StringFieldUpdateOperationsInput | string
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBadgeHistoryUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBadgeHistoryUncheckedUpdateWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
+  }
+
+  export type UserBadgeHistoryUncheckedUpdateManyWithoutUserInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    milestonePoints?: IntFieldUpdateOperationsInput | number
+    badgeName?: StringFieldUpdateOperationsInput | string
+    emailSent?: BoolFieldUpdateOperationsInput | boolean
+    emailSentAt?: NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+    achievedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type SeasonRowCreateManyDistrictInput = {

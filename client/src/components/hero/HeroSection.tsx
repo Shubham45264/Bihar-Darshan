@@ -134,12 +134,6 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
           {/* Action Buttons */}
           <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3.5 sm:gap-4 mb-12 sm:mb-16">
             <a
-              href="/discover"
-              className="px-7 py-3.5 rounded-xl bg-[#D4A017] hover:bg-[#E6B52F] text-[#1A110B] font-extrabold text-sm tracking-wide transition-all shadow-[0_0_25px_rgba(212,160,23,0.45)] hover:shadow-[0_0_35px_rgba(212,160,23,0.7)] flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
-            >
-              <Compass size={18} /> Begin the Journey
-            </a>
-            <a
               href="/districts"
               className="px-7 py-3.5 rounded-xl border border-white/50 hover:border-white text-white hover:bg-white/15 font-semibold text-sm tracking-wide transition-all backdrop-blur-md shadow-lg flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
             >
@@ -147,7 +141,7 @@ const HeroSection = ({ settings }: HeroSectionProps) => {
             </a>
             <a
               href="/share-story"
-              className="px-7 py-3.5 rounded-xl border border-white/50 hover:border-white text-white hover:bg-white/15 font-semibold text-sm tracking-wide transition-all backdrop-blur-md shadow-lg flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
+              className="px-7 py-3.5 rounded-xl bg-[#D4A017] hover:bg-[#E6B52F] text-[#1A110B] font-extrabold text-sm tracking-wide transition-all shadow-[0_0_25px_rgba(212,160,23,0.45)] hover:shadow-[0_0_35px_rgba(212,160,23,0.7)] flex items-center justify-center gap-2.5 cursor-pointer active:scale-95"
             >
               <PenLine size={18} /> Share Your Story
             </a>

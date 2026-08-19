@@ -53,6 +53,10 @@ export interface ProductItem {
   contact: string;
   email: string;
   status?: string;
+  approvedAt?: string;
+  approvalEmailSent?: boolean;
+  approvalEmailSentAt?: string;
+  createdAt?: string;
 }
 
 // ── Site Settings (imported from siteSettingsDefaults.ts) ──
@@ -135,7 +139,7 @@ interface AdminContextValue {
   addTribalArticle: (article: any) => Promise<void>;
   deleteTribalArticle: (id: string) => Promise<void>;
   refreshProducts: () => Promise<void>;
-  approveProduct: (id: string | number) => Promise<void>;
+  approveProduct: (id: string | number) => Promise<any>;
   rejectProduct: (id: string | number) => Promise<void>;
   deleteProductDetail: (id: string | number) => Promise<void>;
   updateProductDetail: (id: string | number, product: any) => Promise<void>;
@@ -686,6 +690,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
       const data = await res.json();
       if (!data.success) throw new Error(data.message || 'Failed to approve product');
       await fetchProducts();
+      return data;
     } catch (error) {
       console.error('Error approving product:', error);
       throw error;

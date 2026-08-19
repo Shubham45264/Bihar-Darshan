@@ -12,6 +12,7 @@ export const createProductSchema = z.object({
   mapLink: z.string().url().optional().nullable(),
   contact: z.string().optional().nullable(),
   email: z.string().email().optional().nullable(),
+  userId: z.string().optional().nullable(),
 });
 
 export const updateProductSchema = createProductSchema.partial();
