@@ -136,6 +136,16 @@ exports.Prisma.UserScalarFieldEnum = {
   updatedAt: 'updatedAt'
 };
 
+exports.Prisma.UserBadgeHistoryScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  milestonePoints: 'milestonePoints',
+  badgeName: 'badgeName',
+  emailSent: 'emailSent',
+  emailSentAt: 'emailSentAt',
+  achievedAt: 'achievedAt'
+};
+
 exports.Prisma.NotificationScalarFieldEnum = {
   id: 'id',
   type: 'type',
@@ -302,6 +312,11 @@ exports.Prisma.JourneyScalarFieldEnum = {
   authorId: 'authorId',
   status: 'status',
   publicId: 'publicId',
+  approvedAt: 'approvedAt',
+  freeDisplayStartDate: 'freeDisplayStartDate',
+  freeDisplayEndDate: 'freeDisplayEndDate',
+  approvalEmailSent: 'approvalEmailSent',
+  approvalEmailSentAt: 'approvalEmailSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -334,8 +349,12 @@ exports.Prisma.MarketplaceProductScalarFieldEnum = {
   mapLink: 'mapLink',
   contact: 'contact',
   email: 'email',
+  userId: 'userId',
   status: 'status',
   publicId: 'publicId',
+  approvedAt: 'approvedAt',
+  approvalEmailSent: 'approvalEmailSent',
+  approvalEmailSentAt: 'approvalEmailSentAt',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -497,6 +516,7 @@ exports.MediaType = exports.$Enums.MediaType = {
 
 exports.Prisma.ModelName = {
   User: 'User',
+  UserBadgeHistory: 'UserBadgeHistory',
   Notification: 'Notification',
   District: 'District',
   SeasonRow: 'SeasonRow',

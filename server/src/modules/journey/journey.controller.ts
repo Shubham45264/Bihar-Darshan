@@ -23,8 +23,12 @@ export const createJourney = catchAsync(async (req: Request, res: Response, next
 });
 
 export const approveJourney = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const journey = await journeyService.updateJourneyStatus(req.params.id as string, 'APPROVED');
-  sendSuccess(res, 200, 'Journey approved successfully', { journey });
+  const result = await journeyService.approveJourneyWithEmail(req.params.id as string);
+  sendSuccess(res, 200, result.message, {
+    journey: result.journey,
+    emailStatus: result.emailStatus,
+    recipientEmail: result.recipientEmail,
+  });
 });
 
 export const rejectJourney = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

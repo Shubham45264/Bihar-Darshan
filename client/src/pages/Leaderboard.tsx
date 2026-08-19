@@ -6,6 +6,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { auth } from '../lib/firebase';
 import { onAuthStateChanged, type User as FirebaseUser } from 'firebase/auth';
 import { API_BASE_URL } from '../config/api';
+import { getBadgeFromPoints, type BadgeInfo } from '../utils/badgeUtils';
 
 interface LeaderboardUser {
   id: string;
@@ -16,6 +17,8 @@ interface LeaderboardUser {
   title: string | null;
   rewardPoints: number;
   badges: number;
+  badge?: BadgeInfo;
+  currentBadge?: string;
   role: string;
   rank: number;
   tier: string;
@@ -130,14 +133,14 @@ const Leaderboard: React.FC = () => {
               </div>
               <div>
                 <p className="text-gray-500 text-xs font-semibold uppercase tracking-wider">Your Ranking</p>
-                <h3 className="font-display text-lg font-bold text-brand-dark flex items-center gap-2">
+                <h3 className="font-display text-lg font-bold text-brand-dark flex items-center gap-2 flex-wrap">
                   {myRankUser.name}
-                  <span className="text-xs bg-brand-gold/10 border border-brand-gold/30 text-amber-900 px-2 py-0.5 rounded-full font-bold">
-                    {myRankUser.tier}
+                  <span className="text-xs bg-amber-100/90 border border-amber-300 text-amber-950 px-2.5 py-0.5 rounded-full font-extrabold shadow-xs">
+                    {myRankUser.currentBadge || getBadgeFromPoints(myRankUser.rewardPoints).fullName}
                   </span>
                 </h3>
                 <p className="text-xs text-gray-500 mt-0.5">
-                  {myRankUser.totalContributions} Contributions • {myRankUser.badges} Badges
+                  {myRankUser.totalContributions} Contributions • {myRankUser.rewardPoints} Pts
                 </p>
               </div>
             </div>
@@ -182,7 +185,11 @@ const Leaderboard: React.FC = () => {
                     />
                   </div>
                   <h3 className="font-display font-bold text-brand-dark text-lg truncate">{top3[1].name}</h3>
-                  <p className="text-xs text-slate-500 font-medium mb-3">{top3[1].tier}</p>
+                  <div className="my-2">
+                    <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-slate-100 border border-slate-200 text-slate-800">
+                      {top3[1].currentBadge || getBadgeFromPoints(top3[1].rewardPoints).fullName}
+                    </span>
+                  </div>
 
                   <div className="bg-slate-50 rounded-2xl p-3 border border-slate-200/60 space-y-1">
                     <p className="text-2xl font-black text-slate-800">{top3[1].rewardPoints} <span className="text-xs text-slate-500 font-normal">Pts</span></p>
@@ -206,11 +213,15 @@ const Leaderboard: React.FC = () => {
                     />
                   </div>
                   <h3 className="font-display font-extrabold text-amber-950 text-xl truncate">{top3[0].name}</h3>
-                  <p className="text-xs text-amber-800 font-bold mb-4 uppercase tracking-wider">{top3[0].tier}</p>
+                  <div className="my-2">
+                    <span className="inline-block px-3.5 py-1 rounded-full text-xs font-black bg-amber-100 border border-brand-gold text-amber-900 shadow-sm">
+                      {top3[0].currentBadge || getBadgeFromPoints(top3[0].rewardPoints).fullName}
+                    </span>
+                  </div>
 
                   <div className="bg-brand-gold/10 rounded-2xl p-4 border border-brand-gold/30 space-y-1">
                     <p className="text-3xl font-black text-amber-900">{top3[0].rewardPoints} <span className="text-xs text-amber-800 font-normal">Pts</span></p>
-                    <p className="text-xs text-amber-900/70 font-medium">{top3[0].totalContributions} Contributions • {top3[0].badges} Badges</p>
+                    <p className="text-xs text-amber-900/70 font-medium">{top3[0].totalContributions} Contributions</p>
                   </div>
                 </div>
               )}
@@ -229,7 +240,11 @@ const Leaderboard: React.FC = () => {
                     />
                   </div>
                   <h3 className="font-display font-bold text-brand-dark text-lg truncate">{top3[2].name}</h3>
-                  <p className="text-xs text-amber-800 font-medium mb-3">{top3[2].tier}</p>
+                  <div className="my-2">
+                    <span className="inline-block px-3 py-1 rounded-full text-xs font-bold bg-amber-50 border border-amber-200 text-amber-900">
+                      {top3[2].currentBadge || getBadgeFromPoints(top3[2].rewardPoints).fullName}
+                    </span>
+                  </div>
 
                   <div className="bg-amber-50/50 rounded-2xl p-3 border border-amber-800/10 space-y-1">
                     <p className="text-2xl font-black text-amber-900">{top3[2].rewardPoints} <span className="text-xs text-gray-500 font-normal">Pts</span></p>
@@ -279,62 +294,58 @@ const Leaderboard: React.FC = () => {
                   <tr>
                     <th className="py-3 px-4">Rank</th>
                     <th className="py-3 px-4">Member</th>
-                    <th className="py-3 px-4">Honorary Title</th>
                     <th className="py-3 px-4 text-center">Contributions</th>
-                    <th className="py-3 px-4 text-center">Badges</th>
+                    <th className="py-3 px-4 text-center">Current Badge</th>
                     <th className="py-3 px-4 text-right">Points</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-100">
-                  {filteredRestUsers.map((user) => (
-                    <tr
-                      key={user.id}
-                      className={`hover:bg-amber-50/30 transition-colors ${
-                        myRankUser?.id === user.id ? 'bg-amber-50/60 border-l-4 border-brand-gold' : ''
-                      }`}
-                    >
-                      <td className="py-4 px-4 font-bold text-gray-400 text-sm">
-                        #{user.rank}
-                      </td>
-                      <td className="py-4 px-4">
-                        <div className="flex items-center gap-3">
-                          <img
-                            src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`}
-                            alt={user.name}
-                            className="w-10 h-10 rounded-full object-cover border border-gray-200"
-                          />
-                          <div>
-                            <p className="font-bold text-brand-dark text-sm flex items-center gap-2">
-                              {user.name}
-                              {user.role === 'ADMIN' && (
-                                <span className="text-[9px] bg-brand-gold/15 text-amber-900 border border-brand-gold/30 px-1.5 py-0.5 rounded uppercase font-bold">
-                                  Admin
-                                </span>
-                              )}
-                            </p>
-                            <p className="text-xs text-gray-400">{user.email || 'Heritage Enthusiast'}</p>
+                  {filteredRestUsers.map((user) => {
+                    const badgeInfo = user.badge || getBadgeFromPoints(user.rewardPoints);
+                    return (
+                      <tr
+                        key={user.id}
+                        className={`hover:bg-amber-50/30 transition-colors ${
+                          myRankUser?.id === user.id ? 'bg-amber-50/60 border-l-4 border-brand-gold' : ''
+                        }`}
+                      >
+                        <td className="py-4 px-4 font-bold text-gray-400 text-sm">
+                          #{user.rank}
+                        </td>
+                        <td className="py-4 px-4">
+                          <div className="flex items-center gap-3">
+                            <img
+                              src={user.avatar || `https://api.dicebear.com/7.x/avataaars/svg?seed=${encodeURIComponent(user.name)}`}
+                              alt={user.name}
+                              className="w-10 h-10 rounded-full object-cover border border-gray-200"
+                            />
+                            <div>
+                              <p className="font-bold text-brand-dark text-sm flex items-center gap-2">
+                                {user.name}
+                                {user.role === 'ADMIN' && (
+                                  <span className="text-[9px] bg-brand-gold/15 text-amber-900 border border-brand-gold/30 px-1.5 py-0.5 rounded uppercase font-bold">
+                                    Admin
+                                  </span>
+                                )}
+                              </p>
+                              <p className="text-xs text-gray-400">{user.email || 'Heritage Enthusiast'}</p>
+                            </div>
                           </div>
-                        </div>
-                      </td>
-                      <td className="py-4 px-4">
-                        <span className="inline-block px-2.5 py-1 rounded-lg text-xs font-semibold bg-gray-100 border border-gray-200 text-amber-900">
-                          {user.tier}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4 text-center font-semibold text-gray-700">
-                        {user.totalContributions}
-                      </td>
-                      <td className="py-4 px-4 text-center">
-                        <span className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-purple-50 border border-purple-200 text-purple-700 text-xs font-bold">
-                          <Award size={12} />
-                          {user.badges}
-                        </span>
-                      </td>
-                      <td className="py-4 px-4 text-right font-black text-brand-gold text-base">
-                        {user.rewardPoints} Pts
-                      </td>
-                    </tr>
-                  ))}
+                        </td>
+                        <td className="py-4 px-4 text-center font-semibold text-gray-700">
+                          {user.totalContributions}
+                        </td>
+                        <td className="py-4 px-4 text-center">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-50/90 border border-amber-200 text-amber-900 text-xs font-extrabold shadow-xs">
+                            {badgeInfo.fullName}
+                          </span>
+                        </td>
+                        <td className="py-4 px-4 text-right font-black text-brand-gold text-base">
+                          {user.rewardPoints} Pts
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

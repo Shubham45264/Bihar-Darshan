@@ -20,7 +20,8 @@ export const getProductById = catchAsync(async (req: Request, res: Response, nex
 
 export const createProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
   const data = validation.createProductSchema.parse(req.body);
-  const product = await marketplaceService.createProduct(data);
+  const userId = (req as any).user?.id || (req as any).user?.firebaseUid;
+  const product = await marketplaceService.createProduct({ ...data, userId });
   sendSuccess(res, 201, 'Product created successfully', { product });
 });
 
@@ -31,8 +32,8 @@ export const updateProduct = catchAsync(async (req: Request, res: Response, next
 });
 
 export const approveProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {
-  const product = await marketplaceService.approveProduct(req.params.id as string);
-  sendSuccess(res, 200, 'Product approved successfully', { product });
+  const result = await marketplaceService.approveProductWithEmail(req.params.id as string);
+  sendSuccess(res, 200, result.message, result);
 });
 
 export const rejectProduct = catchAsync(async (req: Request, res: Response, next: NextFunction) => {

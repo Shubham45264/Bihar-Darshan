@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { ChevronDown, ChevronUp, Image as ImageIcon, Upload, X, MapPin, Quote, Camera, Plus, Trash2, GripVertical, CheckCircle, Phone, MessageSquare, Globe, Star, Clock, ArrowLeft, Tag, Building2, ListChecks, XCircle } from "lucide-react";
+import { ChevronDown, ChevronUp, Image as ImageIcon, Upload, X, MapPin, Quote, Camera, Plus, Trash2, GripVertical, CheckCircle, Phone, MessageSquare, Globe, Star, Clock, ArrowLeft, Tag, Building2, ListChecks, XCircle, Mail } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import PremiumFooter from "../components/tourism/PremiumFooter";
 import { useContributions } from "../data/ContributionContext";
@@ -120,6 +120,7 @@ const CreateJourney = () => {
           setLanguages(trip.guide.languages?.join(", ") || "");
           setCallNumber(trip.phone || trip.guide.phone || "");
           setWhatsapp(trip.whatsapp || trip.guide.whatsapp || "");
+          setGuideEmail(trip.guide.email || "");
         }
         if (trip.galleryImages) {
           setGallery(trip.galleryImages.map((url, idx) => ({ id: String(idx), url, title: `Gallery ${idx}` })));
@@ -169,6 +170,7 @@ const CreateJourney = () => {
   const [userRating, setUserRating] = useState("5");
   const [callNumber, setCallNumber] = useState("");
   const [whatsapp, setWhatsapp] = useState("");
+  const [guideEmail, setGuideEmail] = useState("");
 
   // Section 4: Gallery
   const [gallery, setGallery] = useState<GalleryItem[]>([]);
@@ -311,7 +313,7 @@ const CreateJourney = () => {
       guideLanguages: languages ? languages.split(",").map((l) => l.trim()) : ["Hindi", "English"],
       guideIntro: "Verified community guide for this journey.",
       guidePhone: callNumber || "+919876543210",
-      guideEmail: "guide@example.com",
+      guideEmail: guideEmail || "guide@example.com",
       guideWhatsapp: whatsapp || "+919876543210",
       rating: parseFloat(rating) || 5,
       userRating: parseFloat(userRating) || 5,
@@ -339,7 +341,7 @@ const CreateJourney = () => {
       startPoint: district || "Patna",
       endPoint: district || "Patna",
       emergencyContact: callNumber || "+919876543210",
-      email: "contributor@example.com",
+      email: auth.currentUser?.email || guideEmail || "",
       stops: timeline.map((day) => day.title).filter((t) => t && t.trim() !== ""),
     };
 
@@ -690,6 +692,10 @@ const CreateJourney = () => {
                             <input type="text" className="form-control-dark" value={whatsapp} onChange={(e) => setWhatsapp(e.target.value)} placeholder="+91 9876543210" />
                           </div>
                         </div>
+                        <div className="form-group">
+                          <label className="form-label flex items-center gap-1"><Mail size={12} /> Guide Email <span className="text-red-400 ml-1">*</span></label>
+                          <input type="email" className="form-control-dark" value={guideEmail} onChange={(e) => setGuideEmail(e.target.value)} placeholder="guide@example.com" required />
+                        </div>
                       </div>
                     </div>
 
@@ -729,6 +735,9 @@ const CreateJourney = () => {
                             </button>
                             <button className="w-full h-10 bg-[#25D366] text-white rounded-full flex items-center justify-center gap-2 font-bold text-[10px] uppercase tracking-widest pointer-events-none">
                               <MessageSquare className="w-3 h-3" /> WhatsApp
+                            </button>
+                            <button className="w-full h-10 bg-[#EA4335] text-white rounded-full flex items-center justify-center gap-2 font-bold text-[10px] uppercase tracking-widest pointer-events-none">
+                              <Mail className="w-3 h-3" /> Email Guide
                             </button>
                           </div>
                         </div>

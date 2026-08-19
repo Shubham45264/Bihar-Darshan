@@ -27,6 +27,7 @@ import {
   XCircle,
   Users,
   ExternalLink,
+  Mail,
 } from "lucide-react";
 import Navbar from "../components/layout/Navbar";
 import PremiumFooter from "../components/tourism/PremiumFooter";
@@ -419,6 +420,17 @@ const JourneyDetails = () => {
                   <MessageSquare className="w-4 h-4" />
                   WhatsApp
                 </a>
+                {currentTrip.guide.email && (
+                  <a
+                    href={`https://mail.google.com/mail/?view=cm&fs=1&to=${encodeURIComponent(currentTrip.guide.email)}&su=${encodeURIComponent(`Inquiry about ${currentTrip.title}`)}`}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="w-full h-14 bg-[#EA4335] text-white rounded-full flex items-center justify-center gap-3 font-bold text-xs uppercase tracking-widest hover:bg-[#C5221F] transition-colors duration-300"
+                  >
+                    <Mail className="w-4 h-4" />
+                    Email Guide
+                  </a>
+                )}
               </div>
             </motion.div>
           </div>
