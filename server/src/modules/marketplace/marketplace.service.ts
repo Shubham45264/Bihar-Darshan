@@ -38,11 +38,20 @@ export const createProduct = async (data: CreateProductInput & { status?: any })
   return db.marketplaceProduct.create({ data });
 };
 
-export const updateProduct = async (id: string, data: Partial<CreateProductInput> & { status?: any }) => {
-  await getProductById(id);
+export const updateProduct = async (id: string, data: any) => {
+  const product = await getProductById(id);
+  const now = new Date();
+  const planDays = data.planDays !== undefined ? Number(data.planDays) : product.planDays;
+
   return db.marketplaceProduct.update({
     where: { id },
-    data,
+    data: {
+      ...data,
+      planName: data.planName !== undefined ? data.planName : product.planName,
+      planDays: planDays,
+      freeDisplayStartDate: data.planDays !== undefined ? now : (data.freeDisplayStartDate ? new Date(data.freeDisplayStartDate) : product.freeDisplayStartDate),
+      freeDisplayEndDate: data.planDays !== undefined ? new Date(now.getTime() + (planDays || 10) * 24 * 60 * 60 * 1000) : (data.freeDisplayEndDate ? new Date(data.freeDisplayEndDate) : product.freeDisplayEndDate),
+    },
   });
 };
 
@@ -68,11 +77,17 @@ export const approveProductWithEmail = async (id: string) => {
   }
 
   const now = new Date();
+  const startDate = product.freeDisplayStartDate || now;
+  const planDays = product.planDays || 10;
+  const endDate = product.freeDisplayEndDate || new Date(startDate.getTime() + planDays * 24 * 60 * 60 * 1000);
+
   const updatedProduct = await db.marketplaceProduct.update({
     where: { id },
     data: {
       status: 'APPROVED',
       approvedAt: product.approvedAt || now,
+      freeDisplayStartDate: startDate,
+      freeDisplayEndDate: endDate,
     },
   });
 

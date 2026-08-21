@@ -11,8 +11,13 @@ export const createProductSchema = z.object({
   website: z.string().url().optional().nullable(),
   mapLink: z.string().url().optional().nullable(),
   contact: z.string().optional().nullable(),
-  email: z.string().email().optional().nullable(),
+  email: z.string().optional().nullable(),
   userId: z.string().optional().nullable(),
+  planName: z.string().optional().nullable(),
+  planDays: z.number().optional().nullable(),
+  freeDisplayStartDate: z.string().optional().nullable(),
+  freeDisplayEndDate: z.string().optional().nullable(),
+  status: z.string().optional().nullable(),
 });
 
 export const updateProductSchema = createProductSchema.partial();

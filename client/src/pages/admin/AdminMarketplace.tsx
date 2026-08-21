@@ -42,6 +42,56 @@ const AdminMarketplace = () => {
   const [viewingProduct, setViewingProduct] = useState<ProductItem | null>(null);
   const [isViewModalOpen, setIsViewModalOpen] = useState(false);
 
+  // Expired Period Reminder Modal State
+  const [isExpiryReminderOpen, setIsExpiryReminderOpen] = useState(false);
+
+  const SUBSCRIPTION_PLANS = [
+    { name: '10 Days Free Trial', days: 10, label: '10 Days Free Trial (10 Days - Free)' },
+    { name: 'Monthly Plan', days: 30, label: 'Monthly Plan (30 Days - ₹200)' },
+    { name: 'Quarterly Plan', days: 90, label: 'Quarterly Plan (90 Days - ₹500)' },
+    { name: 'Half-Yearly Plan', days: 180, label: 'Half-Yearly Plan (180 Days - ₹800)' },
+    { name: 'Yearly Plan', days: 365, label: 'Yearly Plan (365 Days - ₹1,300)' },
+  ];
+
+  const getDaysRemainingInfo = (item: any) => {
+    let endDate: Date;
+    if (item.freeDisplayEndDate) {
+      endDate = new Date(item.freeDisplayEndDate);
+    } else if (item.freeDisplayStartDate || item.approvedAt || item.createdAt) {
+      const start = new Date(item.freeDisplayStartDate || item.approvedAt || item.createdAt);
+      const planDays = item.planDays || 10;
+      endDate = new Date(start.getTime() + planDays * 24 * 60 * 60 * 1000);
+    } else {
+      endDate = new Date(Date.now() + 10 * 24 * 60 * 60 * 1000);
+    }
+
+    const now = new Date();
+    const diffMs = endDate.getTime() - now.getTime();
+    const daysLeft = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+    return {
+      daysLeft: Math.max(0, daysLeft),
+      isExpired: daysLeft <= 0,
+      formattedEndDate: endDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+      currentPlanName: item.planName || (item.planDays ? `${item.planDays} Days Plan` : '10 Days Free Trial')
+    };
+  };
+
+  const handlePlanChange = async (productId: string | number, planName: string, planDays: number) => {
+    try {
+      const now = new Date();
+      const newEndDate = new Date(now.getTime() + planDays * 24 * 60 * 60 * 1000);
+      await updateProductDetail(productId, {
+        planName,
+        planDays,
+        freeDisplayStartDate: now.toISOString(),
+        freeDisplayEndDate: newEndDate.toISOString(),
+        status: 'APPROVED',
+      });
+    } catch (err) {
+      console.error('Failed to update product plan:', err);
+    }
+  };
+
   // Feedback & Action Loading State
   const [approvingId, setApprovingId] = useState<string | number | null>(null);
   const [approvalFeedback, setApprovalFeedback] = useState<{
@@ -211,6 +261,41 @@ const AdminMarketplace = () => {
                 {item.approvalEmailSent ? '✉️ Email Sent' : '⚠️ Email Not Sent'}
               </span>
             )
+          },
+          {
+            header: 'Display Plan & Counter',
+            accessor: (item) => {
+              if (item.status !== 'APPROVED' && item.status) return <span className="text-white/30 text-xs">Pending Approval</span>;
+              const daysInfo = getDaysRemainingInfo(item);
+              return (
+                <div className="space-y-1.5 min-w-[170px]">
+                  <span className={`text-[10px] font-sans font-bold px-2.5 py-0.5 rounded-full border block w-fit ${
+                    daysInfo.isExpired
+                      ? 'bg-red-500/20 text-red-400 border-red-500/30 animate-pulse'
+                      : 'bg-emerald-500/15 text-emerald-400 border-emerald-500/25'
+                  }`}>
+                    {daysInfo.isExpired
+                      ? '🚨 Free Period Ended (0d)'
+                      : `⏳ ${daysInfo.daysLeft} Days Left`}
+                  </span>
+
+                  <select
+                    value={item.planName || "10 Days Free Trial"}
+                    onChange={(e) => {
+                      const selected = SUBSCRIPTION_PLANS.find(p => p.name === e.target.value);
+                      if (selected) handlePlanChange(item.id, selected.name, selected.days);
+                    }}
+                    className="bg-[#1a1a24] border border-brand-gold/30 rounded-lg px-2 py-1 text-[11px] text-white font-medium focus:outline-none focus:border-brand-gold cursor-pointer"
+                  >
+                    {SUBSCRIPTION_PLANS.map(plan => (
+                      <option key={plan.name} value={plan.name}>
+                        {plan.label}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+              );
+            }
           },
           {
             header: 'Actions',
@@ -498,6 +583,76 @@ const AdminMarketplace = () => {
         onConfirm={confirmDelete}
         itemName={itemToDelete?.productName || ''}
       />
+
+      {/* ── EXPIRED DISPLAY PERIOD REMINDER POPUP MODAL ───────────────────────── */}
+      {isExpiryReminderOpen && (
+        <AdminModal
+          isOpen={isExpiryReminderOpen}
+          onClose={() => setIsExpiryReminderOpen(false)}
+          title="🚨 Marketplace Display Period Ended - Renewal Required"
+          maxWidth="max-w-3xl"
+        >
+          <div className="space-y-5">
+            <div className="bg-red-500/10 border border-red-500/30 rounded-2xl p-4 flex items-start gap-3 text-red-400">
+              <Info size={24} className="shrink-0 mt-0.5" />
+              <div className="space-y-1 text-sm">
+                <h4 className="font-bold text-white text-base">Free Trial Display Period Expired</h4>
+                <p className="text-white/80">
+                  The 10-day free display period has ended for the following marketplace product(s). Select a plan from the dropdown to update and start a new days counter.
+                </p>
+              </div>
+            </div>
+
+            <div className="space-y-3 max-h-[50vh] overflow-y-auto pr-1">
+              {approvedItems
+                .filter(p => getDaysRemainingInfo(p).isExpired)
+                .map(expProd => {
+                  const info = getDaysRemainingInfo(expProd);
+                  return (
+                    <div key={expProd.id} className="bg-white/5 border border-white/10 rounded-2xl p-4 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+                      <div>
+                        <h5 className="font-bold text-white text-sm font-serif">{expProd.productName} ({expProd.businessName})</h5>
+                        <p className="text-xs text-white/50 font-mono mt-0.5">Category: {expProd.category} | Expired: {info.formattedEndDate}</p>
+                        <span className="text-[10px] font-bold bg-red-500/20 text-red-400 border border-red-500/30 px-2.5 py-0.5 rounded-full inline-block mt-1.5 animate-pulse">
+                          🚨 0 Days Left (Free Period Ended)
+                        </span>
+                      </div>
+
+                      <div className="flex items-center gap-2">
+                        <select
+                          value={expProd.planName || "10 Days Free Trial"}
+                          onChange={(e) => {
+                            const selected = SUBSCRIPTION_PLANS.find(sp => sp.name === e.target.value);
+                            if (selected) handlePlanChange(expProd.id, selected.name, selected.days);
+                          }}
+                          className="bg-[#1a1a24] border border-brand-gold/50 rounded-xl px-3 py-2 text-xs text-white font-bold focus:outline-none focus:border-brand-gold shadow-md"
+                        >
+                          {SUBSCRIPTION_PLANS.map(plan => (
+                            <option key={plan.name} value={plan.name}>
+                              {plan.label}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                    </div>
+                  );
+                })}
+              {approvedItems.filter(p => getDaysRemainingInfo(p).isExpired).length === 0 && (
+                <p className="text-white/40 text-sm text-center py-6">All approved products have active subscription plans.</p>
+              )}
+            </div>
+
+            <div className="flex justify-end pt-2 border-t border-white/10">
+              <button
+                onClick={() => setIsExpiryReminderOpen(false)}
+                className="px-6 py-2.5 rounded-xl bg-[#EAB308] text-black font-bold text-xs hover:bg-yellow-400 transition-all shadow-lg"
+              >
+                Done / Close Reminder
+              </button>
+            </div>
+          </div>
+        </AdminModal>
+      )}
     </div>
   );
 };

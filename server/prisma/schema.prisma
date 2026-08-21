@@ -292,7 +292,9 @@ model Journey {
   approvedAt           DateTime?
   freeDisplayStartDate DateTime?
   freeDisplayEndDate   DateTime?
-  approvalEmailSent    Boolean    @default(false)
+  planName             String?        @default("10 Days Free Trial")
+  planDays             Int?           @default(10)
+  approvalEmailSent    Boolean        @default(false)
   approvalEmailSentAt  DateTime?
 
   createdAt        DateTime       @default(now())
@@ -344,6 +346,10 @@ model MarketplaceProduct {
 
   // Approval & Email tracking
   approvedAt          DateTime?
+  freeDisplayStartDate DateTime?
+  freeDisplayEndDate   DateTime?
+  planName             String?   @default("10 Days Free Trial")
+  planDays             Int?      @default(10)
   approvalEmailSent   Boolean   @default(false)
   approvalEmailSentAt DateTime?
 

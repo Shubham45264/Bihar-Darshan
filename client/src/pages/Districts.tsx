@@ -144,11 +144,10 @@ const Districts = () => {
             </h2>
           </div>
 
-          {/* District grid — uniform card size via gridAutoRows */}
+          {/* District grid — 2 columns on mobile, 3-5 on desktop */}
           {filteredDistricts.length > 0 ? (
             <div
-              className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-5"
-              style={{ gridAutoRows: "260px" }}
+              className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-3 sm:gap-5"
             >
               {filteredDistricts.map((district) => (
                 <DistrictGridCard

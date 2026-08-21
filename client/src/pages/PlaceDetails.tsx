@@ -111,7 +111,7 @@ const PlaceDetails = () => {
           <img
             src={place.image}
             alt={place.name}
-            className="w-full h-full object-cover object-center scale-105 filter brightness-75"
+            className="w-full h-full object-cover object-center scale-110 brightness-[1.05]"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-[#181310] via-[#181310]/70 to-[#181310]/40" />
           <div className="absolute inset-0 bg-black/40" />
@@ -148,45 +148,7 @@ const PlaceDetails = () => {
             </p>
           </div>
 
-          {/* Quick Info Badges Bar */}
-          <div className="mt-8 pt-6 border-t border-white/15 grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10">
-              <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider block">District</span>
-              <Link
-                to={`/districts/${targetDistrictSlug}`}
-                className="text-sm font-semibold text-[#D4A017] hover:underline flex items-center gap-1 mt-0.5"
-              >
-                {place.district}
-                <ChevronRight size={12} />
-              </Link>
-            </div>
 
-            <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10">
-              <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider block">Best Time To Visit</span>
-              <span className="text-sm font-semibold text-white flex items-center gap-1 mt-0.5">
-                <Calendar size={14} className="text-[#D4A017]" />
-                {place.bestTimeToVisit || 'October to March'}
-              </span>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10">
-              <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider block">Visitor Rating</span>
-              <span className="text-sm font-semibold text-white flex items-center gap-1 mt-0.5">
-                <Star size={14} className="text-yellow-400 fill-yellow-400" />
-                {place.rating || 4.9} / 5.0
-              </span>
-            </div>
-
-            <div className="bg-white/10 backdrop-blur-md p-3.5 rounded-xl border border-white/10">
-              <span className="text-[10px] text-white/50 font-bold uppercase tracking-wider block">District Guide</span>
-              <Link
-                to={`/districts/${targetDistrictSlug}`}
-                className="text-xs font-bold text-black bg-[#D4A017] hover:bg-yellow-400 px-3 py-1 rounded-lg transition-colors flex items-center justify-center gap-1 mt-0.5"
-              >
-                Explore District
-              </Link>
-            </div>
-          </div>
         </Container>
       </section>
 

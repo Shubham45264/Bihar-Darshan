@@ -779,6 +779,7 @@ export const AdminDataProvider = ({ children }: { children: React.ReactNode }) =
 
   const updateProductDetail = async (id: string | number, product: any) => {
     try {
+      setProducts(prev => prev.map(p => String(p.id) === String(id) ? { ...p, ...product } : p));
       const user = auth.currentUser;
       if (!user) throw new Error("Not authenticated");
       const token = await user.getIdToken();

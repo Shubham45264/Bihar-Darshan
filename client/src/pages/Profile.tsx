@@ -74,6 +74,53 @@ const Profile = () => {
   const [leaderboardPreview, setLeaderboardPreview] = useState<any[]>([]);
   const [userRank, setUserRank] = useState<number | null>(null);
 
+  // User Expiry Modal State
+  const [isUserExpiryModalOpen, setIsUserExpiryModalOpen] = useState(false);
+
+  const SUBSCRIPTION_PLANS = [
+    { name: '10 Days Free Trial', days: 10, label: '10 Days Free Trial (10 Days - Free)' },
+    { name: 'Monthly Plan', days: 30, label: 'Monthly Plan (30 Days - ₹200)' },
+    { name: 'Quarterly Plan', days: 90, label: 'Quarterly Plan (90 Days - ₹500)' },
+    { name: 'Half-Yearly Plan', days: 180, label: 'Half-Yearly Plan (180 Days - ₹800)' },
+    { name: 'Yearly Plan', days: 365, label: 'Yearly Plan (365 Days - ₹1,300)' },
+  ];
+
+  const handleUserPlanUpdate = async (postId: string | number, type: string, planName: string, planDays: number) => {
+    try {
+      const user = auth.currentUser;
+      const token = user ? await user.getIdToken() : '';
+      const now = new Date();
+      const newEndDate = new Date(now.getTime() + planDays * 24 * 60 * 60 * 1000);
+
+      const endpoint = type === 'journey' ? `${API_BASE_URL}/tourism/${postId}` : `${API_BASE_URL}/marketplace/${postId}`;
+
+      const res = await fetch(endpoint, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          planName,
+          planDays,
+          freeDisplayStartDate: now.toISOString(),
+          freeDisplayEndDate: newEndDate.toISOString(),
+        })
+      });
+
+      if (res.ok) {
+        setUserPosts(prev => prev.map(p => String(p.id) === String(postId) ? {
+          ...p,
+          freeDisplayStartDate: now.toISOString(),
+          freeDisplayEndDate: newEndDate.toISOString(),
+        } : p));
+        alert(`Plan updated to "${planName}"! New ${planDays}-day counter has started.`);
+      }
+    } catch (err) {
+      console.error('Failed to update plan:', err);
+    }
+  };
+
   const fetchProfile = async (firebaseUser: FirebaseUser | null, isInitial = false) => {
     if (isInitial) setLoading(true);
     try {
@@ -355,6 +402,17 @@ const Profile = () => {
       }
 
       setUserPosts(deduplicatedPosts);
+
+      // Check if user has any expired published posts
+      const hasExpiredUserPosts = deduplicatedPosts.some(p =>
+        (p.type === 'journey' || p.type === 'marketplace') &&
+        p.status === 'published' &&
+        getTrialDaysRemaining(p) !== null &&
+        getTrialDaysRemaining(p)! <= 0
+      );
+      if (hasExpiredUserPosts && isInitial) {
+        setIsUserExpiryModalOpen(true);
+      }
 
       const publishedCount = deduplicatedPosts.filter(p => p.status === 'published').length;
       const pendingCount = deduplicatedPosts.filter(p => p.status === 'pending').length;
@@ -1082,6 +1140,69 @@ const Profile = () => {
           </motion.div>
         )}
       </AnimatePresence>
+
+      {/* Expired Display Period Reminder Modal for User */}
+      {isUserExpiryModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm flex items-center justify-center p-4">
+          <div className="bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full shadow-2xl border border-gray-100 space-y-5">
+            <div className="flex items-center justify-between border-b border-gray-100 pb-4">
+              <div className="flex items-center gap-2.5 text-red-600 font-bold font-serif text-lg">
+                <Clock className="w-6 h-6 animate-pulse" /> Free Trial Period Ended
+              </div>
+              <button
+                onClick={() => setIsUserExpiryModalOpen(false)}
+                className="text-gray-400 hover:text-gray-600 p-1.5 rounded-full hover:bg-gray-100 transition"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-gray-700 text-sm leading-relaxed font-sans">
+              The 10-day free display period has ended for your published listing(s). Select a plan below to update your subscription and start a new days counter!
+            </p>
+
+            <div className="space-y-3 max-h-60 overflow-y-auto pr-1">
+              {userPosts
+                .filter(p => (p.type === 'journey' || p.type === 'marketplace') && p.status === 'published' && getTrialDaysRemaining(p) !== null && getTrialDaysRemaining(p)! <= 0)
+                .map(expPost => (
+                  <div key={expPost.id} className="p-3.5 rounded-2xl bg-red-50/80 border border-red-200 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <h4 className="font-bold text-gray-900 text-sm truncate max-w-[200px]">{expPost.title}</h4>
+                      <span className="text-[10px] font-black text-red-700 bg-white px-2 py-0.5 rounded-full border border-red-300">
+                        0 Days Left
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2">
+                      <select
+                        onChange={(e) => {
+                          const selected = SUBSCRIPTION_PLANS.find(sp => sp.name === e.target.value);
+                          if (selected) handleUserPlanUpdate(expPost.id, expPost.type, selected.name, selected.days);
+                        }}
+                        className="w-full bg-white border border-red-300 rounded-xl px-3 py-2 text-xs text-gray-900 font-bold focus:outline-none focus:ring-2 focus:ring-red-400 shadow-xs"
+                      >
+                        <option value="">Select Plan to Renew...</option>
+                        {SUBSCRIPTION_PLANS.map(plan => (
+                          <option key={plan.name} value={plan.name}>
+                            {plan.label}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                ))}
+            </div>
+
+            <div className="pt-2 flex justify-end">
+              <button
+                onClick={() => setIsUserExpiryModalOpen(false)}
+                className="px-6 py-2.5 rounded-xl bg-[#8B3E2F] text-white font-bold text-xs hover:bg-[#763325] transition shadow-md"
+              >
+                Close Reminder
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

@@ -71,16 +71,16 @@ const DistrictsDetails = () => {
       <section className="relative pt-40 pb-24 overflow-hidden bg-[#251E18]">
         {/* Background District Image with Gradient Overlays */}
         {heroBgImage && (
-          <div className="absolute inset-0 pointer-events-none z-0">
+          <div className="absolute inset-0 pointer-events-none z-0 overflow-hidden">
             <img
               src={heroBgImage}
               alt={d.name}
-              className="w-full h-full object-cover object-center"
+              className="w-full h-full object-cover object-center scale-110 brightness-[1.08] contrast-[1.05]"
             />
-            {/* Dark overlays for high text contrast and rich aesthetic */}
-            <div className="absolute inset-0 bg-gradient-to-t from-[#251E18] via-[#251E18]/75 to-[#251E18]/50" />
-            <div className="absolute inset-0 bg-black/40" />
-            <div className="absolute inset-0 bg-gradient-to-r from-black/50 via-transparent to-black/30" />
+            {/* Softened dark overlays for brighter visual appeal with clear text contrast */}
+            <div className="absolute inset-0 bg-gradient-to-t from-[#251E18] via-[#251E18]/45 to-transparent" />
+            <div className="absolute inset-0 bg-black/20" />
+            <div className="absolute inset-0 bg-gradient-to-r from-black/40 via-transparent to-black/20" />
           </div>
         )}
 
@@ -207,48 +207,59 @@ const DistrictsDetails = () => {
         </section>
 
         {/* 6. TOP ATTRACTIONS */}
-        <section className="py-16 bg-[#FFFFFF]">
+        <section className="py-12 sm:py-16 bg-[#FFFFFF]">
           <Container className="max-w-6xl">
-            <div className="space-y-8">
-              <SectionLabel text="Top Attractions" />
+            <div className="space-y-6 sm:space-y-8">
+              <div className="flex items-center justify-between">
+                <SectionLabel text="Top Attractions" />
+                <span className="text-sm font-extrabold text-[#8C6239] sm:hidden bg-[#FAF6EE] px-3 py-0.5 rounded-full border border-[#EAE6DF]">
+                  →
+                </span>
+              </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div
+                className="flex overflow-x-auto gap-4 pb-4 px-1 snap-x snap-mandatory hide-scrollbar sm:grid sm:grid-cols-2 lg:grid-cols-4 sm:gap-6 sm:overflow-visible sm:pb-0"
+                style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+              >
                 {allDistrictAttractions.map((attraction: any, idx: number) => {
                   const attractionSlug = attraction.name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
                   return (
                     <Link
                       key={idx}
                       to={`/places/${attractionSlug}`}
-                      className="relative aspect-[3/4] overflow-hidden rounded-2xl bg-gray-900 group shadow-md hover:shadow-2xl border border-gray-200/50 hover:border-[#D4A017] transition-all duration-300 block cursor-pointer"
+                      className="relative w-[260px] xs:w-[280px] shrink-0 snap-start aspect-[3/4] sm:w-auto overflow-hidden rounded-2xl bg-gray-900 group shadow-md hover:shadow-2xl border border-gray-200/50 hover:border-[#D4A017] transition-all duration-300 block cursor-pointer"
                     >
                       {/* Image */}
                       <img
                         src={attraction.image}
                         alt={attraction.name}
                         className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        onError={(e) => {
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&q=80&w=800';
+                        }}
                       />
 
                       {/* Rich Gradient Overlay for high text contrast */}
                       <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/50 to-transparent group-hover:from-black/95 group-hover:via-black/70 transition-all duration-300" />
 
                       {/* Content Container — positioned properly without bottom clipping */}
-                      <div className="absolute inset-x-0 bottom-0 p-5 flex flex-col justify-end">
+                      <div className="absolute inset-x-0 bottom-0 p-4 sm:p-5 flex flex-col justify-end">
                         {/* Tag/Metadata */}
                         <span className="text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017] block mb-1 drop-shadow">
                           {attraction.district || d.name}
                         </span>
 
                         {/* Title — always fully visible */}
-                        <h3 className="text-lg font-serif font-bold text-white leading-snug drop-shadow-md group-hover:text-[#D4A017] transition-colors">
+                        <h3 className="text-base sm:text-lg font-serif font-bold text-white leading-snug drop-shadow-md group-hover:text-[#D4A017] transition-colors">
                           {attraction.name}
                         </h3>
 
-                        {/* Description — expands smoothly on hover */}
-                        <p className="text-xs text-white/90 leading-relaxed max-h-0 overflow-hidden opacity-0 group-hover:max-h-28 group-hover:opacity-100 group-hover:mt-2 transition-all duration-300 ease-out line-clamp-4">
+                        {/* Description — visible on mobile, expands smoothly on desktop hover */}
+                        <p className="text-xs text-white/90 leading-relaxed max-h-16 sm:max-h-0 overflow-hidden opacity-100 sm:opacity-0 group-hover:max-h-28 group-hover:opacity-100 mt-1 sm:mt-0 group-hover:mt-2 transition-all duration-300 ease-out line-clamp-3 sm:line-clamp-4 font-sans">
                           {attraction.description || attraction.shortDescription}
                         </p>
 
-                        <div className="mt-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017]">
+                        <div className="mt-2 opacity-100 sm:opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center gap-1 text-[10px] font-extrabold uppercase tracking-wider text-[#D4A017]">
                           <span>Explore Details</span>
                           <span>→</span>
                         </div>

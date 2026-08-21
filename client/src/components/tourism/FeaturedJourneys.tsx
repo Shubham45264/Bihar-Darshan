@@ -98,14 +98,12 @@ const FeaturedJourneys = () => {
             </Link>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-8">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-8">
             {displayJourneys.map((trip, i) => {
               const isAuthor = currentUser && (trip as any).authorId === currentUser.uid;
               const tripCategory = (trip as any).category || "";
               const companyName = (trip as any).companyName || trip.provider || "Community Contributor";
               const tripDuration = (trip as any).tripDuration || trip.duration || "";
-              const highlights = (trip as any).highlights as string[] | undefined;
-              const categoryStyle = CATEGORY_COLORS[tripCategory] || "bg-[#c19a5b]/15 text-[#c19a5b] border-[#c19a5b]/30";
 
               return (
                 <motion.div
@@ -121,12 +119,12 @@ const FeaturedJourneys = () => {
                     className="bg-white rounded-2xl shadow-sm border border-[#e8dfcf]/50 overflow-hidden flex flex-col h-full group hover:shadow-[0_20px_40px_-15px_rgba(62,39,35,0.15)] hover:-translate-y-2 transition-all duration-500 relative"
                   >
                     {/* Image */}
-                    <div className="relative h-44 sm:h-56 overflow-hidden shrink-0">
+                    <div className="relative h-32 sm:h-56 overflow-hidden shrink-0">
                       <img
                         src={trip.image}
                         alt={trip.title}
                         className="w-full h-full object-cover transform scale-100 group-hover:scale-110 transition-transform duration-1000 ease-out"
-                        onError={(e) => { e.currentTarget.src = "https://via.placeholder.com/400x300?text=Bihar+Tourism"; }}
+                        onError={(e) => { e.currentTarget.src = "https://images.unsplash.com/photo-1590050752117-238cb0fb12b1?auto=format&fit=crop&q=80&w=800"; }}
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-[#2c1e16]/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
 
@@ -137,48 +135,43 @@ const FeaturedJourneys = () => {
                             e.stopPropagation();
                             navigate(`/tourism/create-journey?editId=${trip.id}`);
                           }}
-                          className="absolute top-3 right-3 z-20 bg-[#F4A261] hover:bg-[#E5914F] text-black w-8 h-8 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 font-sans"
+                          className="absolute top-2 right-2 z-20 bg-[#F4A261] hover:bg-[#E5914F] text-black w-7 h-7 sm:w-9 sm:h-9 rounded-full flex items-center justify-center shadow-lg hover:scale-110 transition-all duration-300 font-sans"
                           title="Edit Experience"
                         >
-                          <Edit3 size={14} />
+                          <Edit3 size={12} className="sm:w-3.5 sm:h-3.5" />
                         </button>
                       )}
                     </div>
 
                     {/* Content */}
-                    <div className="p-4 sm:p-6 flex-1 flex flex-col justify-start items-center text-center relative bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]">
+                    <div className="p-3 sm:p-6 flex-1 flex flex-col justify-start items-center text-center relative bg-[url('https://www.transparenttextures.com/patterns/handmade-paper.png')]">
 
                       {/* Company name */}
                       {companyName && companyName !== "Community Contributor" && (
-                        <span className="flex items-center gap-1 text-[10px] font-semibold text-[#3e2723]/50 uppercase tracking-wider mb-2">
-                          <Building2 size={10} className="text-[#c19a5b]" />
-                          {companyName}
+                        <span className="flex items-center gap-1 text-[9px] sm:text-[10px] font-semibold text-[#3e2723]/50 uppercase tracking-wider mb-1 truncate max-w-full">
+                          <Building2 size={9} className="text-[#c19a5b] shrink-0" />
+                          <span className="truncate">{companyName}</span>
                         </span>
                       )}
 
                       {/* Duration + Location */}
-                      <div className="flex items-center gap-3 mb-3 text-xs font-bold text-[#c19a5b] font-sans">
-                        <span className="flex items-center gap-1"><Clock size={12} /> {tripDuration}</span>
-                        <span>•</span>
-                        <span className="flex items-center gap-1"><MapPin size={12} /> {trip.departureCity}</span>
+                      <div className="flex flex-wrap items-center justify-center gap-1 sm:gap-3 mb-2 text-[10px] sm:text-xs font-bold text-[#c19a5b] font-sans">
+                        <span className="flex items-center gap-0.5 sm:gap-1"><Clock size={11} /> {tripDuration}</span>
+                        <span className="hidden xs:inline">•</span>
+                        <span className="flex items-center gap-0.5 sm:gap-1"><MapPin size={11} /> {trip.departureCity}</span>
                       </div>
 
-                      <h3 className="text-xl font-serif font-bold text-[#3e2723] group-hover:text-[#8b5a2b] transition-colors duration-300 mb-2">{trip.title}</h3>
+                      <h3 className="text-sm sm:text-xl font-serif font-bold text-[#3e2723] group-hover:text-[#8b5a2b] transition-colors duration-300 mb-1.5 line-clamp-1 sm:line-clamp-2 leading-tight">{trip.title}</h3>
 
-                      <p className="text-sm text-[#3e2723]/60 mb-4 line-clamp-2 max-w-sm">{(trip as any).desc || trip.description}</p>
-
+                      <p className="text-[11px] sm:text-sm text-[#3e2723]/60 mb-3 line-clamp-2 max-w-sm font-sans">{(trip as any).desc || trip.description}</p>
 
                       {/* Footer */}
-                      <div className="mt-auto pt-4 border-t border-[#e8dfcf]/60 w-full flex items-center justify-between">
-                        <span className="text-xs text-[#3e2723]/50 font-sans flex items-center gap-1">
-                          <Wallet size={12} className="text-[#c19a5b]" />
-                          Budget: <strong className="text-[#3e2723] font-bold ml-1">{trip.price}</strong>
+                      <div className="mt-auto pt-2.5 sm:pt-4 border-t border-[#e8dfcf]/60 w-full flex items-center justify-between gap-1 text-[10px] sm:text-xs font-sans">
+                        <span className="text-[#3e2723]/60 font-sans flex items-center gap-0.5 truncate">
+                          Budget: <strong className="text-[#3e2723] font-bold ml-0.5">{trip.price}</strong>
                         </span>
-                        <div className="flex items-center gap-1 text-[#8b5a2b] font-bold text-xs uppercase tracking-widest">
-                          View Details
-                          <motion.div animate={{ x: [0, 5, 0] }} transition={{ repeat: Infinity, duration: 1.5, ease: "easeInOut" }}>
-                            <ArrowRight size={14} />
-                          </motion.div>
+                        <div className="flex items-center gap-0.5 text-[#8b5a2b] font-bold uppercase tracking-wider shrink-0 text-[9px] sm:text-xs">
+                          View <ArrowRight size={11} className="sm:w-3.5 sm:h-3.5" />
                         </div>
                       </div>
 

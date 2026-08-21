@@ -85,10 +85,10 @@ const CardCarousel = ({ cards, onCardClick }: { cards: CultureCard[], onCardClic
             transition={{ duration: 0.6, delay: i * 0.1, ease: "easeOut" }}
             whileHover={{ y: -8 }}
             onClick={() => onCardClick(card)}
-            className="min-w-[240px] sm:min-w-[280px] max-w-[270px] sm:max-w-[300px] flex-shrink-0 group cursor-pointer relative rounded-2xl bg-[#FFFBEB]/90 backdrop-blur-md border border-[#D4A017]/25 p-3 pb-5 shadow-sm hover:shadow-[0_15px_35px_rgba(212,160,23,0.25)] hover:bg-[#FFFBEB] hover:border-[#D4A017] transition-all duration-300"
+            className="min-w-[250px] sm:min-w-[280px] w-[250px] sm:w-[280px] h-[370px] sm:h-[400px] flex-shrink-0 group cursor-pointer relative rounded-2xl bg-[#FFFBEB]/95 backdrop-blur-md border border-[#D4A017]/30 p-3.5 pb-4 shadow-sm hover:shadow-[0_15px_35px_rgba(212,160,23,0.25)] hover:bg-[#FFFBEB] hover:border-[#D4A017] transition-all duration-300 flex flex-col justify-between"
           >
             {/* Image Container */}
-            <div className="relative aspect-[4/3] rounded-xl overflow-hidden bg-[#FEF3C7] border border-[#D4A017]/20 mb-4 sm:mb-5 shadow-inner">
+            <div className="relative h-44 sm:h-48 w-full shrink-0 rounded-xl overflow-hidden bg-[#FEF3C7] border border-[#D4A017]/20 mb-3 shadow-inner">
               <img
                 src={card.image}
                 alt={card.title}
@@ -100,13 +100,21 @@ const CardCarousel = ({ cards, onCardClick }: { cards: CultureCard[], onCardClic
             </div>
 
             {/* Text Content */}
-            <div className="px-1 sm:px-2 relative z-10">
-              <h5 className="text-base sm:text-[1.05rem] font-bold text-[#451A03] mb-1.5 sm:mb-2 font-serif leading-snug group-hover:text-[#D4A017] transition-colors duration-300">
-                {card.title}
-              </h5>
-              <p className="text-xs sm:text-[0.9rem] text-[#582C12] leading-relaxed line-clamp-3 font-medium">
-                {card.description}
-              </p>
+            <div className="px-1 relative z-10 flex-1 flex flex-col justify-between overflow-hidden">
+              <div>
+                <h5 className="text-base sm:text-[1.05rem] font-bold text-[#451A03] mb-1 font-serif leading-snug group-hover:text-[#D4A017] transition-colors duration-300 line-clamp-1">
+                  {card.title}
+                </h5>
+                <p className="text-xs sm:text-[0.88rem] text-[#582C12] leading-relaxed line-clamp-2 font-medium">
+                  {card.description}
+                </p>
+              </div>
+
+              <div className="pt-2 flex items-center justify-between mt-auto border-t border-[#D4A017]/20">
+                <span className="text-xs font-bold text-[#B45309] group-hover:text-[#D4A017] flex items-center gap-1 transition-colors">
+                  Read More <ChevronRight size={14} className="group-hover:translate-x-1 transition-transform" />
+                </span>
+              </div>
             </div>
             
             {/* Decorative hover glow line at the bottom */}

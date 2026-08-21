@@ -45,6 +45,13 @@ export const createJourneySchema = z.object({
   guidePhone: z.string().optional().nullable(),
   guideEmail: z.string().optional().nullable(),
   guideWhatsapp: z.string().optional().nullable(),
+
+  // Plan fields
+  planName: z.string().optional().nullable(),
+  planDays: z.number().optional().nullable(),
+  freeDisplayStartDate: z.string().optional().nullable(),
+  freeDisplayEndDate: z.string().optional().nullable(),
+  status: z.string().optional().nullable(),
 });
 
 export const updateJourneySchema = createJourneySchema.partial();
