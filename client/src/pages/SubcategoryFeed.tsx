@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import {
-  ArrowLeft, Heart, Eye, Share2, Bookmark, MoreHorizontal, ThumbsDown, Plus, Sparkles, Send, Check, ChevronLeft, ChevronRight, ArrowRight, MessageSquare
+  ArrowLeft, Heart, Eye, Share2, Bookmark, MoreHorizontal, ThumbsDown, Plus, Sparkles, Send, Check, ChevronLeft, ChevronRight, ArrowRight, MessageSquare, MapPin, Filter
 } from 'lucide-react';
 import Navbar from '../components/layout/Navbar';
 import Footer from '../components/layout/Footer';
@@ -135,14 +135,29 @@ const SubcategoryFeed = () => {
   const [savedPosts, setSavedPosts] = useState<Record<string, boolean>>({});
   const [activeShareStory, setActiveShareStory] = useState<Story | null>(null);
 
+  const [selectedDistrict, setSelectedDistrict] = useState<string>('ALL');
+
   const currentUser = auth.currentUser;
   const currentUserId = currentUser ? currentUser.uid : 'guest';
 
+  // Extract unique districts only for posts present
+  const availableDistricts = React.useMemo(() => {
+    const districts = stories
+      .map((s) => s.district)
+      .filter((d): d is string => Boolean(d && d.trim()));
+    return Array.from(new Set(districts)).sort();
+  }, [stories]);
 
+  // Filter stories based on selected district
+  const filteredStories = React.useMemo(() => {
+    if (selectedDistrict === 'ALL') return stories;
+    return stories.filter((s) => s.district?.toLowerCase() === selectedDistrict.toLowerCase());
+  }, [stories, selectedDistrict]);
 
   const fetchCategoryAndStories = async () => {
     try {
       setLoading(true);
+      setSelectedDistrict('ALL');
       // Fetch category & subcategory info
       const catRes = await fetch(`${API_BASE_URL}/categories/${categorySlug}`);
       const catData = await catRes.json();
@@ -245,6 +260,48 @@ const SubcategoryFeed = () => {
                 <span>Share Your Story</span>
               </Link>
             </div>
+
+            {/* District Filter section - Only districts with posts present */}
+            {availableDistricts.length > 0 && (
+              <div className="mt-5 pt-4 border-t border-gray-100 flex flex-wrap items-center gap-2">
+                <div className="flex items-center gap-1.5 text-xs font-bold text-gray-500 mr-2 shrink-0">
+                  <MapPin size={14} className="text-[#D4A017]" />
+                  <span>Filter District:</span>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => setSelectedDistrict('ALL')}
+                  className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                    selectedDistrict === 'ALL'
+                      ? 'bg-gray-900 text-white shadow-sm'
+                      : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                  }`}
+                >
+                  All Districts ({stories.length})
+                </button>
+
+                {availableDistricts.map((district) => {
+                  const count = stories.filter((s) => s.district?.toLowerCase() === district.toLowerCase()).length;
+                  const isSelected = selectedDistrict.toLowerCase() === district.toLowerCase();
+
+                  return (
+                    <button
+                      key={district}
+                      type="button"
+                      onClick={() => setSelectedDistrict(district)}
+                      className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer ${
+                        isSelected
+                          ? 'bg-[#D4A017] text-black shadow-sm'
+                          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                      }`}
+                    >
+                      {district} ({count})
+                    </button>
+                  );
+                })}
+              </div>
+            )}
           </div>
 
           {/* Stories Grid (3 Cards Per Row Full Width) */}
@@ -267,9 +324,24 @@ const SubcategoryFeed = () => {
                 Share First Story
               </Link>
             </div>
+          ) : filteredStories.length === 0 ? (
+            <div className="max-w-md mx-auto text-center py-16 px-6 bg-white border border-gray-200 rounded-3xl shadow-sm">
+              <MapPin className="mx-auto text-[#D4A017] mb-3" size={40} />
+              <h3 className="text-xl font-bold text-gray-900">No stories found</h3>
+              <p className="text-gray-600 text-sm mt-2">
+                No stories available for district <strong>{selectedDistrict}</strong> under {subcategoryTitle}.
+              </p>
+              <button
+                type="button"
+                onClick={() => setSelectedDistrict('ALL')}
+                className="inline-block mt-5 bg-[#D4A017] text-black font-bold px-6 py-2.5 rounded-full text-sm hover:bg-[#B8860B] transition-all shadow cursor-pointer"
+              >
+                Show All Districts
+              </button>
+            </div>
           ) : (
             <div className="w-full grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {stories.map((story) => {
+              {filteredStories.map((story) => {
                 const hasLiked = story.likedBy?.includes(currentUserId);
 
                 return (
