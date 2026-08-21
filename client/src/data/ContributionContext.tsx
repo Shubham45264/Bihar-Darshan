@@ -26,6 +26,10 @@ export interface ProductItem {
   contact?: string;
   email?: string;
   status?: string;
+  planName?: string;
+  planDays?: number;
+  freeDisplayStartDate?: string;
+  freeDisplayEndDate?: string;
 }
 
 interface ContributionContextValue {

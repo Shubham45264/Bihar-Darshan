@@ -57,6 +57,10 @@ export interface ProductItem {
   approvalEmailSent?: boolean;
   approvalEmailSentAt?: string;
   createdAt?: string;
+  planName?: string;
+  planDays?: number;
+  freeDisplayStartDate?: string;
+  freeDisplayEndDate?: string;
 }
 
 // ── Site Settings (imported from siteSettingsDefaults.ts) ──

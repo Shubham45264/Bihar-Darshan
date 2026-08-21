@@ -97,6 +97,13 @@ export interface TourTrip {
   includedServices?: string[];
   excludedServices?: string[];
   googleMapsLink?: string;
+  planName?: string;
+  planDays?: number;
+  freeDisplayStartDate?: string;
+  freeDisplayEndDate?: string;
+  status?: string;
+  approvedAt?: string;
+  createdAt?: string;
 }
 
 export const featuredTrips: TourTrip[] = [
