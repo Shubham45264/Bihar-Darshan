@@ -10,6 +10,8 @@ import Container from '../components/layout/Container';
 import { signOut, onAuthStateChanged, updateProfile, type User as FirebaseUser } from 'firebase/auth';
 import { auth } from '../lib/firebase';
 import { API_BASE_URL } from '../config/api';
+import { useContributions } from '../data/ContributionContext';
+import { useAdminData } from '../data/AdminContext';
 
 interface UserPostItem {
   id: string | number;
@@ -47,6 +49,9 @@ const Profile = () => {
   const { userId: routeUserId } = useParams();
   const [searchParams] = useSearchParams();
   const targetId = routeUserId || searchParams.get('id') || searchParams.get('userId');
+
+  const { journeySubmissions, productSubmissions, gallerySubmissions, cultureSubmissions } = useContributions();
+  const adminData = useAdminData();
 
   const [currentUser, setCurrentUser] = useState<FirebaseUser | null>(null);
   const [authChecking, setAuthChecking] = useState(true);
@@ -194,10 +199,11 @@ const Profile = () => {
       ]);
 
       const matchUser = (authorNameOrEmail: string | null | undefined, authorId?: string | null) => {
-        if (authorId && (authorId === userUid || authorId === dbUser?.id || authorId === dbUser?.firebaseUid || authorId === targetId)) return true;
-        if (!authorNameOrEmail) return false;
+        if (authorId && (authorId === userUid || authorId === dbUser?.id || authorId === dbUser?.firebaseUid || authorId === targetId || (firebaseUser && authorId === firebaseUser.uid))) return true;
+        if (!authorNameOrEmail) return isOwn;
         const authorStr = authorNameOrEmail.toLowerCase().trim();
-        if (!authorStr) return false;
+        if (!authorStr) return isOwn;
+        if (isOwn) return true;
         return authorStr === userName || authorStr === userEmail || (userEmail && authorStr.includes(userEmail)) || (userName && (authorStr.includes(userName) || userName.includes(authorStr)));
       };
 
@@ -352,14 +358,66 @@ const Profile = () => {
         freeDisplayEndDate: p.approvedAt ? new Date(new Date(p.approvedAt).getTime() + 10 * 24 * 60 * 60 * 1000).toISOString() : undefined,
       }));
 
-      // 7. Check Local Storage Submissions as backup
+      // 7. Context & Local Submissions as fallback / backup
+      const contextJourneys: UserPostItem[] = (journeySubmissions || [])
+        .filter(j => isOwn || matchUser((j as any).provider || (j as any).email, j.authorId))
+        .map(j => ({
+          id: j.id,
+          title: j.title,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: "Tourism Journey",
+          category: j.category || "Tourism",
+          status: (j as any).status === "REJECTED" ? "rejected" : (j as any).status === "PENDING" ? "pending" : "published",
+          image: j.image || "/images/culture/hero-artwork.png",
+          type: "journey",
+        }));
+
+      const contextProducts: UserPostItem[] = (productSubmissions || [])
+        .filter(p => isOwn || matchUser(p.businessName || p.email, (p as any).userId))
+        .map(p => ({
+          id: p.id,
+          title: p.productName ? `${p.productName} (${p.businessName})` : p.businessName,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: "Marketplace Product",
+          category: p.category || "Handicrafts",
+          status: p.status === "REJECTED" ? "rejected" : p.status === "PENDING" ? "pending" : "published",
+          image: p.image || p.images?.[0] || "/images/culture/hero-artwork.png",
+          type: "marketplace",
+        }));
+
+      const contextGallery: UserPostItem[] = (gallerySubmissions || [])
+        .filter(g => isOwn || matchUser((g as any).submittedBy || (g as any).author, (g as any).authorId))
+        .map(g => ({
+          id: g.id,
+          title: g.title,
+          date: g.uploadDate || new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: `${g.views ?? 0} Views`,
+          category: g.category || "Gallery",
+          status: (g as any).status === "REJECTED" ? "rejected" : (g as any).status === "PENDING" ? "pending" : "published",
+          image: g.image || "/images/culture/hero-artwork.png",
+          type: "gallery",
+        }));
+
+      const contextCulture: UserPostItem[] = (cultureSubmissions || [])
+        .filter(c => isOwn || matchUser((c as any).submittedBy || (c as any).author, (c as any).authorId))
+        .map(c => ({
+          id: c.id,
+          title: c.title,
+          date: new Date().toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
+          views: "Culture Submission",
+          category: c.type || "Culture",
+          status: (c as any).status === "REJECTED" ? "rejected" : (c as any).status === "PENDING" ? "pending" : "published",
+          image: c.image || "/images/culture/hero-artwork.png",
+          type: "culture",
+        }));
+
       let localPosts: UserPostItem[] = [];
       try {
         const storedArticlesStr = localStorage.getItem('bihar_community_submissions');
         if (storedArticlesStr) {
           const storedArticles = JSON.parse(storedArticlesStr);
           if (Array.isArray(storedArticles)) {
-            const matched = storedArticles.filter((art: any) => matchUser(art.author));
+            const matched = storedArticles.filter((art: any) => matchUser(art.author, art.authorId));
             localPosts = matched.map((art: any) => ({
               id: art.id,
               title: art.headline || art.title,
@@ -388,6 +446,10 @@ const Profile = () => {
         ...tribalArticles,
         ...marketplacePosts,
         ...mappedUserMarketplace,
+        ...contextJourneys,
+        ...contextProducts,
+        ...contextGallery,
+        ...contextCulture,
         ...localPosts
       ];
 
@@ -421,8 +483,9 @@ const Profile = () => {
       // Award 15 points for every accepted tribal article, and 10 points for other approved contributions
       const publishedArticlesCount = deduplicatedPosts.filter(p => p.status === 'published' && p.type === 'article').length;
       const publishedOtherCount = deduplicatedPosts.filter(p => p.status === 'published' && p.type !== 'article').length;
-      const acceptedPoints = (publishedArticlesCount * 15) + (publishedOtherCount * 10);
-      const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints);
+      const pendingOtherCount = deduplicatedPosts.filter(p => p.status === 'pending').length;
+      const acceptedPoints = (publishedArticlesCount * 15) + (publishedOtherCount * 10) + (pendingOtherCount * 5);
+      const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints, deduplicatedPosts.length > 0 ? deduplicatedPosts.length * 10 : 0);
 
       setProfile({
         name: dbUser?.name || firebaseUser?.displayName || "User",
