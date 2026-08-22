@@ -487,8 +487,40 @@ const Profile = () => {
       const acceptedPoints = (publishedArticlesCount * 15) + (publishedOtherCount * 10) + (pendingOtherCount * 5);
       const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints, deduplicatedPosts.length > 0 ? deduplicatedPosts.length * 10 : 0);
 
+      const deriveNameFromEmail = (email?: string | null): string => {
+        if (!email) return '';
+        const prefix = email.split('@')[0];
+        if (!prefix) return '';
+        return prefix
+          .replace(/[._-]/g, ' ')
+          .split(' ')
+          .filter(Boolean)
+          .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+          .join(' ');
+      };
+
+      const getEffectiveUserName = (
+        dbName?: string | null,
+        fbName?: string | null,
+        userEmailStr?: string | null
+      ): string => {
+        if (dbName && dbName.trim() && dbName.trim().toLowerCase() !== 'user') return dbName.trim();
+        if (fbName && fbName.trim() && fbName.trim().toLowerCase() !== 'user') return fbName.trim();
+        const saved = localStorage.getItem('userName');
+        if (saved && saved.trim() && saved.trim().toLowerCase() !== 'user') return saved.trim();
+        const fromEmail = deriveNameFromEmail(userEmailStr);
+        if (fromEmail && fromEmail.toLowerCase() !== 'user') return fromEmail;
+        return "Bihari Explorer";
+      };
+
+      const resolvedName = getEffectiveUserName(
+        dbUser?.name,
+        firebaseUser?.displayName,
+        dbUser?.email || firebaseUser?.email
+      );
+
       setProfile({
-        name: dbUser?.name || firebaseUser?.displayName || "User",
+        name: resolvedName,
         title: dbUser?.title || "Cultural Enthusiast",
         bio: dbUser?.bio || "Explore and discover the rich culture & destinations of Bihar!",
         avatar: dbUser?.avatar || firebaseUser?.photoURL || "/images/culture/avatar-man1.png",
@@ -649,6 +681,10 @@ const Profile = () => {
     }
 
     setIsEditing(false);
+
+    if (editForm.name && editForm.name.trim()) {
+      localStorage.setItem('userName', editForm.name.trim());
+    }
 
     if (currentUser) {
       updateProfile(currentUser, { displayName: editForm.name, photoURL: finalAvatar }).catch(console.error);
