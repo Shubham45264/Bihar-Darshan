@@ -44,6 +44,32 @@ const PREDEFINED_BACKGROUNDS = [
   "/images/culture/rajgir-mahotsav.png"
 ];
 
+const deriveNameFromEmail = (email?: string | null): string => {
+  if (!email) return '';
+  const prefix = email.split('@')[0];
+  if (!prefix) return '';
+  return prefix
+    .replace(/[._-]/g, ' ')
+    .split(' ')
+    .filter(Boolean)
+    .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
+    .join(' ');
+};
+
+const getEffectiveUserName = (
+  dbName?: string | null,
+  fbName?: string | null,
+  userEmailStr?: string | null
+): string => {
+  if (dbName && dbName.trim() && dbName.trim().toLowerCase() !== 'user') return dbName.trim();
+  if (fbName && fbName.trim() && fbName.trim().toLowerCase() !== 'user') return fbName.trim();
+  const saved = localStorage.getItem('userName');
+  if (saved && saved.trim() && saved.trim().toLowerCase() !== 'user') return saved.trim();
+  const fromEmail = deriveNameFromEmail(userEmailStr);
+  if (fromEmail && fromEmail.toLowerCase() !== 'user') return fromEmail;
+  return "Bihari Explorer";
+};
+
 const Profile = () => {
   const navigate = useNavigate();
   const { userId: routeUserId } = useParams();
@@ -64,10 +90,10 @@ const Profile = () => {
 
   // Profile State
   const [profile, setProfile] = useState({
-    name: "User",
+    name: getEffectiveUserName(null, auth.currentUser?.displayName, auth.currentUser?.email),
     title: "Cultural Enthusiast",
     bio: "Explore and discover the rich culture & destinations of Bihar!",
-    avatar: "/images/culture/avatar-man1.png",
+    avatar: auth.currentUser?.photoURL || localStorage.getItem('userAvatar') || "/images/culture/avatar-man1.png",
     background: "/images/culture/hero-artwork.png",
     rewardPoints: 0,
     totalPosts: 0,
@@ -199,12 +225,34 @@ const Profile = () => {
       ]);
 
       const matchUser = (authorNameOrEmail: string | null | undefined, authorId?: string | null) => {
-        if (authorId && (authorId === userUid || authorId === dbUser?.id || authorId === dbUser?.firebaseUid || authorId === targetId || (firebaseUser && authorId === firebaseUser.uid))) return true;
-        if (!authorNameOrEmail) return isOwn;
+        if (authorId) {
+          if (
+            authorId === userUid ||
+            authorId === dbUser?.id ||
+            authorId === dbUser?.firebaseUid ||
+            (targetId && authorId === targetId) ||
+            (firebaseUser && authorId === firebaseUser.uid)
+          ) {
+            return true;
+          }
+        }
+
+        if (!authorNameOrEmail) return false;
         const authorStr = authorNameOrEmail.toLowerCase().trim();
-        if (!authorStr) return isOwn;
-        if (isOwn) return true;
-        return authorStr === userName || authorStr === userEmail || (userEmail && authorStr.includes(userEmail)) || (userName && (authorStr.includes(userName) || userName.includes(authorStr)));
+        if (!authorStr) return false;
+
+        const currentUserNameClean = (dbUser?.name || firebaseUser?.displayName || localStorage.getItem('userName') || '').toLowerCase().trim();
+        const currentUserEmailClean = (dbUser?.email || firebaseUser?.email || '').toLowerCase().trim();
+
+        if (currentUserEmailClean && (authorStr === currentUserEmailClean || authorStr.includes(currentUserEmailClean))) {
+          return true;
+        }
+
+        if (currentUserNameClean && currentUserNameClean !== 'user' && (authorStr === currentUserNameClean || authorStr.includes(currentUserNameClean) || currentUserNameClean.includes(authorStr))) {
+          return true;
+        }
+
+        return false;
       };
 
       // 1. Stories
