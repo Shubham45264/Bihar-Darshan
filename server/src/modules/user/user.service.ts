@@ -26,55 +26,54 @@ export const checkAndUpdateUserMilestones = async (
     const recordedMilestones = new Set(existingHistories.map((h) => h.milestonePoints));
     const crossedMilestones = MILESTONES.filter((m) => totalPoints >= m.points);
 
-    // If no histories exist yet, this is an existing user being migrated on first load
-    const isFirstTimeInit = existingHistories.length === 0 && crossedMilestones.length > 0;
-
-    let highestNewMilestone: (typeof MILESTONES)[0] | null = null;
-
     for (const m of crossedMilestones) {
-      if (!recordedMilestones.has(m.points)) {
+      let history = existingHistories.find((h) => h.milestonePoints === m.points);
+
+      if (!history) {
         try {
-          await db.userBadgeHistory.create({
+          history = await db.userBadgeHistory.create({
             data: {
               userId,
               milestonePoints: m.points,
               badgeName: m.badgeName,
-              emailSent: isFirstTimeInit, // don't send emails for historical pre-existing points on first load
-              emailSentAt: isFirstTimeInit ? new Date() : null,
+              emailSent: false,
+              emailSentAt: null,
             },
           });
         } catch (dbErr) {
-          // Idempotency constraint protection
-        }
-
-        if (!isFirstTimeInit) {
-          highestNewMilestone = m;
+          history = await db.userBadgeHistory.findFirst({
+            where: { userId, milestonePoints: m.points },
+          }) || undefined;
         }
       }
-    }
 
-    // Send email ONLY for newly crossed highest milestone during an active points update
-    if (highestNewMilestone && userEmail) {
-      const badgeInfo = getBadgeFromPoints(totalPoints);
-      sendAchievementEmail({
-        to: userEmail,
-        userName: userName || 'Cultural Explorer',
-        badgeName: highestNewMilestone.badgeName,
-        badgeIcon: highestNewMilestone.icon,
-        milestonePoints: highestNewMilestone.points,
-        badgeMeaning: badgeInfo.meaning,
-      })
-        .then((res) => {
-          if (res.success) {
-            db.userBadgeHistory
-              .updateMany({
-                where: { userId, milestonePoints: highestNewMilestone!.points },
-                data: { emailSent: true, emailSentAt: new Date() },
-              })
-              .catch(() => {});
+      // If email has not been sent yet (or was previously suppressed during migration), send it now
+      const isUnsent = !history || !history.emailSent || (history.milestonePoints === 100 && history.emailSentAt && Math.abs(new Date(history.emailSentAt).getTime() - new Date(history.achievedAt).getTime()) < 5000);
+
+      if (isUnsent && userEmail) {
+        const badgeInfo = getBadgeFromPoints(totalPoints);
+        try {
+          logger.info(`🚀 Sending milestone achievement certificate email to ${userEmail} for ${m.points} points (${m.badgeName})...`);
+          const res = await sendAchievementEmail({
+            to: userEmail,
+            userName: userName || 'Cultural Explorer',
+            badgeName: m.badgeName,
+            badgeIcon: m.icon,
+            milestonePoints: m.points,
+            badgeMeaning: badgeInfo.meaning,
+          });
+
+          if (res.success && history) {
+            await db.userBadgeHistory.update({
+              where: { id: history.id },
+              data: { emailSent: true, emailSentAt: new Date() },
+            });
+            logger.info(`✅ Milestone certificate email successfully delivered & recorded for ${userEmail} (${m.points} pts)`);
           }
-        })
-        .catch((err) => logger.error('Failed sending achievement email:', err));
+        } catch (emailErr) {
+          logger.error(`Failed sending milestone email to ${userEmail}:`, emailErr);
+        }
+      }
     }
 
     return await db.userBadgeHistory.findMany({
@@ -346,6 +345,9 @@ export const getLeaderboardUsers = async (limit = 100) => {
     const dynamicContributionPoints = totalContributions * 10;
     const totalPoints = (user.rewardPoints || 0) + dynamicContributionPoints;
     const badge = getBadgeFromPoints(totalPoints);
+
+    // Trigger milestone check & certificate email dispatch
+    checkAndUpdateUserMilestones(user.id, user.email, user.name, totalPoints).catch(() => {});
 
     return {
       id: user.id,
