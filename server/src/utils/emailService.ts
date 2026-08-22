@@ -1,3 +1,5 @@
+import fs from 'fs';
+import path from 'path';
 import { Resend } from 'resend';
 import nodemailer from 'nodemailer';
 import { env } from '../config/env';
@@ -441,6 +443,18 @@ export const sendAchievementEmail = async (params: AchievementEmailParams): Prom
         <div><strong>Status:</strong> Permanently Unlocked & Recorded</div>
       </div>
 
+      ${milestonePoints === 100 ? `
+      <div style="text-align: center; margin: 30px 0 20px 0;">
+        <div style="font-size: 15px; font-weight: 800; color: #0F3D2E; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px;">
+          📜 Official Certificate of Appreciation
+        </div>
+        <img src="cid:culture_champion_certificate" alt="Bihar Darshan Culture Champion Certificate" style="width: 100%; max-width: 540px; border-radius: 12px; border: 3px solid #D4A017; box-shadow: 0 8px 24px rgba(212,160,23,0.25);" />
+        <p style="font-size: 13px; color: #744210; margin-top: 10px; font-weight: 600;">
+          🎉 Congratulations! Your 100 Points Culture Champion Certificate is attached to this email.
+        </p>
+      </div>
+      ` : ''}
+
       <p style="text-align: center;">
         <a href="${profileUrl}" class="cta-btn">View Your Badge on Profile</a>
       </p>
@@ -477,6 +491,19 @@ Team Bihar Darshan
 www.bihardarshan.in
   `.trim();
 
+  const certPath = path.join(__dirname, '../../public/images/culture-champion-certificate.jpg');
+  const hasCert = milestonePoints === 100 && fs.existsSync(certPath);
+
+  const smtpAttachments = hasCert
+    ? [
+        {
+          filename: 'Bihar_Darshan_Culture_Champion_Certificate.jpg',
+          path: certPath,
+          cid: 'culture_champion_certificate',
+        },
+      ]
+    : [];
+
   if (smtpTransporter) {
     try {
       const fromAddress = env.SMTP_USER || env.BIHAR_DARSHAN_CONTACT_EMAIL || 'bihardarshanofficial@gmail.com';
@@ -486,11 +513,41 @@ www.bihardarshan.in
         subject,
         text: textContent,
         html: htmlContent,
+        attachments: smtpAttachments,
       });
       logger.info(`✅ Achievement email sent via SMTP to ${to} for milestone ${milestonePoints} (Message ID: ${info.messageId})`);
       return { success: true, messageId: info.messageId };
     } catch (err: any) {
       logger.error(`SMTP achievement email dispatch error for ${to}:`, err);
+    }
+  }
+
+  if (resend) {
+    try {
+      const resendAttachments = hasCert
+        ? [
+            {
+              filename: 'Bihar_Darshan_Culture_Champion_Certificate.jpg',
+              content: fs.readFileSync(certPath),
+            },
+          ]
+        : undefined;
+
+      const data = await resend.emails.send({
+        from: 'Bihar Darshan <onboarding@resend.dev>',
+        to: [to],
+        subject,
+        html: htmlContent,
+        text: textContent,
+        attachments: resendAttachments,
+      });
+
+      if (!data.error) {
+        logger.info(`✅ Achievement email sent via Resend to ${to} for milestone ${milestonePoints} (Message ID: ${data.data?.id})`);
+        return { success: true, messageId: data.data?.id };
+      }
+    } catch (resendErr: any) {
+      logger.error(`Resend achievement email error for ${to}:`, resendErr);
     }
   }
 

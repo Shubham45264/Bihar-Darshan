@@ -70,6 +70,26 @@ const getEffectiveUserName = (
   return "Bihari Explorer";
 };
 
+const getTrialDaysRemaining = (post: UserPostItem) => {
+  if ((post.type !== 'journey' && post.type !== 'marketplace') || post.status !== 'published') return null;
+
+  let endDate: Date;
+  if (post.freeDisplayEndDate) {
+    endDate = new Date(post.freeDisplayEndDate);
+  } else if (post.freeDisplayStartDate || post.approvedAt || post.date) {
+    const start = new Date(post.freeDisplayStartDate || post.approvedAt || post.date);
+    endDate = new Date(start.getTime() + 10 * 24 * 60 * 60 * 1000);
+  } else {
+    return null;
+  }
+
+  const now = new Date();
+  const diffMs = endDate.getTime() - now.getTime();
+  const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+
+  return diffDays;
+};
+
 const Profile = () => {
   const navigate = useNavigate();
   const { userId: routeUserId } = useParams();
@@ -535,32 +555,6 @@ const Profile = () => {
       const acceptedPoints = (publishedArticlesCount * 15) + (publishedOtherCount * 10) + (pendingOtherCount * 5);
       const totalRewardPoints = Math.max(dbUser?.rewardPoints || 0, acceptedPoints, deduplicatedPosts.length > 0 ? deduplicatedPosts.length * 10 : 0);
 
-      const deriveNameFromEmail = (email?: string | null): string => {
-        if (!email) return '';
-        const prefix = email.split('@')[0];
-        if (!prefix) return '';
-        return prefix
-          .replace(/[._-]/g, ' ')
-          .split(' ')
-          .filter(Boolean)
-          .map(w => w.charAt(0).toUpperCase() + w.slice(1).toLowerCase())
-          .join(' ');
-      };
-
-      const getEffectiveUserName = (
-        dbName?: string | null,
-        fbName?: string | null,
-        userEmailStr?: string | null
-      ): string => {
-        if (dbName && dbName.trim() && dbName.trim().toLowerCase() !== 'user') return dbName.trim();
-        if (fbName && fbName.trim() && fbName.trim().toLowerCase() !== 'user') return fbName.trim();
-        const saved = localStorage.getItem('userName');
-        if (saved && saved.trim() && saved.trim().toLowerCase() !== 'user') return saved.trim();
-        const fromEmail = deriveNameFromEmail(userEmailStr);
-        if (fromEmail && fromEmail.toLowerCase() !== 'user') return fromEmail;
-        return "Bihari Explorer";
-      };
-
       const resolvedName = getEffectiveUserName(
         dbUser?.name,
         firebaseUser?.displayName,
@@ -796,25 +790,7 @@ const Profile = () => {
     }
   };
 
-  const getTrialDaysRemaining = (post: UserPostItem) => {
-    if ((post.type !== 'journey' && post.type !== 'marketplace') || post.status !== 'published') return null;
 
-    let endDate: Date;
-    if (post.freeDisplayEndDate) {
-      endDate = new Date(post.freeDisplayEndDate);
-    } else if (post.freeDisplayStartDate || post.approvedAt || post.date) {
-      const start = new Date(post.freeDisplayStartDate || post.approvedAt || post.date);
-      endDate = new Date(start.getTime() + 10 * 24 * 60 * 60 * 1000);
-    } else {
-      return null;
-    }
-
-    const now = new Date();
-    const diffMs = endDate.getTime() - now.getTime();
-    const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
-
-    return diffDays;
-  };
 
   const activePosts = userPosts.filter(post => !isOwnProfile ? post.status === 'published' : post.status === activeTab);
 

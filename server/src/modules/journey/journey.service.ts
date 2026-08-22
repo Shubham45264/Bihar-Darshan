@@ -228,13 +228,13 @@ export const updateJourney = async (id: string, authorId: string, data: any) => 
       guidePhone: data.guidePhone,
       guideEmail: data.guideEmail,
       guideWhatsapp: data.guideWhatsapp,
-      planName: data.planName !== undefined ? data.planName : journey.planName,
-      planDays: data.planDays !== undefined ? Number(data.planDays) : journey.planDays,
-      freeDisplayStartDate: data.planDays !== undefined ? new Date() : (data.freeDisplayStartDate ? new Date(data.freeDisplayStartDate) : journey.freeDisplayStartDate),
-      freeDisplayEndDate: data.planDays !== undefined ? new Date(Date.now() + Number(data.planDays) * 24 * 60 * 60 * 1000) : (data.freeDisplayEndDate ? new Date(data.freeDisplayEndDate) : journey.freeDisplayEndDate),
+      planName: data.planName !== undefined ? data.planName : (journey as any).planName,
+      planDays: data.planDays !== undefined ? Number(data.planDays) : (journey as any).planDays,
+      freeDisplayStartDate: data.planDays !== undefined ? new Date() : (data.freeDisplayStartDate ? new Date(data.freeDisplayStartDate) : (journey as any).freeDisplayStartDate),
+      freeDisplayEndDate: data.planDays !== undefined ? new Date(Date.now() + Number(data.planDays) * 24 * 60 * 60 * 1000) : (data.freeDisplayEndDate ? new Date(data.freeDisplayEndDate) : (journey as any).freeDisplayEndDate),
       // If admin, keep the current status (e.g. APPROVED), else reset to PENDING for re-review
       status: user?.role === 'ADMIN' ? (data.status || journey.status) : 'PENDING'
-    }
+    } as any
   });
 };
 

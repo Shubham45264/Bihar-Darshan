@@ -1,4 +1,5 @@
 import express, { Application, Request, Response, NextFunction } from 'express';
+import path from 'path';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
@@ -64,6 +65,7 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 app.use(cookieParser());
 app.use(compression());
+app.use(express.static(path.join(__dirname, '../public')));
 
 // Disable browser caching for API requests to ensure dynamic DB updates
 app.use('/api/v1', (req: Request, res: Response, next: NextFunction) => {

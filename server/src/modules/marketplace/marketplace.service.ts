@@ -39,7 +39,7 @@ export const createProduct = async (data: CreateProductInput & { status?: any })
 };
 
 export const updateProduct = async (id: string, data: any) => {
-  const product = await getProductById(id);
+  const product: any = await getProductById(id);
   const now = new Date();
   const planDays = data.planDays !== undefined ? Number(data.planDays) : product.planDays;
 
@@ -51,12 +51,12 @@ export const updateProduct = async (id: string, data: any) => {
       planDays: planDays,
       freeDisplayStartDate: data.planDays !== undefined ? now : (data.freeDisplayStartDate ? new Date(data.freeDisplayStartDate) : product.freeDisplayStartDate),
       freeDisplayEndDate: data.planDays !== undefined ? new Date(now.getTime() + (planDays || 10) * 24 * 60 * 60 * 1000) : (data.freeDisplayEndDate ? new Date(data.freeDisplayEndDate) : product.freeDisplayEndDate),
-    },
+    } as any,
   });
 };
 
 export const approveProductWithEmail = async (id: string) => {
-  const product = await getProductById(id);
+  const product: any = await getProductById(id);
 
   const isValidEmail = (e?: string | null): boolean => {
     if (!e) return false;
@@ -88,7 +88,7 @@ export const approveProductWithEmail = async (id: string) => {
       approvedAt: product.approvedAt || now,
       freeDisplayStartDate: startDate,
       freeDisplayEndDate: endDate,
-    },
+    } as any,
   });
 
   if (!targetEmail) {
