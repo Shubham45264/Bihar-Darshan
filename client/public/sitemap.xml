@@ -2,73 +2,73 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <!-- Core Pages -->
   <url>
-    <loc>https://bihardarshan.in/</loc>
+    <loc>https://www.bihardarshan.in/</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>daily</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts</loc>
+    <loc>https://www.bihardarshan.in/districts</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/discover</loc>
+    <loc>https://www.bihardarshan.in/discover</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/culture</loc>
+    <loc>https://www.bihardarshan.in/culture</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/marketplace</loc>
+    <loc>https://www.bihardarshan.in/marketplace</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tourism</loc>
+    <loc>https://www.bihardarshan.in/tourism</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals</loc>
+    <loc>https://www.bihardarshan.in/tribals</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/gallery</loc>
+    <loc>https://www.bihardarshan.in/gallery</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/leaderboard</loc>
+    <loc>https://www.bihardarshan.in/leaderboard</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/about-us</loc>
+    <loc>https://www.bihardarshan.in/about-us</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/contact</loc>
+    <loc>https://www.bihardarshan.in/contact</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.6</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/privacy-policy</loc>
+    <loc>https://www.bihardarshan.in/privacy-policy</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.5</priority>
@@ -76,335 +76,335 @@
 
   <!-- District Pages (38 Districts of Bihar) -->
   <url>
-    <loc>https://bihardarshan.in/districts/araria</loc>
+    <loc>https://www.bihardarshan.in/districts/araria</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/arwal</loc>
+    <loc>https://www.bihardarshan.in/districts/arwal</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/aurangabad</loc>
+    <loc>https://www.bihardarshan.in/districts/aurangabad</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/banka</loc>
+    <loc>https://www.bihardarshan.in/districts/banka</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/begusarai</loc>
+    <loc>https://www.bihardarshan.in/districts/begusarai</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/bhagalpur</loc>
+    <loc>https://www.bihardarshan.in/districts/bhagalpur</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/bhojpur</loc>
+    <loc>https://www.bihardarshan.in/districts/bhojpur</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/buxar</loc>
+    <loc>https://www.bihardarshan.in/districts/buxar</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/darbhanga</loc>
+    <loc>https://www.bihardarshan.in/districts/darbhanga</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/east%20champaran</loc>
+    <loc>https://www.bihardarshan.in/districts/east%20champaran</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/gaya</loc>
+    <loc>https://www.bihardarshan.in/districts/gaya</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/gopalganj</loc>
+    <loc>https://www.bihardarshan.in/districts/gopalganj</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/jamui</loc>
+    <loc>https://www.bihardarshan.in/districts/jamui</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/jehanabad</loc>
+    <loc>https://www.bihardarshan.in/districts/jehanabad</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/kaimur%20(bhabua)</loc>
+    <loc>https://www.bihardarshan.in/districts/kaimur%20%28bhabua%29</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/katihar</loc>
+    <loc>https://www.bihardarshan.in/districts/katihar</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/khagaria</loc>
+    <loc>https://www.bihardarshan.in/districts/khagaria</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/kishanganj</loc>
+    <loc>https://www.bihardarshan.in/districts/kishanganj</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/lakhisarai</loc>
+    <loc>https://www.bihardarshan.in/districts/lakhisarai</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/madhepura</loc>
+    <loc>https://www.bihardarshan.in/districts/madhepura</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/madhubani</loc>
+    <loc>https://www.bihardarshan.in/districts/madhubani</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/munger</loc>
+    <loc>https://www.bihardarshan.in/districts/munger</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/muzaffarpur</loc>
+    <loc>https://www.bihardarshan.in/districts/muzaffarpur</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/nalanda</loc>
+    <loc>https://www.bihardarshan.in/districts/nalanda</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/nawada</loc>
+    <loc>https://www.bihardarshan.in/districts/nawada</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/patna</loc>
+    <loc>https://www.bihardarshan.in/districts/patna</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/purnia</loc>
+    <loc>https://www.bihardarshan.in/districts/purnia</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/rohtas</loc>
+    <loc>https://www.bihardarshan.in/districts/rohtas</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/saharsa</loc>
+    <loc>https://www.bihardarshan.in/districts/saharsa</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/samastipur</loc>
+    <loc>https://www.bihardarshan.in/districts/samastipur</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/saran</loc>
+    <loc>https://www.bihardarshan.in/districts/saran</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/sheikhpura</loc>
+    <loc>https://www.bihardarshan.in/districts/sheikhpura</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/sheohar</loc>
+    <loc>https://www.bihardarshan.in/districts/sheohar</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/sitamarhi</loc>
+    <loc>https://www.bihardarshan.in/districts/sitamarhi</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/siwan</loc>
+    <loc>https://www.bihardarshan.in/districts/siwan</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/supaul</loc>
+    <loc>https://www.bihardarshan.in/districts/supaul</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/vaishali</loc>
+    <loc>https://www.bihardarshan.in/districts/vaishali</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/districts/west%20champaran</loc>
+    <loc>https://www.bihardarshan.in/districts/west%20champaran</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
 
-  <!-- Key Destination / Popular Places Pages -->
+  <!-- Key Destination Places -->
   <url>
-    <loc>https://bihardarshan.in/places/bodh-gaya</loc>
+    <loc>https://www.bihardarshan.in/places/bodh-gaya</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/places/nalanda</loc>
+    <loc>https://www.bihardarshan.in/places/nalanda</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/places/rajgir</loc>
+    <loc>https://www.bihardarshan.in/places/rajgir</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/places/vaishali</loc>
+    <loc>https://www.bihardarshan.in/places/vaishali</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/places/patna-sahib</loc>
+    <loc>https://www.bihardarshan.in/places/patna-sahib</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/places/pawapuri</loc>
+    <loc>https://www.bihardarshan.in/places/pawapuri</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
   </url>
 
-  <!-- Key Tribal Heritage Pages -->
+  <!-- Indigenous Tribal Pages -->
   <url>
-    <loc>https://bihardarshan.in/tribals/santhal</loc>
+    <loc>https://www.bihardarshan.in/tribals/santhal</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/oraon</loc>
+    <loc>https://www.bihardarshan.in/tribals/oraon</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/munda</loc>
+    <loc>https://www.bihardarshan.in/tribals/munda</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/kharwar</loc>
+    <loc>https://www.bihardarshan.in/tribals/kharwar</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/tharu</loc>
+    <loc>https://www.bihardarshan.in/tribals/tharu</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/gond</loc>
+    <loc>https://www.bihardarshan.in/tribals/gond</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/asur</loc>
+    <loc>https://www.bihardarshan.in/tribals/asur</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/baiga</loc>
+    <loc>https://www.bihardarshan.in/tribals/baiga</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/birhor</loc>
+    <loc>https://www.bihardarshan.in/tribals/birhor</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/kharia</loc>
+    <loc>https://www.bihardarshan.in/tribals/kharia</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
   <url>
-    <loc>https://bihardarshan.in/tribals/kora</loc>
+    <loc>https://www.bihardarshan.in/tribals/kora</loc>
     <lastmod>2026-08-22</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
